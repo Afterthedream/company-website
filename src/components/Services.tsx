@@ -129,7 +129,7 @@ export default function Services({ products = [] }: ServicesProps) {
 
         {/* 查看更多 */}
         <div className="text-center mt-12">
-          <Link href="/" className="btn-primary">
+          <Link href="/products" className="btn-primary">
             查看所有产品
           </Link>
         </div>
