@@ -3,12 +3,7 @@
 import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
-interface CompanyInfo {
-  phone: string
-  email: string
-  address: string
-}
+import PageHeader from '@/components/PageHeader'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -18,230 +13,194 @@ export default function ContactPage() {
     company: '',
     message: '',
   })
-
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
+  const [submitting, setSubmitting] = useState(false)
+  const [companyInfo, setCompanyInfo] = useState({
     phone: '',
     email: '',
     address: '',
   })
 
   useEffect(() => {
-    const fetchCompanyInfo = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?populate=*`)
-        const data = await response.json()
-        if (data.data && data.data.length > 0) {
-          const company = data.data[0]
+    fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?populate=*`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.data?.[0]) {
+          const c = data.data[0]
           setCompanyInfo({
-            phone: company.phone || '',
-            email: company.email || '',
-            address: company.address || '',
+            phone: c.phone || '',
+            email: c.email || '',
+            address: c.address || '',
           })
         }
-      } catch (error) {
-        console.error('获取公司信息失败:', error)
-      }
-    }
-
-    fetchCompanyInfo()
+      })
+      .catch(() => {})
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+    setSubmitting(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/contacts`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            company: formData.company,
-            message: formData.message,
-          },
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: formData }),
       })
-      
-      const responseData = await response.json()
-      console.log('响应状态:', response.status)
-      console.log('响应数据:', responseData)
-      
       if (response.ok) {
         alert('感谢您的留言，我们会尽快与您联系！')
         setFormData({ name: '', email: '', phone: '', company: '', message: '' })
       } else {
-        console.error('API 错误:', responseData)
-        const errorMsg = responseData.error?.message || JSON.stringify(responseData) || `HTTP ${response.status}`
-        alert(`提交失败：${errorMsg}`)
+        const err = await response.json()
+        alert(`提交失败：${err.error?.message || '请稍后重试'}`)
       }
-    } catch (error) {
-      console.error('提交错误:', error)
-      alert(`提交失败：${error instanceof Error ? error.message : '未知错误'}`)
+    } catch {
+      alert('提交失败，请检查网络连接后重试')
+    } finally {
+      setSubmitting(false)
     }
   }
 
-  const contactInfo = [
+  const contactItems = [
     {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
-      title: '电话咨询',
-      items: companyInfo.phone ? [companyInfo.phone] : [],
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>,
+      label: '电话咨询',
+      value: companyInfo.phone,
     },
     {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      title: '邮箱联系',
-      items: companyInfo.email ? [companyInfo.email] : [],
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+      label: '邮箱联系',
+      value: companyInfo.email,
     },
     {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      title: '公司地址',
-      items: companyInfo.address ? [companyInfo.address] : [],
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+      label: '公司地址',
+      value: companyInfo.address,
     },
   ]
 
   return (
     <main className="min-h-screen">
       <Header />
-      
-      {/* 页面头部 */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-primary-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              联系我们
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              如有任何疑问或需求，欢迎随时与我们联系
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* 联系信息和表单 */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* 联系信息 */}
+      <PageHeader
+        number="06"
+        label="联系我们"
+        title="联系我们"
+        description="如有任何疑问或需求，欢迎随时与我们联系"
+      />
+
+      <section className="py-28 bg-surface-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* 左：联系信息 */}
             <div className="space-y-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">联系方式</h2>
-              
-              {contactInfo.map((item, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {item.title}
-                    </h3>
-                    {item.items.map((text, idx) => (
-                      <p key={idx} className="text-gray-600">
-                        {text}
-                      </p>
-                    ))}
-                  </div>
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
+                  <div className="w-8 h-px bg-primary-200" />
+                  <span className="text-xs text-surface-400">联系方式</span>
                 </div>
-              ))}
+                <h2 className="section-title mb-2">随时联系我们</h2>
+                <p className="text-sm text-surface-400 leading-relaxed">
+                  我们期待与您合作，为您提供最优质的水治理解决方案
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {contactItems.map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-5 rounded-xl bg-surface-50 hover:bg-surface-100/80 transition-colors duration-200">
+                    <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 flex-shrink-0">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <div className="text-xs text-surface-400 mb-0.5">{item.label}</div>
+                      <div className="text-sm font-medium text-surface-800">{item.value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* 留言表单 */}
-            <div id="message">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">在线留言</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+            {/* 右：表单 */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="font-display text-sm font-bold text-primary-600 tracking-wider">02</span>
+                <div className="w-8 h-px bg-primary-200" />
+                <span className="text-xs text-surface-400">在线留言</span>
+              </div>
+              <h2 className="section-title mb-8">发送消息</h2>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid md:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      姓名 *
-                    </label>
+                    <label htmlFor="name" className="block text-xs font-medium text-surface-600 mb-1.5">姓名 *</label>
                     <input
                       type="text"
                       id="name"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
                       placeholder="请输入您的姓名"
                     />
                   </div>
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                      公司
-                    </label>
+                    <label htmlFor="company" className="block text-xs font-medium text-surface-600 mb-1.5">公司</label>
                     <input
                       type="text"
                       id="company"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
                       placeholder="请输入公司名称"
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      邮箱 *
-                    </label>
+                    <label htmlFor="email" className="block text-xs font-medium text-surface-600 mb-1.5">邮箱 *</label>
                     <input
                       type="email"
                       id="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
                       placeholder="请输入您的邮箱"
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      电话
-                    </label>
+                    <label htmlFor="phone" className="block text-xs font-medium text-surface-600 mb-1.5">电话</label>
                     <input
                       type="tel"
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
                       placeholder="请输入您的电话"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    留言内容 *
-                  </label>
+                  <label htmlFor="message" className="block text-xs font-medium text-surface-600 mb-1.5">留言内容 *</label>
                   <textarea
                     id="message"
                     required
-                    rows={6}
+                    rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+                    className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200 resize-none"
                     placeholder="请详细描述您的需求或问题"
                   />
                 </div>
 
-                <button type="submit" className="w-full btn-primary">
-                  提交留言
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="btn-primary w-full justify-center disabled:opacity-50"
+                >
+                  {submitting ? '提交中...' : '提交留言'}
                 </button>
               </form>
             </div>

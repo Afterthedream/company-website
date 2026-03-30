@@ -208,127 +208,163 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
   // features
   const featureList = parseFeatures(item.features)
 
+  // 根据类型获取主题色
+  const getTypeColor = () => {
+    switch (type) {
+      case 'product': return 'primary'
+      case 'solution': return 'emerald'
+      case 'news': return 'blue'
+      default: return 'primary'
+    }
+  }
+
+  const typeColor = getTypeColor()
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+      style={{ 
+        backgroundColor: 'rgba(0,0,0,0.6)', 
+        backdropFilter: 'blur(6px)',
+        animation: 'fadeIn 0.3s ease-in-out'
+      }}
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-hidden"
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-scale-in"
+        style={{ animation: 'scaleIn 0.3s ease-out' }}
         onClick={e => e.stopPropagation()}
       >
         {/* 关闭按钮 */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg shadow-surface-200/30 transition-all duration-200"
           aria-label="关闭"
         >
-          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        {/* 封面图 */}
-        {coverImg ? (
-          <div className="w-full overflow-hidden rounded-t-3xl bg-white">
-            <img src={coverImg} alt={title} className="w-full h-auto max-h-[400px] object-contain mx-auto" />
+        <div className="flex flex-col md:flex-row h-full">
+          {/* 左侧：图片 */}
+          <div className="md:w-2/5 bg-surface-50 flex items-center justify-center overflow-hidden">
+            {coverImg ? (
+              <img 
+                src={coverImg} 
+                alt={title} 
+                className="w-full h-full object-contain p-8 transition-transform duration-300 hover:scale-[1.02]"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <svg className="w-24 h-24 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="w-full h-[200px] rounded-t-3xl bg-gray-50 flex items-center justify-center">
-            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        )}
 
-        <div className="p-8 space-y-6">
-          {/* 新闻标签行 */}
-          {type === 'news' && (
-            <div className="flex items-center space-x-3">
-              {item.category && (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  item.category === 'company'
-                    ? 'bg-primary-100 text-primary-600'
-                    : 'bg-green-100 text-green-600'
-                }`}>
-                  {item.category === 'company' ? '公司新闻' : '行业资讯'}
-                </span>
-              )}
-              {(item.publishedAt || item.date) && (
-                <span className="text-gray-400 text-sm">
-                  {new Date(item.publishedAt || item.date!).toLocaleDateString('zh-CN')}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* 标题 */}
-          <h2 className="text-2xl font-bold text-gray-900 leading-snug">{title}</h2>
-
-          {/* 新闻：摘要 + 正文 */}
-          {type === 'news' && (
-            <>
-              {excerpt && (
-                <p className="text-gray-500 italic border-l-4 border-primary-200 pl-3 leading-relaxed">
-                  {excerpt}
-                </p>
-              )}
-              {item.content && (
-                <div className="border-t pt-4">
-                  <StrapiBlocks content={item.content} />
-                </div>
-              )}
-            </>
-          )}
-
-          {/* 产品 / 解决方案：描述 */}
-          {type !== 'news' && excerpt && (
-            <p className="text-gray-600 leading-relaxed">{excerpt}</p>
-          )}
-
-          {/* Features */}
-          {featureList.length > 0 && (
-            <div>
-              <h3 className="text-base font-semibold text-gray-800 mb-3">
-                {type === 'product' ? '产品特性' : '方案特点'}
-              </h3>
-              <div className="space-y-2">
-                {featureList.map((f, i) => (
-                  <div key={i} className="flex items-start space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0 mt-1.5" />
-                    <div className="text-sm">
-                      {f.value ? (
-                        <>
-                          <span className="font-medium text-gray-800">{f.label}：</span>
-                          <span className="text-gray-600">{f.value}</span>
-                        </>
-                      ) : (
-                        <span className="text-gray-700">{f.label}</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
+          {/* 右侧：内容 */}
+          <div className="md:w-3/5 overflow-y-auto scrollbar-hidden p-8 space-y-6">
+            {/* 类型标签 */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                {type === 'news' && item.category && (
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${
+                    item.category === 'company'
+                      ? 'bg-primary-50 text-primary-600 border border-primary-100'
+                      : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                  }`}>
+                    {item.category === 'company' ? '公司新闻' : '行业资讯'}
+                  </span>
+                )}
+                {type !== 'news' && (
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-${typeColor}-50 text-${typeColor}-600 border border-${typeColor}-100`}>
+                    {type === 'product' ? '产品' : '解决方案'}
+                  </span>
+                )}
+                {(item.publishedAt || item.date) && (
+                  <span className="text-surface-400 text-sm">
+                    {new Date(item.publishedAt || item.date!).toLocaleDateString('zh-CN')}
+                  </span>
+                )}
               </div>
             </div>
-          )}
 
-          {/* Cases */}
-          {type === 'solution' && item.cases && (
-            <div className="bg-primary-50 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-primary-700 mb-1">典型案例</h3>
-              <p className="text-primary-700 text-sm">{parseRichText(item.cases) || String(item.cases)}</p>
+            {/* 标题 */}
+            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 leading-tight">{title}</h2>
+
+            {/* 新闻：摘要 + 正文 */}
+            {type === 'news' && (
+              <>
+                {excerpt && (
+                  <div className={`p-4 rounded-xl bg-blue-50 border border-blue-100`}>
+                    <p className="text-surface-600 italic leading-relaxed">
+                      {excerpt}
+                    </p>
+                  </div>
+                )}
+                {item.content && (
+                  <div className="border-t border-surface-200 pt-6 space-y-4">
+                    <StrapiBlocks content={item.content} />
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* 产品 / 解决方案：描述 */}
+            {type !== 'news' && excerpt && (
+              <p className="text-surface-600 leading-relaxed text-base">{excerpt}</p>
+            )}
+
+            {/* Features */}
+            {featureList.length > 0 && (
+              <div className={`p-5 rounded-xl bg-${typeColor}-50/50 border border-${typeColor}-100/50`}>
+                <h3 className={`text-base font-semibold text-${typeColor}-700 mb-4`}>
+                  {type === 'product' ? '产品特性' : '方案特点'}
+                </h3>
+                <div className="space-y-3">
+                  {featureList.map((f, i) => (
+                    <div key={i} className="flex items-start space-x-3">
+                      <div className={`w-2.5 h-2.5 rounded-full bg-${typeColor}-500 flex-shrink-0 mt-1.5`} />
+                      <div className="text-sm">
+                        {f.value ? (
+                          <>
+                            <span className="font-medium text-surface-800">{f.label}：</span>
+                            <span className="text-surface-600">{f.value}</span>
+                          </>
+                        ) : (
+                          <span className="text-surface-700">{f.label}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Cases */}
+            {type === 'solution' && item.cases && (
+              <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
+                <h3 className="text-sm font-semibold text-emerald-700 mb-2">典型案例</h3>
+                <p className="text-emerald-700 text-sm leading-relaxed">{parseRichText(item.cases) || String(item.cases)}</p>
+              </div>
+            )}
+
+            {/* 关闭按钮 */}
+            <div className="pt-4">
+              <button
+                onClick={onClose}
+                className="w-full py-3.5 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
+                style={{
+                  backgroundColor: typeColor === 'primary' ? '#2563eb' : typeColor === 'emerald' ? '#059669' : '#2563eb',
+                  color: 'white',
+                  boxShadow: typeColor === 'primary' ? '0 10px 15px -3px rgba(37, 99, 235, 0.2)' : typeColor === 'emerald' ? '0 10px 15px -3px rgba(5, 150, 105, 0.2)' : '0 10px 15px -3px rgba(37, 99, 235, 0.2)'
+                }}
+              >
+                关闭
+              </button>
             </div>
-          )}
-
-          {/* 关闭按钮 */}
-          <div className="pt-2">
-            <button
-              onClick={onClose}
-              className="w-full py-3 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors"
-            >
-              关闭
-            </button>
           </div>
         </div>
       </div>

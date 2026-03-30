@@ -1,34 +1,33 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import PageHeader from '@/components/PageHeader'
 import TencentMapSimple from '@/components/TencentMapSimple'
 import { getCompanyInfo, getCompanyImage } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
-// 默认公司信息（当 Strapi 没有数据时显示）
 const defaultCompany = {
-  name: '智汇泽润',
-  description: '智汇泽润是一家专注于水资源治理与保护的科技企业，成立于 2005 年，总部位于北京。公司秉承"道法自然、上善若水"的理念，致力于为客户提供专业、高效、环保的水治理解决方案。公司拥有多项核心技术和专利，服务范围涵盖水处理技术、水生态修复、智慧水务、水环境监测等多个领域，已成功完成 500+ 个项目，客户遍布全国各地。',
+  name: '四川沧杰荇科技',
+  description: '智汇泽润是一家专注于水资源治理与保护的科技企业，秉承"道法自然、上善若水"的理念，致力于为客户提供专业、高效、环保的水治理解决方案。',
   vision: '成为受人尊敬的水治理行业领导者，让每一滴水都充满生命力',
   mission: '用科技守护水资源，用专业创造美好环境',
   values: '诚信、创新、专业、共赢',
   phone: '400-XXX-XXXX',
-  email: 'info@techwater.com',
-  address: '北京市海淀区 XXX 路 XXX 号科技大厦 A 座 10 层',
-  mapLongitude: 116.301234,
-  mapLatitude: 39.982757,
-  mapAddress: '北京市海淀区',
-  workHours: '周一至周五：9:00-18:00\n周末及节假日：10:00-16:00',
+  email: 'contact@cjx-tech.com',
+  address: '成都市双流区新通大道777号',
+  mapLongitude: 104.066,
+  mapLatitude: 30.572,
+  mapAddress: '成都市双流区',
   establishedYear: '2005',
   projectCount: 500,
 }
+
 export const dynamic = 'force-dynamic'
+
 export default async function AboutPage() {
-  // 从 Strapi 获取公司信息和照片
   const company = await getCompanyInfo()
   const companyImage = await getCompanyImage()
 
-  // 合并数据：优先使用 Strapi 数据，否则使用默认值
-  const companyData = {
+  const data = {
     ...defaultCompany,
     ...company,
     name: company?.name || defaultCompany.name,
@@ -42,62 +41,63 @@ export default async function AboutPage() {
     mapLongitude: company?.mapLongitude || defaultCompany.mapLongitude,
     mapLatitude: company?.mapLatitude || defaultCompany.mapLatitude,
     mapAddress: company?.mapAddress || defaultCompany.mapAddress,
-    establishedYear: company?.establishedYear || defaultCompany.establishedYear,
-    projectCount: company?.projectCount || defaultCompany.projectCount,
   }
+
+  const culture = [
+    { title: '愿景', text: data.vision, icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+    )},
+    { title: '使命', text: data.mission, icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+    )},
+    { title: '价值观', text: data.values, icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+    )},
+  ]
 
   return (
     <main className="min-h-screen">
       <Header />
-      
-      {/* 页面头部 */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-primary-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              关于我们
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {companyData.name} - 一站式水利信息化问题解决者
-            </p>
-          </div>
-        </div>
-      </section>
+
+      <PageHeader
+        number="05"
+        label="关于我们"
+        title="关于沧杰荇"
+        description="一站式水利信息化问题解决者"
+      />
 
       {/* 公司简介 */}
-      <section id="introduction" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
-                {companyImage ? (
-                  <img
-                    src={companyImage}
-                    alt={companyData.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : companyData.logo ? (
-                  <img
-                    src={companyData.logo.url || '/placeholder.svg'}
-                    alt={companyData.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : null}
-              </div>
+      <section className="py-28 bg-surface-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* 图片 */}
+            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3]">
+              {companyImage ? (
+                <img src={companyImage} alt={data.name} className="w-full h-full object-cover" />
+              ) : null}
+              <div className="absolute -bottom-3 -left-3 w-full h-full rounded-2xl border border-primary-100 -z-10" />
             </div>
-            <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-gray-900">公司简介</h2>
-              <p className="text-gray-600 leading-relaxed">
-                {companyData.description}
-              </p>
-              <div className="grid grid-cols-2 gap-6 pt-4">
+
+            {/* 内容 */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
+                  <div className="w-8 h-px bg-primary-200" />
+                  <span className="text-xs text-surface-400">公司简介</span>
+                </div>
+                <h2 className="section-title">{data.name}</h2>
+                <p className="text-surface-500 leading-relaxed text-[15px]">{data.description}</p>
+              </div>
+
+              <div className="flex gap-10">
                 <div>
-                  <div className="text-3xl font-bold text-primary-600">{companyData.establishedYear}</div>
-                  <div className="text-gray-600">成立年份</div>
+                  <div className="font-display text-3xl font-bold text-primary-600">{data.establishedYear}</div>
+                  <div className="text-xs text-surface-400 mt-1">成立年份</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-primary-600">{companyData.projectCount}+</div>
-                  <div className="text-gray-600">成功案例</div>
+                  <div className="font-display text-3xl font-bold text-primary-600">{data.projectCount}+</div>
+                  <div className="text-xs text-surface-400 mt-1">成功案例</div>
                 </div>
               </div>
             </div>
@@ -106,110 +106,77 @@ export default async function AboutPage() {
       </section>
 
       {/* 企业文化 */}
-      <section id="culture" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="section-title mb-4">企业文化</h2>
+      <section className="py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-px bg-primary-200" />
+              <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">企业文化</span>
+              <div className="w-8 h-px bg-primary-200" />
+            </div>
+            <h2 className="section-title">我们的理念</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 card-hover">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center text-white mb-6">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+          <div className="grid md:grid-cols-3 gap-5">
+            {culture.map((item, i) => (
+              <div key={i} className="card-surface p-8 card-hover">
+                <div className="w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 mb-5">
+                  {item.icon}
+                </div>
+                <span className="text-[11px] font-mono text-surface-300 block mb-2">0{i + 1}</span>
+                <h3 className="text-lg font-semibold text-surface-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-surface-400 leading-relaxed">{item.text}</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">愿景</h3>
-              <p className="text-gray-600">
-                {companyData.vision}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 card-hover">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center text-white mb-6">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">使命</h3>
-              <p className="text-gray-600">
-                {companyData.mission}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 card-hover">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center text-white mb-6">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">价值观</h3>
-              <p className="text-gray-600">
-                {companyData.values}
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 公司信息 */}
-      <section id="contact-info" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="section-title mb-4">公司信息</h2>
+      <section className="py-28 bg-surface-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-px bg-primary-200" />
+              <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">联系方式</span>
+              <div className="w-8 h-px bg-primary-200" />
+            </div>
+            <h2 className="section-title">公司信息</h2>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12">
             {/* 联系方式 */}
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
+            <div className="space-y-6">
+              {[
+                { icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                ), label: '联系电话', value: data.phone },
+                { icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                ), label: '电子邮箱', value: data.email },
+                { icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                ), label: '公司地址', value: data.address },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-4 p-5 rounded-xl bg-surface-50 hover:bg-surface-100/80 transition-colors duration-200">
+                  <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 flex-shrink-0">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <div className="text-xs text-surface-400 mb-0.5">{item.label}</div>
+                    <div className="text-sm font-medium text-surface-800">{item.value}</div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">联系电话</h3>
-                  <p className="text-gray-600">{companyData.phone}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">电子邮箱</h3>
-                  <p className="text-gray-600">{companyData.email}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">公司地址</h3>
-                  <p className="text-gray-600">{companyData.address}</p>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* 地图 */}
-            <div className="relative">
-              <div className="aspect-video rounded-2xl overflow-hidden shadow-lg">
-                <TencentMapSimple
-                  longitude={companyData.mapLongitude}
-                  latitude={companyData.mapLatitude}
-                  address={companyData.mapAddress || companyData.address}
-                />
-              </div>
+            <div className="rounded-2xl overflow-hidden shadow-lg shadow-surface-200/50 h-[360px]">
+              <TencentMapSimple
+                longitude={data.mapLongitude}
+                latitude={data.mapLatitude}
+                address={data.mapAddress || data.address}
+              />
             </div>
           </div>
         </div>

@@ -54,10 +54,10 @@ export default function Footer() {
 
       {/* ── 主体 ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row lg:items-start gap-8">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
 
           {/* 左：品牌 + 联系 */}
-          <div className="lg:w-72 flex-shrink-0 space-y-4">
+          <div className="lg:max-w-xs xl:max-w-sm flex-shrink-0 space-y-4">
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
@@ -115,21 +115,29 @@ export default function Footer() {
           {/* 分割线（仅大屏竖向） */}
           <div className="hidden lg:block w-px bg-gray-800 self-stretch" />
 
-          {/* 右：导航，3 列紧凑排列 */}
-          <div className="flex-1 grid grid-cols-3 gap-x-6 gap-y-6">
+          {/* 右：导航，3 列排列 */}
+          <div className="grid grid-cols-3 gap-x-[50px] gap-y-6 lg:max-w-md xl:max-w-lg">
             {NAV_GROUPS.map((group) => (
               <div key={group.title}>
-                <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
+                <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-4">
                   {group.title}
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-2.5">
                   {group.links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="text-xs text-gray-500 hover:text-primary-400 transition-colors duration-200"
+                        className="group/link inline-flex items-center text-xs text-gray-500 hover:text-primary-400 transition-all duration-200"
                       >
-                        {link.name}
+                        <span className="relative">
+                          {link.name}
+                          {/* 下划线滑入效果 */}
+                          <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary-400 transition-all duration-300 ease-out group-hover/link:w-full" />
+                        </span>
+                        {/* 箭头滑入 */}
+                        <svg className="w-3 h-3 ml-1 opacity-0 -translate-x-1 transition-all duration-200 ease-out group-hover/link:opacity-100 group-hover/link:translate-x-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
                       </Link>
                     </li>
                   ))}

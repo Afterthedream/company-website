@@ -2,100 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 240, 249, 255;
-}
+@layer base {
+  body {
+    @apply font-sans text-surface-800 antialiased;
+    background: #ffffff;
+  }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+  /* 中性色带冷色调的灰 */
+  ::selection {
+    background-color: oklch(0.9 0.03 240);
+    color: inherit;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* 清晰的 focus 状态 */
+  *:focus-visible {
+    outline: 2px solid oklch(0.65 0.15 240);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+    @apply inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-primary-600/20 hover:shadow-xl hover:shadow-primary-600/25 active:scale-[0.98];
   }
-  
+
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-primary-600 font-medium py-3 px-8 rounded-full border-2 border-primary-600 transition-all duration-300;
+    @apply inline-flex items-center gap-2 bg-white hover:bg-surface-50 text-primary-700 font-semibold text-sm py-3.5 px-8 rounded-xl border border-surface-200 hover:border-primary-300 transition-all duration-200;
   }
-  
+
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-gray-900 mb-4;
+    @apply font-display text-3xl md:text-[2.75rem] font-bold tracking-tight text-surface-900;
+    line-height: 1.15;
+  }
+
+  .section-subtitle {
+    @apply text-base md:text-lg text-surface-500 max-w-2xl leading-relaxed;
+  }
+
+  .section-label {
+    @apply inline-flex items-center gap-2 text-xs font-bold text-primary-600 tracking-widest uppercase;
+  }
+
+  .card-surface {
+    @apply bg-white rounded-2xl border border-surface-200 shadow-lg shadow-surface-200/30;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-xl hover:shadow-surface-200/40 hover:-translate-y-0.5;
+  }
+
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
-  .section-subtitle {
-    @apply text-xl text-gray-600 max-w-3xl mx-auto;
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
   }
 }
 
-/* 水波纹效果 */
-.water-ripple {
-  position: relative;
+/* 响应式字体比例 (1.333 modular scale) */
+/* Base: 16px → 21px → 28px → 38px → 50px → 67px */
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
 }
 
-.water-ripple::before,
-.water-ripple::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 2px solid rgba(59, 130, 246, 0.5);
-  animation: ripple-effect 3s infinite;
-}
-
-.water-ripple::after {
-  animation-delay: 1.5s;
-}
-
-@keyframes ripple-effect {
-  0% {
-    width: 0;
-    height: 0;
-    opacity: 0.8;
+/* 尊重减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  100% {
-    width: 300px;
-    height: 300px;
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 模态框动画 */
+@keyframes fadeIn {
+  from {
     opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
 }
 
-/* 渐变背景 */
-.water-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.blue-gradient {
-  background: linear-gradient(to right, #e0f2fe, #bae6fd, #7dd3fc);
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* 卡片悬浮效果 */
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
-}
-
-/* 隐藏滚动条但保持滚动功能 */
-.scrollbar-hidden {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
 import { getSolutions } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
@@ -40,12 +41,36 @@ const defaultSolutions = [
   },
 ]
 
+const solutionIcons = [
+  <svg key={0} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
+  <svg key={1} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>,
+  <svg key={2} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
+  <svg key={3} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>,
+  <svg key={4} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+]
+
 export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<any[]>([])
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     getSolutions().then(data => setSolutions(data)).catch(() => setSolutions([]))
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.05 }
+    )
+    if (listRef.current) observer.observe(listRef.current)
+    return () => observer.disconnect()
   }, [])
 
   const displaySolutions = solutions.length > 0 ? solutions : defaultSolutions
@@ -54,27 +79,21 @@ export default function SolutionsPage() {
     <main className="min-h-screen">
       <Header />
 
-      {/* 页面头部 */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-primary-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">解决方案</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              针对不同场景，提供专业的定制化解决方案
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        number="03"
+        label="解决方案"
+        title="专业解决方案"
+        description="针对不同场景，提供专业的定制化解决方案"
+      />
 
-      {/* 解决方案列表 */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-16">
+      <section className="py-28 bg-surface-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div ref={listRef} className="space-y-5">
             {displaySolutions.map((solution: any, index: number) => {
               let featuresArray: string[] = []
               if (solution.features) {
                 if (Array.isArray(solution.features)) {
-                  featuresArray = solution.features.map((f: any) => parseRichText(f))
+                  featuresArray = solution.features.map((f: any) => parseRichText(f) || String(f))
                 } else if (typeof solution.features === 'string') {
                   featuresArray = solution.features.split(',').map((f: string) => f.trim())
                 }
@@ -83,56 +102,66 @@ export default function SolutionsPage() {
                 featuresArray = defaultSolutions[index].features
               }
 
+              const icon = solutionIcons[index % solutionIcons.length]
+
               return (
                 <div
                   key={solution.id || index}
-                  className={`grid md:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'md:grid-flow-dense' : ''}`}
+                  className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className={`${index % 2 === 1 ? 'md:col-start-2' : ''}`}>
-                    <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
-                      {solution.image && (
-                        <img
-                          src={solution.image.url || '/placeholder.svg'}
-                          alt={solution.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                  </div>
+                  <div className="card-surface p-8 md:p-10 card-hover">
+                    <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
+                      {/* 左：图标 + 编号 */}
+                      <div className="flex items-center gap-4 md:flex-col md:items-center md:gap-3 flex-shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-200">
+                          {icon}
+                        </div>
+                        <span className="text-xs font-mono text-surface-300 md:mt-1">0{index + 1}</span>
+                      </div>
 
-                  <div className={`space-y-6 ${index % 2 === 1 ? 'md:col-start-1 md:row-start-1' : ''}`}>
-                    <h2 className="text-3xl font-bold text-gray-900">{solution.title}</h2>
-                    <p className="text-lg text-gray-600">
-                      {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
-                    </p>
+                      {/* 右：内容 */}
+                      <div className="flex-1 space-y-4">
+                        <div>
+                          <h2 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200 mb-2">
+                            {solution.title}
+                          </h2>
+                          <p className="text-sm text-surface-400 leading-relaxed">
+                            {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
+                          </p>
+                        </div>
 
-                    {featuresArray.length > 0 && (
-                      <div className="grid grid-cols-2 gap-4">
-                        {featuresArray.map((feature: string, idx: number) => (
-                          <div key={idx} className="flex items-center space-x-2">
-                            <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span className="text-gray-700">{feature}</span>
+                        {/* 特性标签 */}
+                        {featuresArray.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {featuresArray.map((feature: string, idx: number) => (
+                              <span key={idx} className="px-3 py-1 bg-surface-50 text-surface-600 text-xs rounded-lg">
+                                {feature}
+                              </span>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        )}
 
-                    {solution.cases && (
-                      <div className="bg-primary-50 rounded-xl p-4">
-                        <p className="text-primary-700 font-medium">
-                          {parseRichText(solution.cases)}
-                        </p>
-                      </div>
-                    )}
+                        {/* 案例数据 */}
+                        {solution.cases && (
+                          <p className="text-xs text-primary-600 font-medium">
+                            {parseRichText(solution.cases)}
+                          </p>
+                        )}
 
-                    <button
-                      className="btn-primary mt-2"
-                      onClick={() => setSelectedItem(solution)}
-                    >
-                      了解详情
-                    </button>
+                        <button
+                          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                          onClick={() => setSelectedItem(solution)}
+                        >
+                          了解详情
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )
@@ -142,29 +171,34 @@ export default function SolutionsPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-primary-600 to-primary-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">没有找到适合的解决方案？</h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
-            我们的专业团队可以为您量身定制专属解决方案
-          </p>
-          <a href='/contact'>
-            <button className="bg-white text-primary-600 font-medium py-4 px-12 rounded-full hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
-              联系我们获取方案
-            </button>
-          </a>
+      <section className="py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-20 relative">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="text-center md:text-left space-y-2">
+                <h2 className="font-display text-3xl font-bold text-white tracking-tight">
+                  需要定制化的<span className="text-primary-300">解决方案</span>？
+                </h2>
+                <p className="text-sm text-surface-400">
+                  我们的专业团队将根据您的具体需求，提供个性化的水治理解决方案
+                </p>
+              </div>
+              <a href="/contact" className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-3.5 px-8 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 flex-shrink-0">
+                联系我们
+                <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
       <Footer />
 
-      {/* 详情弹窗 */}
       {selectedItem && (
-        <DetailModal
-          item={selectedItem}
-          type="solution"
-          onClose={() => setSelectedItem(null)}
-        />
+        <DetailModal item={selectedItem} type="solution" onClose={() => setSelectedItem(null)} />
       )}
     </main>
   )
