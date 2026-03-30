@@ -215,7 +215,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* 关闭按钮 */}
@@ -231,12 +231,12 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
         {/* 封面图 */}
         {coverImg ? (
-          <div className="w-full aspect-video overflow-hidden rounded-t-3xl">
-            <img src={coverImg} alt={title} className="w-full h-full object-cover" />
+          <div className="w-full overflow-hidden rounded-t-3xl bg-white">
+            <img src={coverImg} alt={title} className="w-full h-auto max-h-[400px] object-contain mx-auto" />
           </div>
         ) : (
-          <div className="w-full aspect-video rounded-t-3xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-            <svg className="w-20 h-20 text-primary-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-full h-[200px] rounded-t-3xl bg-gray-50 flex items-center justify-center">
+            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>

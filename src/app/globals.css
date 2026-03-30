@@ -89,3 +89,13 @@ body {
 .card-hover {
   @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
 }
+
+/* 隐藏滚动条但保持滚动功能 */
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}

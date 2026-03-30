@@ -1,7 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import TencentMapSimple from '@/components/TencentMapSimple'
-import { getCompanyInfo } from '@/lib/strapi'
+import { getCompanyInfo, getCompanyImage } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
 // 默认公司信息（当 Strapi 没有数据时显示）
@@ -23,8 +23,9 @@ const defaultCompany = {
 }
 export const dynamic = 'force-dynamic'
 export default async function AboutPage() {
-  // 从 Strapi 获取公司信息
+  // 从 Strapi 获取公司信息和照片
   const company = await getCompanyInfo()
+  const companyImage = await getCompanyImage()
 
   // 合并数据：优先使用 Strapi 数据，否则使用默认值
   const companyData = {
@@ -69,7 +70,13 @@ export default async function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
-                {companyData.logo ? (
+                {companyImage ? (
+                  <img
+                    src={companyImage}
+                    alt={companyData.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : companyData.logo ? (
                   <img
                     src={companyData.logo.url || '/placeholder.svg'}
                     alt={companyData.name}
@@ -150,7 +157,7 @@ export default async function AboutPage() {
       <section id="contact-info" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="section-title mb-4">找到我们</h2>
+            <h2 className="section-title mb-4">公司信息</h2>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12">

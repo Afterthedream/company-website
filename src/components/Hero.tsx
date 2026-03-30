@@ -49,7 +49,7 @@ export default function Hero({ company }: HeroProps) {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/products" className="btn-primary">
+              <a href="/" className="btn-primary">
                 了解更多
               </a>
               <a href="/contact" className="btn-secondary">

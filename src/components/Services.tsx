@@ -76,7 +76,9 @@ const defaultServices = [
 
 export default function Services({ products = [] }: ServicesProps) {
   // 如果有 Strapi 产品数据则使用，否则使用默认数据
-  const services = products.length > 0 ? products : defaultServices
+  const allServices = products.length > 0 ? products : defaultServices
+  // 只显示前3个产品
+  const services = allServices.slice(0, 3)
 
   return (
     <section className="py-20 bg-gray-50">
@@ -127,7 +129,7 @@ export default function Services({ products = [] }: ServicesProps) {
 
         {/* 查看更多 */}
         <div className="text-center mt-12">
-          <Link href="/products" className="btn-primary">
+          <Link href="/" className="btn-primary">
             查看所有产品
           </Link>
         </div>

@@ -59,6 +59,16 @@
     },
     "mapAddress": {
       "type": "string"
+    },
+    "companyImage": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

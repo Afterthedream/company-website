@@ -32,6 +32,11 @@
     },
     "order": {
       "type": "integer"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-category.product-category"
     }
   }
 }

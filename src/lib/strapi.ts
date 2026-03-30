@@ -65,11 +65,63 @@ export async function getCompanyInfo() {
 }
 
 /**
+ * 获取公司Logo
+ */
+export async function getCompanyLogo() {
+  try {
+    const company = await getCompanyInfo();
+    if (company?.logo) {
+      const logoUrl = Array.isArray(company.logo) ? company.logo[0]?.url : company.logo?.url;
+      return logoUrl ? getStrapiMedia(logoUrl) : null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching company logo:', error);
+    return null;
+  }
+}
+
+/**
+ * 获取公司照片
+ */
+export async function getCompanyImage() {
+  try {
+    const company = await getCompanyInfo();
+    if (company?.companyImage) {
+      const imageUrl = Array.isArray(company.companyImage) ? company.companyImage[0]?.url : company.companyImage?.url;
+      return imageUrl ? getStrapiMedia(imageUrl) : null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching company image:', error);
+    return null;
+  }
+}
+
+/**
+ * 获取所有产品分类
+ */
+export async function getProductCategories() {
+  try {
+    const data = await fetchApi<any>('/product-categories?populate=*&sort=order:asc');
+    return data.data || [];
+  } catch (error) {
+    // 如果分类接口不存在或返回错误，返回空数组
+    console.warn('Product categories not available yet:', error);
+    return [];
+  }
+}
+
+/**
  * 获取所有产品
  */
-export async function getProducts() {
+export async function getProducts(categoryId?: string) {
   try {
-    const data = await fetchApi<any>('/products?populate=*&sort=order:asc');
+    let endpoint = '/products?populate=*&sort=order:asc';
+    if (categoryId) {
+      endpoint += `&filters[category][id][$eq]=${categoryId}`;
+    }
+    const data = await fetchApi<any>(endpoint);
     return data.data || [];
   } catch (error) {
     console.error('Error fetching products:', error);

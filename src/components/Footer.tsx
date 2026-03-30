@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { getCompanyInfo } from '@/lib/strapi'
+import { getCompanyInfo, getCompanyLogo } from '@/lib/strapi'
 
 const NAV_GROUPS = [
   {
@@ -35,12 +35,17 @@ export default function Footer() {
   const [address, setAddress] = useState('成都市双流区新通大道777号')
   const [phone, setPhone]     = useState('400-XXX-XXXX')
   const [email, setEmail]     = useState('contact@cjx-tech.com')
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
 
   useEffect(() => {
     getCompanyInfo().then(company => {
       if (company?.address) setAddress(company.address)
       if (company?.phone)   setPhone(company.phone)
       if (company?.email)   setEmail(company.email)
+    }).catch(() => {})
+
+    getCompanyLogo().then(logo => {
+      setLogoUrl(logo)
     }).catch(() => {})
   }, [])
 
@@ -55,12 +60,23 @@ export default function Footer() {
           <div className="lg:w-72 flex-shrink-0 space-y-4">
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
-                </svg>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
+                {logoUrl ? (
+                  <img 
+                    src={logoUrl} 
+                    alt="公司Logo" 
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
+                  </svg>
+                )}
               </div>
-              <span className="text-sm font-bold">四川沧杰荇科技有限公司</span>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">四川沧杰荇科技有限公司</span>
+                <span className="text-[10px] text-gray-400">SICHUAN CANGJIEXING TECHNOLOGY CO,LTD</span>
+              </div>
             </Link>
 
             {/* 简介 */}

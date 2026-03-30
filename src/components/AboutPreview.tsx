@@ -15,25 +15,34 @@ interface Company {
 
 interface AboutPreviewProps {
   company?: Company | null
+  companyImage?: string | null
 }
 
-export default function AboutPreview({ company }: AboutPreviewProps) {
+export default function AboutPreview({ company, companyImage }: AboutPreviewProps) {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* 图片区域 */}
           <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg
-                  className="w-48 h-48 text-primary-400/50"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
-                </svg>
-              </div>
+            <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
+              {companyImage ? (
+                <img
+                  src={companyImage}
+                  alt="公司照片"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    className="w-48 h-48 text-primary-400/50"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
+                  </svg>
+                </div>
+              )}
             </div>
             {/* 装饰元素 */}
             <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-500/10 rounded-full blur-2xl" />

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
-import { getProducts } from '@/lib/strapi'
+import { getProducts, getProductCategories } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
 const defaultProducts = [
@@ -53,16 +53,36 @@ const defaultProducts = [
     ),
   },
 ]
-
+export const dynamic = 'force-dynamic'
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
 
   useEffect(() => {
-    getProducts().then(data => setProducts(data)).catch(() => setProducts([]))
+    // 获取分类和产品数据
+    Promise.all([
+      getProductCategories(),
+      getProducts()
+    ]).then(([categoriesData, productsData]) => {
+      setCategories(categoriesData)
+      setProducts(productsData)
+    }).catch((error) => {
+      console.error('Error loading data:', error)
+      setCategories([])
+      setProducts([])
+    })
   }, [])
 
-  const displayProducts = products.length > 0 ? products : defaultProducts
+  // 根据选择的分类筛选产品
+  const displayProducts = selectedCategory 
+    ? products.filter(p => p.category?.id === selectedCategory)
+    : products
+  
+  // 如果没有数据，使用默认数据
+  const finalProducts = displayProducts.length > 0 ? displayProducts : defaultProducts
+  const hasCategories = categories.length > 0
 
   return (
     <main className="min-h-screen">
@@ -83,120 +103,82 @@ export default function ProductsPage() {
       {/* 产品列表 */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-20">
-            {displayProducts.map((product: any, index: number) => (
+          {/* 分类筛选按钮 */}
+          {hasCategories && (
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                  selectedCategory === null
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                全部
+              </button>
+              {categories.map((category: any) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {finalProducts.map((product: any, index: number) => (
               <div
                 key={product.id || index}
                 id={product.documentId || product.id}
-                className={`grid md:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 {/* 图片区域 */}
-                <div className="relative">
-                  <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl overflow-hidden">
-                    {(() => {
-                      const img = product.image
-                      const imgUrl = img
-                        ? (Array.isArray(img) ? img[0]?.url : img?.url)
-                        : null
-                      const fullUrl = imgUrl
-                        ? (imgUrl.startsWith('http') ? imgUrl : `${process.env.NEXT_PUBLIC_STRAPI_URL}${imgUrl}`)
-                        : null
-                      return fullUrl ? (
-                        <img
-                          src={fullUrl}
-                          alt={product.name || product.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-primary-400/50">
-                          {product.icon || (
-                            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                            </svg>
-                          )}
-                        </div>
-                      )
-                    })()}
-                  </div>
-                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-500/10 rounded-full blur-2xl" />
-                  <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary-300/10 rounded-full blur-2xl" />
+                <div className="relative h-48 bg-white">
+                  {(() => {
+                    const img = product.image
+                    const imgUrl = img
+                      ? (Array.isArray(img) ? img[0]?.url : img?.url)
+                      : null
+                    const fullUrl = imgUrl
+                      ? (imgUrl.startsWith('http') ? imgUrl : `${process.env.NEXT_PUBLIC_STRAPI_URL}${imgUrl}`)
+                      : null
+                    return fullUrl ? (
+                      <img
+                        src={fullUrl}
+                        alt={product.name || product.title}
+                        className="w-full h-full object-contain p-4"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-300">
+                        {product.icon || (
+                          <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                          </svg>
+                        )}
+                      </div>
+                    )
+                  })()}
                 </div>
 
                 {/* 内容区域 */}
-                <div className="space-y-6">
-                  <div className="inline-block px-4 py-2 bg-primary-50 rounded-full">
-                    <span className="text-primary-600 font-medium">
-                      {index % 2 === 0 ? '核心产品' : '解决方案'}
-                    </span>
-                  </div>
-
-                  <h2 className="text-4xl font-bold text-gray-900">
+                <div className="p-6 space-y-4">
+                  <h2 className="text-xl font-bold text-gray-900">
                     {product.name || product.title}
                   </h2>
 
-                  {product.features && (() => {
-                    const f = product.features
-
-                    // 格式一：字符串数组 ["特性1", "特性2"]
-                    if (Array.isArray(f)) {
-                      return (
-                        <div className="grid grid-cols-2 gap-3 pt-2">
-                          {f.map((item: string, idx: number) => (
-                            <div key={idx} className="flex items-center space-x-2">
-                              <div className="w-2 h-2 bg-primary-600 rounded-full flex-shrink-0" />
-                              <span className="text-gray-700 text-sm">{item}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    }
-
-                    // 格式二：嵌套对象 {"分组名": {"特性名": "特性值", ...}, ...}
-                    if (typeof f === 'object') {
-                      return (
-                        <div className="space-y-4 pt-2">
-                          {Object.entries(f).map(([groupName, groupVal]: [string, any]) => {
-                            // 值是字符串：直接展示
-                            if (typeof groupVal === 'string') {
-                              return (
-                                <div key={groupName} className="flex items-start space-x-2">
-                                  <div className="w-2 h-2 bg-primary-600 rounded-full flex-shrink-0 mt-1.5" />
-                                  <div>
-                                    <span className="text-gray-900 font-medium text-sm">{groupName}：</span>
-                                    <span className="text-gray-600 text-sm">{groupVal}</span>
-                                  </div>
-                                </div>
-                              )
-                            }
-                            // 值是对象：分组标题 + 子特性列表
-                            if (typeof groupVal === 'object' && groupVal !== null) {
-                              return (
-                                <div key={groupName}>
-                                  <p className="text-sm font-semibold text-primary-700 mb-2">{groupName}</p>
-                                  <div className="grid grid-cols-1 gap-2 pl-2">
-                                    {Object.entries(groupVal).map(([label, val]: [string, any]) => (
-                                      <div key={label} className="flex items-start space-x-2">
-                                        <div className="w-1.5 h-1.5 bg-primary-400 rounded-full flex-shrink-0 mt-1.5" />
-                                        <div className="text-sm">
-                                          <span className="font-medium text-gray-800">{label}：</span>
-                                          <span className="text-gray-600">{String(val)}</span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )
-                            }
-                            return null
-                          })}
-                        </div>
-                      )
-                    }
-                    return null
-                  })()}
+                  <p className="text-gray-600 text-sm line-clamp-2">
+                    {parseRichText(product.description) || '暂无描述'}
+                  </p>
 
                   <button
-                    className="btn-primary mt-4"
+                    className="w-full py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors"
                     onClick={() => setSelectedItem(product)}
                   >
                     了解详情
