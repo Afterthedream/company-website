@@ -166,16 +166,9 @@ export default function Services({ products = [] }: ServicesProps) {
           ))}
         </div>
 
-        {/* CTA */}
-        <div
-          className={`text-center mt-12 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-400 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 text-sm font-medium text-surface-300 hover:text-white transition-colors"
-          >
+        {/* 查看更多 */}
+        <div className="text-center mt-12">
+          <Link href="/" className="btn-primary">
             查看所有产品
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
