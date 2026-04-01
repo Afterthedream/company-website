@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { getSolutions } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
+import DetailModal, { ModalItem } from '@/components/DetailModal'
 
 const defaultSolutions = [
   {
@@ -41,6 +42,7 @@ export default function Solutions() {
   const [solutions, setSolutions] = useState<any[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -61,14 +63,17 @@ export default function Solutions() {
     return () => observer.disconnect()
   }, [])
 
-  const displaySolutions = solutions.length > 0
-    ? solutions.slice(0, 3).map((solution: any, index: number) => ({
-        title: solution.title || defaultSolutions[index]?.title,
-        description: parseRichText(solution.description) || solution.description || defaultSolutions[index]?.description,
-        icon: defaultSolutions[index]?.icon,
-        tags: defaultSolutions[index]?.tags || [],
-      }))
-    : defaultSolutions.slice(0, 3)
+  const hasSolutions = solutions.length > 0
+  const displaySolutions = solutions.slice(0, 3).map((solution: any, index: number) => ({
+    title: solution.title || defaultSolutions[index]?.title,
+    description: parseRichText(solution.description) || solution.description || defaultSolutions[index]?.description,
+    icon: defaultSolutions[index]?.icon,
+    tags: defaultSolutions[index]?.tags || [],
+    features: solution.features,
+    cases: solution.cases,
+    image: solution.image,
+    coverImage: solution.coverImage,
+  }))
 
   return (
     <section ref={sectionRef} className="py-28 bg-white relative overflow-hidden">
@@ -99,6 +104,17 @@ export default function Solutions() {
         </div>
 
         {/* 编辑式列表布局 */}
+        {!hasSolutions ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-5 bg-surface-100 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-surface-600 mb-2">暂时还没有解决方案哦</h3>
+            <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+          </div>
+        ) : (
         <div className="space-y-0">
           {displaySolutions.map((solution, index) => {
             const accentColors = [
@@ -165,12 +181,15 @@ export default function Solutions() {
                   </div>
 
                   {/* 箭头指示 */}
-                  <div className={`flex-shrink-0 hidden md:flex items-center gap-2 text-sm font-medium text-surface-300 group-hover:text-primary-500 transition-all duration-300 ${isHovered ? 'translate-x-1' : ''}`}>
+                  <button
+                    onClick={() => setSelectedItem(solution)}
+                    className={`flex-shrink-0 hidden md:flex items-center gap-2 text-sm font-medium text-surface-300 group-hover:text-primary-500 transition-all duration-300 ${isHovered ? 'translate-x-1' : ''}`}
+                  >
                     了解详情
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                  </div>
+                  </button>
 
                   {/* hover 时的左侧色条 */}
                   <div className={`absolute left-0 w-1 h-16 ${ac.line} rounded-full transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
@@ -179,6 +198,7 @@ export default function Solutions() {
             )
           })}
         </div>
+        )}
 
         {/* 底部分隔线 */}
         <div className="border-t border-surface-100" />
@@ -200,6 +220,15 @@ export default function Solutions() {
           </a>
         </div>
       </div>
+
+      {/* 详情弹窗 */}
+      {selectedItem && (
+        <DetailModal 
+          item={selectedItem} 
+          type="solution" 
+          onClose={() => setSelectedItem(null)} 
+        />
+      )}
     </section>
   )
 }

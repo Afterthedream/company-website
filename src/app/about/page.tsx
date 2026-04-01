@@ -6,19 +6,19 @@ import { getCompanyInfo, getCompanyImage } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
 const defaultCompany = {
-  name: '四川沧杰荇科技',
-  description: '智汇泽润是一家专注于水资源治理与保护的科技企业，秉承"道法自然、上善若水"的理念，致力于为客户提供专业、高效、环保的水治理解决方案。',
-  vision: '成为受人尊敬的水治理行业领导者，让每一滴水都充满生命力',
-  mission: '用科技守护水资源，用专业创造美好环境',
-  values: '诚信、创新、专业、共赢',
-  phone: '400-XXX-XXXX',
-  email: 'contact@cjx-tech.com',
-  address: '成都市双流区新通大道777号',
-  mapLongitude: 104.066,
-  mapLatitude: 30.572,
-  mapAddress: '成都市双流区',
-  establishedYear: '2005',
-  projectCount: 500,
+  name: '四川沧杰荇科技有限公司',
+  description: '四川沧杰荇科技有限公司是专业的水利水务数字化解决方案服务商，以先进的水利信息化技术为驱动，为客户提供专业、高效的解决方案，助力实现水资源的科学管理与可持续利用。',
+  vision: '以水为脉，以智为器，以服为桥 —— 让每一滴水都被精准守护，每一项水治理都可持续',
+  mission: '致力于水利信息化领域的科技创新，为水利行业提供智能化、数字化的服务，推动水资源管理迈向新高度。',
+  values: '团结 共建 努力 共赢',
+  phone: '028-86045168',
+  email: '742035754@qq.com',
+  address: '成都市双流区新通大道777号2栋1单元1203号',
+  mapLongitude: 104.098072,
+  mapLatitude: 30.524227,
+  mapAddress: '成都市双流区新通大道777号2栋1单元1203号',
+  establishedYear: '2025',
+  projectCount: 10,
 }
 
 export const dynamic = 'force-dynamic'
@@ -171,7 +171,7 @@ export default async function AboutPage() {
             </div>
 
             {/* 地图 */}
-            <div className="rounded-2xl overflow-hidden shadow-lg shadow-surface-200/50 h-[360px]">
+            <div className="rounded-2xl overflow-hidden shadow-lg h-[360px] relative z-0">
               <TencentMapSimple
                 longitude={data.mapLongitude}
                 latitude={data.mapLatitude}

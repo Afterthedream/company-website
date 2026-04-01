@@ -3,7 +3,21 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-export default function CtaSection() {
+interface CtaSectionProps {
+  title?: string
+  description?: string
+  highlightText?: string
+  buttonText?: string
+  secondaryLink?: { href: string; text: string }
+}
+
+export default function CtaSection({ 
+  title = "需要专业的",
+  description = "我们的专业团队将根据您的具体需求，提供个性化的定制化解决方案",
+  highlightText = "水治理方案",
+  buttonText = "免费咨询方案",
+  secondaryLink = { href: "/products", text: "浏览产品 →" }
+}: CtaSectionProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -36,11 +50,11 @@ export default function CtaSection() {
           <div className="relative flex flex-col lg:flex-row items-center justify-between gap-12">
             {/* 左 */}
             <div className="text-center lg:text-left space-y-4 max-w-lg">
-              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                需要专业的<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">水治理方案</span>？
+              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight lg:whitespace-nowrap">
+                {title}<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">{highlightText}</span>？
               </h2>
               <p className="text-base text-surface-300 leading-relaxed">
-                我们的专业团队将根据您的具体需求，提供个性化的定制化解决方案
+                {description}
               </p>
             </div>
 
@@ -50,17 +64,19 @@ export default function CtaSection() {
                 href="/contact"
                 className="group inline-flex items-center gap-2.5 bg-white text-surface-900 font-bold text-base py-4 px-10 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 active:scale-[0.97]"
               >
-                免费咨询方案
+                {buttonText}
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
-              <Link
-                href="/products"
-                className="text-base text-surface-400 hover:text-white transition-colors font-semibold"
-              >
-                浏览产品 →
-              </Link>
+              {secondaryLink && (
+                <Link
+                  href={secondaryLink.href}
+                  className="text-base text-surface-400 hover:text-white transition-colors font-semibold"
+                >
+                  {secondaryLink.text}
+                </Link>
+              )}
             </div>
           </div>
         </div>

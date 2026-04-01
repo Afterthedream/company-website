@@ -92,8 +92,8 @@ export default function Services({ products = [] }: ServicesProps) {
     return () => observer.disconnect()
   }, [])
 
-  const allServices = products.length > 0 ? products : defaultServices
-  const services = allServices.slice(0, 3)
+  const hasProducts = products.length > 0
+  const services = products.slice(0, 3)
 
   return (
     <section ref={sectionRef} className="py-28 bg-surface-950 relative overflow-hidden">
@@ -123,6 +123,17 @@ export default function Services({ products = [] }: ServicesProps) {
         </div>
 
         {/* 卡片网格 */}
+        {!hasProducts ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-5 bg-white/10 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">暂时还没有产品哦</h3>
+            <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+          </div>
+        ) : (
         <div className="grid md:grid-cols-3 gap-5">
           {services.map((item: any, index: number) => {
             const accentColors = [
@@ -173,6 +184,7 @@ export default function Services({ products = [] }: ServicesProps) {
             )
           })}
         </div>
+        )}
 
         {/* 查看更多 */}
         <div className="text-center mt-12">

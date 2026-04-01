@@ -33,9 +33,9 @@ const NAV_GROUPS = [
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
-  const [address, setAddress] = useState('成都市双流区新通大道777号')
-  const [phone, setPhone]     = useState('400-XXX-XXXX')
-  const [email, setEmail]     = useState('contact@cjx-tech.com')
+  const [address, setAddress] = useState('成都市双流区新通大道777号2栋1单元1203号')
+  const [phone, setPhone]     = useState('028-86045168')
+  const [email, setEmail]     = useState('742035754@qq.com')
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -164,13 +164,8 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4
                         flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-surface-600 text-xs">
-            © {currentYear} 四川沧杰荇科技有限公司 · 让每一滴水都被精准守护 💧
+            © {currentYear} 四川沧杰荇科技有限公司 All Rights Reserved.
           </p>
-          {/* <div className="flex items-center gap-4 text-xs text-gray-600">
-            <Link href="/privacy" className="hover:text-primary-400 transition-colors">隐私政策</Link>
-            <span>|</span>
-            <Link href="/terms" className="hover:text-primary-400 transition-colors">使用条款</Link>
-          </div> */}
         </div>
       </div>
 

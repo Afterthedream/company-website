@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
+import CtaSection from '@/components/CtaSection'
+import { SolutionListSkeleton } from '@/components/Skeleton'
 import { getSolutions, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
@@ -53,10 +55,14 @@ export default function SolutionsPage() {
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [loading, setLoading] = useState(true)
   const listRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getSolutions().then(data => setSolutions(data)).catch(() => setSolutions([]))
+    getSolutions()
+      .then(data => setSolutions(data))
+      .catch(() => setSolutions([]))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -73,7 +79,8 @@ export default function SolutionsPage() {
     return () => observer.disconnect()
   }, [])
 
-  const displaySolutions = solutions.length > 0 ? solutions : defaultSolutions
+  const hasSolutions = solutions.length > 0
+  const displaySolutions = solutions
 
   return (
     <main className="min-h-screen animate-page-enter">
@@ -107,6 +114,19 @@ export default function SolutionsPage() {
       {/* 解决方案列表 */}
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
+          {loading ? (
+            <SolutionListSkeleton count={3} />
+          ) : !hasSolutions ? (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 bg-surface-100 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-surface-700 mb-2">暂时还没有解决方案哦</h3>
+              <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+            </div>
+          ) : (
           <div ref={listRef} className="space-y-0">
             {displaySolutions.map((solution: any, index: number) => {
               let featuresArray: string[] = []
@@ -234,41 +254,18 @@ export default function SolutionsPage() {
               )
             })}
           </div>
+          )}
 
           {/* 底部分隔线 */}
           <div className="border-t border-surface-100" />
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-surface-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-20 relative">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent-500/8 rounded-full blur-[80px]" />
-
-            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
-              <div className="text-center lg:text-left space-y-3 max-w-lg">
-                <h2 className="font-display text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                  需要定制化的<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">解决方案</span>？
-                </h2>
-                <p className="text-base text-surface-300 leading-relaxed">
-                  免费咨询，1 个工作日内为您定制专属方案
-                </p>
-              </div>
-              <a
-                href="/contact"
-                className="group inline-flex items-center gap-2.5 bg-white text-surface-900 font-bold text-base py-4 px-10 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 flex-shrink-0 active:scale-[0.97]"
-              >
-                免费咨询方案
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection 
+        title="需要定制化的"
+        highlightText="解决方案"
+        description="联系我们，我们将根据您的需求，为您提供专业的定制化解决方案"
+      />
 
       <Footer />
 

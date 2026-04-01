@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import DetailModal from '@/components/DetailModal'
+import CtaSection from '@/components/CtaSection'
+import { CaseListSkeleton } from '@/components/Skeleton'
 import { getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
@@ -86,6 +88,7 @@ export default function CasesPage() {
   const [cases, setCases] = useState<any[]>([])
   const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // 数据获取
   React.useEffect(() => {
@@ -98,13 +101,16 @@ export default function CasesPage() {
       } catch (error) {
         console.error('Error fetching cases:', error)
         setCases([])
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchCases()
   }, [])
 
-  const displayCases = cases.length > 0 ? cases.map((item: any) => ({
+  const hasCases = cases.length > 0
+  const displayCases = cases.map((item: any) => ({
     id: item.id,
     title: item.title,
     client: item.client,
@@ -114,7 +120,7 @@ export default function CasesPage() {
     date: item.projectDate,
     coverImage: item.cover,
     location: item.location
-  })) : defaultCases
+  }))
 
   const handleOpenModal = (caseItem: CaseItem) => {
     setSelectedCase(caseItem)
@@ -158,6 +164,19 @@ export default function CasesPage() {
       {/* 案例列表 */}
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
+          {loading ? (
+            <CaseListSkeleton count={3} />
+          ) : !hasCases ? (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 bg-surface-100 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-surface-700 mb-2">暂时还没有案例哦</h3>
+              <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+            </div>
+          ) : (
           <div className="space-y-0">
             {displayCases.map((item: any, index: number) => {
               const theme = accentThemes[index % 3]
@@ -260,41 +279,18 @@ export default function CasesPage() {
               )
             })}
           </div>
+          )}
 
           {/* 底部分隔线 */}
           <div className="border-t border-surface-100" />
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-surface-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-20 relative">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent-500/8 rounded-full blur-[80px]" />
-
-            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
-              <div className="text-center lg:text-left space-y-3 max-w-lg">
-                <h2 className="font-display text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                  下一个成功案例<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">就是您的</span>？
-                </h2>
-                <p className="text-base text-surface-300 leading-relaxed">
-                  免费咨询，1 个工作日内为您定制专属方案
-                </p>
-              </div>
-              <a
-                href="/contact"
-                className="group inline-flex items-center gap-2.5 bg-white text-surface-900 font-bold text-base py-4 px-10 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 flex-shrink-0 active:scale-[0.97]"
-              >
-                免费咨询方案
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection 
+        title="下一个成功案例"
+        highlightText="就是您的"
+        description="免费咨询，1 个工作日内为您定制专属方案"
+      />
 
       <Footer />
 

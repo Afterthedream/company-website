@@ -80,7 +80,7 @@ export default function TencentMap({
   return (
     <div
       ref={mapRef}
-      style={{ width, height, borderRadius: '1rem', overflow: 'hidden' }}
+      style={{ width, height, borderRadius: '1rem', overflow: 'hidden', position: 'relative', zIndex: 1 }}
       className="w-full h-full"
     />
   )

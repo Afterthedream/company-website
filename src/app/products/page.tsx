@@ -5,6 +5,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
+import CtaSection from '@/components/CtaSection'
+import { ProductListSkeleton } from '@/components/Skeleton'
 import { getProducts, getProductCategories } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
@@ -63,6 +65,7 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [loading, setLoading] = useState(true)
   const gridRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -75,6 +78,7 @@ export default function ProductsPage() {
         setCategories([])
         setProducts([])
       })
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -95,7 +99,7 @@ export default function ProductsPage() {
     ? products.filter((p) => p.category?.id === selectedCategory)
     : products
 
-  const finalProducts = displayProducts.length > 0 ? displayProducts : defaultProducts
+  const hasProducts = products.length > 0
   const hasCategories = categories.length > 0
 
   return (
@@ -141,8 +145,21 @@ export default function ProductsPage() {
           )}
 
           {/* 产品网格 */}
+          {loading ? (
+            <ProductListSkeleton count={4} />
+          ) : !hasProducts ? (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 bg-surface-100 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-surface-700 mb-2">暂时还没有产品哦</h3>
+              <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+            </div>
+          ) : (
           <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {finalProducts.map((product: any, index: number) => (
+            {displayProducts.map((product: any, index: number) => (
               <div
                 key={product.id || index}
                 className={`group bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 h-full ${
@@ -201,39 +218,16 @@ export default function ProductsPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-28 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-24 relative">
-            {/* 背景装饰 */}
-            <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-600/5 rounded-full blur-[80px]" />
-            
-            <div className="relative flex flex-col md:flex-row items-center justify-between gap-10">
-              <div className="text-center md:text-left space-y-4 max-w-xl">
-                <h2 className="font-['Geist'] text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
-                  没有找到合适的<span className="text-primary-300">产品</span>？
-                </h2>
-                <p className="text-sm text-surface-400 leading-relaxed">
-                  免费咨询，1 个工作日内为您定制专属解决方案
-                </p>
-              </div>
-              <a 
-                href="/contact" 
-                className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-4 px-9 rounded-xl hover:bg-primary-50 transition-all duration-300 shadow-lg shadow-black/10 flex-shrink-0 micro-interaction"
-              >
-                免费获取报价
-                <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection 
+        title="没有找到合适的"
+        highlightText="产品"
+        description="免费咨询，1 个工作日内为您定制专属解决方案"
+        buttonText="免费获取报价"
+      />
 
       <Footer />
 

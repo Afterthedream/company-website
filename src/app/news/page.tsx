@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
+import { NewsListSkeleton } from '@/components/Skeleton'
 import { getArticles, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
@@ -103,10 +104,10 @@ function NewsContent() {
     return () => observer.disconnect()
   }, [loading])
 
-  const displayArticles = articles.length > 0 ? articles : defaultArticles
+  const hasArticles = articles.length > 0
   const filteredArticles = activeTab === 'all'
-    ? displayArticles
-    : displayArticles.filter((item: any) => item.category === activeTab)
+    ? articles
+    : articles.filter((item: any) => item.category === activeTab)
   const visibleArticles = filteredArticles.slice(0, visibleCount)
   const hasMore = visibleCount < filteredArticles.length
 
@@ -149,8 +150,16 @@ function NewsContent() {
           </div>
 
           {loading ? (
+            <NewsListSkeleton count={6} />
+          ) : !hasArticles ? (
             <div className="text-center py-20">
-              <p className="text-sm text-surface-400">加载中...</p>
+              <div className="w-20 h-20 mx-auto mb-6 bg-surface-100 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-surface-700 mb-2">暂时还没有新闻哦</h3>
+              <p className="text-sm text-surface-400">敬请期待后续更新~</p>
             </div>
           ) : (
             <>
@@ -250,7 +259,11 @@ export default function NewsPage() {
       <main className="min-h-screen">
         <Header />
         <PageHeader number="04" label="新闻动态" title="最新资讯" description="了解公司最新资讯和行业动态" />
-        <section className="py-28 bg-white"><div className="max-w-6xl mx-auto px-6 text-center"><p className="text-sm text-surface-400">加载中...</p></div></section>
+        <section className="py-28 bg-surface-50">
+          <div className="max-w-6xl mx-auto px-6">
+            <NewsListSkeleton count={6} />
+          </div>
+        </section>
         <Footer />
       </main>
     }>

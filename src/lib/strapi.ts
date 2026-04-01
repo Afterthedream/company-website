@@ -167,6 +167,19 @@ export async function getSolutions() {
 }
 
 /**
+ * 获取应用案例
+ */
+export async function getCases() {
+  try {
+    const data = await fetchApi<any>('/cases?populate=*&sort=projectDate:desc');
+    return data.data || [];
+  } catch (error) {
+    console.error('Error fetching cases:', error);
+    return [];
+  }
+}
+
+/**
  * 获取联系方式
  */
 export async function getContactInfo() {
