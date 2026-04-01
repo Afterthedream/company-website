@@ -64,14 +64,15 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
   const displayArticles = articles.length > 0 ? articles.slice(0, 3) : defaultArticles
 
   return (
-    <section ref={sectionRef} className="py-28 bg-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-28 bg-surface-50 relative overflow-hidden">
       {/* 背景装饰 */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary-50/40 rounded-full blur-[100px]" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-surface-100/60 rounded-full blur-[80px]" />
 
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 标题区 */}
         <div
-          className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
@@ -84,7 +85,7 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
           </div>
           <Link
             href="/news"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors group micro-interaction"
           >
             查看全部
             <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +95,7 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
         </div>
 
         {/* 文章列表 */}
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-8">
           {displayArticles.map((article: any, index: number) => {
             // 获取封面图
             const cover = article.coverImage
@@ -111,14 +112,14 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                 style={{ transitionDelay: `${(index + 1) * 120}ms` }}
               >
                 <Link href="/news" className="block">
-                  <div className="card-surface overflow-hidden card-hover">
+                  <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md shadow-surface-200/20 hover:shadow-xl hover:shadow-primary-100/20 transition-all duration-300 transform hover:-translate-y-2">
                     {/* 封面图 */}
                     <div className="aspect-[16/10] bg-surface-100 overflow-hidden">
                       {imgUrl ? (
                         <img
                           src={imgUrl}
                           alt={article.title}
-                          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-50 to-primary-100/50 flex items-center justify-center">
@@ -130,9 +131,9 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                     </div>
 
                     {/* 内容 */}
-                    <div className="p-5 space-y-3">
+                    <div className="p-6 space-y-4">
                       <div className="flex items-center gap-3 text-[11px]">
-                        <span className={`px-2 py-0.5 rounded-md font-medium ${
+                        <span className={`px-2.5 py-1 rounded-md font-medium ${
                           article.category === 'company'
                             ? 'bg-primary-50 text-primary-600'
                             : 'bg-emerald-50 text-emerald-600'
@@ -143,12 +144,18 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                           {new Date(article.publishedAt).toLocaleDateString('zh-CN')}
                         </span>
                       </div>
-                      <h3 className="text-[15px] font-semibold text-surface-900 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors duration-200">
+                      <h3 className="text-lg font-semibold text-surface-900 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors duration-200">
                         {article.title}
                       </h3>
                       <p className="text-sm text-surface-400 leading-relaxed line-clamp-2">
                         {parseRichText(article.excerpt) || article.excerpt || ''}
                       </p>
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-primary-600 group-hover:text-primary-700 transition-colors duration-200">
+                        阅读更多
+                        <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </Link>

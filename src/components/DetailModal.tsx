@@ -265,7 +265,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
           </div>
 
           {/* 右侧：内容 */}
-          <div className="md:w-3/5 overflow-y-auto scrollbar-hidden p-8 space-y-6">
+          <div className="md:w-3/5 overflow-y-auto scrollbar-hidden p-8 space-y-6" style={{ maxHeight: '90vh' }}>
             {/* 类型标签 */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">

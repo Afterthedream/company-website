@@ -113,13 +113,13 @@ export default function ProductsPage() {
         <div className="max-w-6xl mx-auto px-6">
           {/* 分类筛选 */}
           {hasCategories && (
-            <div className="flex flex-wrap justify-center gap-3 mb-14">
+            <div className="flex flex-wrap justify-center gap-4 mb-16">
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 micro-interaction ${
                   selectedCategory === null
-                    ? 'bg-surface-900 text-white shadow-sm'
-                    : 'bg-surface-100 text-surface-600 hover:bg-surface-200'
+                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
+                    : 'bg-white text-surface-700 hover:bg-surface-100 border border-surface-200'
                 }`}
               >
                 全部
@@ -128,10 +128,10 @@ export default function ProductsPage() {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 micro-interaction ${
                     selectedCategory === category.id
-                      ? 'bg-surface-900 text-white shadow-sm'
-                      : 'bg-surface-100 text-surface-600 hover:bg-surface-200'
+                      ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
+                      : 'bg-white text-surface-700 hover:bg-surface-100 border border-surface-200'
                   }`}
                 >
                   {category.name}
@@ -141,7 +141,7 @@ export default function ProductsPage() {
           )}
 
           {/* 产品网格 */}
-          <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {finalProducts.map((product: any, index: number) => (
               <div
                 key={product.id || index}
@@ -150,9 +150,9 @@ export default function ProductsPage() {
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="card-surface overflow-hidden card-hover h-full">
+                <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md shadow-surface-200/20 hover:shadow-xl hover:shadow-primary-100/20 transition-all duration-300 transform hover:-translate-y-2 h-full">
                   {/* 图片区 */}
-                  <div className="relative h-48 bg-surface-50 overflow-hidden">
+                  <div className="relative h-52 bg-gradient-to-br from-surface-50 to-surface-100 overflow-hidden">
                     {(() => {
                       const img = product.image
                       const imgUrl = img
@@ -162,10 +162,14 @@ export default function ProductsPage() {
                         ? imgUrl.startsWith('http') ? imgUrl : `${process.env.NEXT_PUBLIC_STRAPI_URL}${imgUrl}`
                         : null
                       return fullUrl ? (
-                        <img src={fullUrl} alt={product.name || product.title} className="w-full h-full object-contain p-6" />
+                        <img 
+                          src={fullUrl} 
+                          alt={product.name || product.title} 
+                          className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-500"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <div className="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center text-primary-400">
+                          <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 shadow-sm">
                             {product.icon || defaultProducts[0].icon}
                           </div>
                         </div>
@@ -174,9 +178,10 @@ export default function ProductsPage() {
                   </div>
 
                   {/* 内容 */}
-                  <div className="p-6 space-y-3">
-                    <div className="flex items-center gap-2">
+                  <div className="p-6 space-y-4">
+                    <div className="flex items-center justify-between">
                       <span className="text-[11px] font-mono text-surface-300">0{index + 1}</span>
+                      <span className="w-1.5 h-1.5 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <h2 className="text-lg font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200">
                       {product.name || product.title}
@@ -185,11 +190,11 @@ export default function ProductsPage() {
                       {parseRichText(product.description) || '暂无描述'}
                     </p>
                     <button
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors pt-1"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors pt-1 micro-interaction"
                       onClick={() => setSelectedItem(product)}
                     >
                       了解详情
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </button>
@@ -204,18 +209,24 @@ export default function ProductsPage() {
       {/* CTA */}
       <section className="py-28 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-20 relative">
+          <div className="rounded-3xl bg-surface-900 overflow-hidden px-8 py-16 md:px-16 md:py-24 relative">
+            {/* 背景装饰 */}
             <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
-            <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="text-center md:text-left space-y-2">
-                <h2 className="font-display text-3xl font-bold text-white tracking-tight">
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-600/5 rounded-full blur-[80px]" />
+            
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-10">
+              <div className="text-center md:text-left space-y-4 max-w-xl">
+                <h2 className="font-['Geist'] text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
                   没有心仪的<span className="text-primary-300">应用产品</span>？
                 </h2>
-                <p className="text-sm text-surface-400">
-                  我们将根据您的具体需求，提供合适的产品
+                <p className="text-sm text-surface-400 leading-relaxed">
+                  我们将根据您的具体需求，提供合适的产品解决方案，为您的项目保驾护航
                 </p>
               </div>
-              <a href="/contact" className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-3.5 px-8 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 flex-shrink-0">
+              <a 
+                href="/contact" 
+                className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-4 px-9 rounded-xl hover:bg-primary-50 transition-all duration-300 shadow-lg shadow-black/10 flex-shrink-0 micro-interaction"
+              >
                 联系我们
                 <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

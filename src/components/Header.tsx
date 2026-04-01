@@ -35,15 +35,20 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled || isMobileMenuOpen ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isScrolled || isMobileMenuOpen 
+          ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-surface-200/30'
+          : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+          <Link 
+            href="/" 
+            className="flex items-center space-x-3 micro-interaction"
+          >
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shadow-md">
               {logoUrl ? (
                 <img 
                   src={logoUrl} 
@@ -52,7 +57,7 @@ export default function Header() {
                 />
               ) : (
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-7 h-7 text-primary-600"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -61,19 +66,20 @@ export default function Header() {
               )}
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">四川沧杰荇科技有限公司</h1>
+              <h1 className="text-xl font-bold text-surface-900">四川沧杰荇科技有限公司</h1>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 ml-auto">
+          <nav className="hidden md:flex items-center space-x-10 ml-auto">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200"
+                className="text-surface-700 hover:text-primary-600 font-medium transition-colors duration-200 relative group"
               >
                 {item.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-200" />
               </Link>
             ))}
           </nav>
@@ -81,11 +87,12 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4">
             <button
-              className="md:hidden p-2"
+              className="md:hidden p-2 rounded-lg hover:bg-surface-100 micro-interaction"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
             >
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 text-surface-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -112,12 +119,12 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100">
+          <div className="md:hidden py-4 border-t border-surface-200 animate-fade-in-up">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="block py-3 text-gray-700 hover:text-primary-600 font-medium"
+                className="block py-3 px-4 text-surface-700 hover:bg-surface-50 hover:text-primary-600 font-medium micro-interaction rounded-lg"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.name}

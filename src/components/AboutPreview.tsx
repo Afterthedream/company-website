@@ -72,6 +72,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
     <section ref={sectionRef} className="py-28 bg-surface-50 relative overflow-hidden">
       {/* 背景光晕 */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary-50/60 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-100/40 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4" />
 
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 区域标签 */}
@@ -80,7 +81,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
-          <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
+          <span className="font-['Geist'] text-sm font-bold text-primary-600 tracking-wider">01</span>
           <div className="w-10 h-px bg-primary-300" />
           <span className="text-sm text-surface-400">关于我们</span>
         </div>
@@ -92,12 +93,16 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'
             }`}
           >
-            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3]">
+            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg shadow-surface-200/30">
               {companyImage ? (
-                <img src={companyImage} alt="公司照片" className="w-full h-full object-cover" />
+                <img 
+                  src={companyImage} 
+                  alt="公司照片" 
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-24 h-24 text-surface-200" fill="currentColor" viewBox="0 0 24 24">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
+                  <svg className="w-24 h-24 text-surface-300" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
                   </svg>
                 </div>
@@ -106,6 +111,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
 
             {/* 装饰边框 */}
             <div className="absolute -bottom-3 -left-3 w-full h-full rounded-2xl border border-primary-100 -z-10" />
+            <div className="absolute -top-3 -right-3 w-full h-full rounded-2xl border border-primary-200/50 -z-10" />
           </div>
 
           {/* 文字区 */}
@@ -125,13 +131,13 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
 
             {/* 三列理念 */}
             {values.some(v => v.text) && (
-              <div className="grid gap-3">
+              <div className="grid gap-4">
                 {values.filter(v => v.text).map((item, i) => (
                   <div
                     key={i}
-                    className="group flex items-start gap-4 p-4 rounded-xl hover:bg-surface-50 transition-colors duration-200"
+                    className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-surface-200 hover:border-primary-300 hover:shadow-md hover:shadow-primary-100/20 transition-all duration-200"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-200">
+                    <div className="flex-shrink-0 w-11 h-11 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-200 shadow-sm">
                       {item.icon}
                     </div>
                     <div>
@@ -145,7 +151,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
 
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors group"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors group micro-interaction"
             >
               了解更多
               <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
