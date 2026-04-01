@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
+import DetailModal, { ModalItem } from '@/components/DetailModal'
 
 interface Article {
   id: number
@@ -45,6 +46,7 @@ const defaultArticles = [
 
 export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
   const [isVisible, setIsVisible] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -64,55 +66,57 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
   const displayArticles = articles.length > 0 ? articles.slice(0, 3) : defaultArticles
 
   return (
-    <section ref={sectionRef} className="py-28 bg-surface-50 relative overflow-hidden">
-      {/* 背景装饰 */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-primary-50/40 rounded-full blur-[100px]" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-surface-100/60 rounded-full blur-[80px]" />
+    <>
+      <section ref={sectionRef} className="py-28 bg-surface-50 relative overflow-hidden">
+        {/* 背景装饰 */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-primary-50/40 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-surface-100/60 rounded-full blur-[80px]" />
 
-      <div className="max-w-6xl mx-auto px-6 relative">
-        {/* 标题区 */}
-        <div
-          className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-          }`}
-        >
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
-              <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">新闻动态</span>
-            </div>
-            <h2 className="section-title">最新资讯</h2>
-          </div>
-          <Link
-            href="/news"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors group micro-interaction"
+        <div className="max-w-6xl mx-auto px-6 relative">
+          {/* 标题区 */}
+          <div
+            className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+            }`}
           >
-            查看全部
-            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
+                <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">新闻动态</span>
+              </div>
+              <h2 className="section-title">最新资讯</h2>
+            </div>
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors group micro-interaction"
+            >
+              查看全部
+              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
 
-        {/* 文章列表 */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {displayArticles.map((article: any, index: number) => {
-            // 获取封面图
-            const cover = article.coverImage
-            const imgUrl = cover
-              ? getStrapiMedia(Array.isArray(cover) ? cover[0]?.url : cover?.url ?? null)
-              : null
+          {/* 文章列表 */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {displayArticles.map((article: any, index: number) => {
+              const cover = article.coverImage
+              const imgUrl = cover
+                ? getStrapiMedia(Array.isArray(cover) ? cover[0]?.url : cover?.url ?? null)
+                : null
 
-            return (
-              <article
-                key={article.id || index}
-                className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                style={{ transitionDelay: `${(index + 1) * 120}ms` }}
-              >
-                <Link href={`/news/${article.documentId || article.id}`} className="block">
-                  <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              return (
+                <article
+                  key={article.id || index}
+                  className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 120}ms` }}
+                >
+                  <div
+                    className="cursor-pointer bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                    onClick={() => setSelectedItem(article)}
+                  >
                     {/* 封面图 */}
                     <div className="aspect-[16/10] bg-surface-100 overflow-hidden">
                       {imgUrl ? (
@@ -136,7 +140,7 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                         <span className={`px-2.5 py-1 rounded-md font-medium ${
                           article.category === 'company'
                             ? 'bg-primary-50 text-primary-600'
-                            : 'bg-emerald-50 text-emerald-600'
+                            : 'bg-accent-50 text-accent-600'
                         }`}>
                           {article.category === 'company' ? '公司新闻' : '行业资讯'}
                         </span>
@@ -158,12 +162,16 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                       </div>
                     </div>
                   </div>
-                </Link>
-              </article>
-            )
-          })}
+                </article>
+              )
+            })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {selectedItem && (
+        <DetailModal item={selectedItem} type="news" onClose={() => setSelectedItem(null)} />
+      )}
+    </>
   )
 }
