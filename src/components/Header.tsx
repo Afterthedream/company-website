@@ -76,10 +76,10 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-surface-700 hover:text-primary-600 font-medium transition-colors duration-200 relative group"
+                className="text-surface-700 hover:text-primary-600 font-medium transition-colors duration-200 relative group py-1"
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-200" />
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 group-hover:w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full" />
               </Link>
             ))}
           </nav>

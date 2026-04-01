@@ -76,7 +76,7 @@ export default function SolutionsPage() {
   const displaySolutions = solutions.length > 0 ? solutions : defaultSolutions
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen animate-page-enter">
       <Header />
 
       <PageHeader

@@ -99,7 +99,7 @@ export default function ProductsPage() {
   const hasCategories = categories.length > 0
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen animate-page-enter">
       <Header />
 
       <PageHeader

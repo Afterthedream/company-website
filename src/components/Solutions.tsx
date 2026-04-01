@@ -101,18 +101,18 @@ export default function Solutions() {
             return (
             <div
               key={index}
-              className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              className={`group transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
-              style={{ transitionDelay: `${(index + 1) * 120}ms` }}
+              style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className={`flex flex-col md:flex-row md:items-center gap-6 p-7 rounded-2xl bg-white border border-surface-200 shadow-md hover:shadow-lg ${ac.hoverBorder} transition-all duration-300 transform hover:-translate-y-1`}>
                 {/* 图标和编号 */}
                 <div className="flex-shrink-0 flex flex-col items-center gap-3">
-                  <div className={`w-14 h-14 rounded-2xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} group-hover:text-white transition-all duration-300 shadow-sm`}>
+                  <div className={`w-14 h-14 rounded-2xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} group-hover:text-white transition-all duration-300 shadow-sm group-hover:scale-110 group-hover:shadow-lg`}>
                     {solution.icon}
                   </div>
-                  <span className="text-[11px] font-mono text-surface-300">0{index + 1}</span>
+                  <span className={`text-[11px] font-mono text-surface-300 group-hover:${ac.text} transition-colors duration-300`}>0{index + 1}</span>
                 </div>
 
                 {/* 内容 */}

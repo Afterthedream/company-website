@@ -117,7 +117,7 @@ function NewsContent() {
   ]
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen animate-page-enter">
       <Header />
 
       <PageHeader

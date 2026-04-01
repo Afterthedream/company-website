@@ -96,20 +96,22 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'
             }`}
           >
-            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg">
+            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg group">
               {companyImage ? (
                 <img 
                   src={companyImage} 
                   alt="公司照片" 
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
-                  <svg className="w-24 h-24 text-surface-300" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-24 h-24 text-surface-300 animate-breathe" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
                   </svg>
                 </div>
               )}
+              {/* 图片遮罩 */}
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
 
             {/* 装饰边框 */}
