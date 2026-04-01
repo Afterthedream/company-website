@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
@@ -220,18 +221,21 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
   const typeColor = getTypeColor()
 
-  return (
+  // 使用 Portal 挂载到 body，避免父元素 transform 影响 fixed 定位
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
       style={{ 
         backgroundColor: 'rgba(0,0,0,0.6)', 
         backdropFilter: 'blur(6px)',
-        animation: 'fadeIn 0.3s ease-in-out'
+        animation: 'fadeIn 0.3s ease-in-out',
       }}
       onClick={onClose}
     >
       <div
-        className={`relative bg-white rounded-2xl shadow-2xl w-full overflow-hidden animate-scale-in ${type === 'news' ? 'max-w-6xl max-h-[85vh]' : 'max-w-4xl max-h-[90vh]'}`}
+        className={`relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl md:max-w-6xl overflow-hidden animate-scale-in ${type === 'news' ? 'max-h-[85vh]' : 'max-h-[90vh]'}`}
         style={{ animation: 'scaleIn 0.3s ease-out' }}
         onClick={e => e.stopPropagation()}
       >
@@ -355,11 +359,10 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
             <div className="pt-4">
               <button
                 onClick={onClose}
-                className="w-full py-3.5 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
+                className="w-full py-3.5 rounded-xl font-bold text-base transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
                 style={{
                   backgroundColor: typeColor === 'primary' ? '#2563eb' : typeColor === 'emerald' ? '#059669' : '#2563eb',
                   color: 'white',
-                  boxShadow: typeColor === 'primary' ? '0 10px 15px -3px rgba(37, 99, 235, 0.2)' : typeColor === 'emerald' ? '0 10px 15px -3px rgba(5, 150, 105, 0.2)' : '0 10px 15px -3px rgba(37, 99, 235, 0.2)'
                 }}
               >
                 关闭
@@ -368,6 +371,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

@@ -104,46 +104,95 @@ export default function Hero({ company }: HeroProps) {
 
           </div>
 
-          {/* 装饰图形 — 右 5 列 */}
+          {/* 动画水波 — 右 5 列 */}
           <div
-            className={`hidden lg:flex lg:col-span-5 items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200 ${
-              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+            className={`hidden lg:flex lg:col-span-5 items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-300 ${
+              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}
           >
-            <div className="relative w-80 h-80">
-              {/* 外环 */}
-              <div className="absolute inset-0 rounded-full border border-primary-200/40 animate-spin-slow" />
-              {/* 中环 */}
-              <div className="absolute inset-6 rounded-full border border-dashed border-primary-300/30 animate-spin-reverse-slow" />
-              {/* 内环 */}
-              <div className="absolute inset-14 rounded-full border border-primary-200/20 animate-spin-slow" />
+            <div className="relative w-[380px] h-[380px]">
+              {/* 底层渐变圆 */}
+              <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary-100/60 via-accent-50/40 to-primary-50/60 animate-breathe" />
 
-              {/* 中心实心圆 */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg" />
-              </div>
-
-              {/* 轨道上的点 */}
-              {[
-                { pos: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2', size: 'w-3 h-3', color: 'bg-primary-500' },
-                { pos: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2', size: 'w-2 h-2', color: 'bg-accent-400' },
-                { pos: 'left-0 top-1/2 -translate-x-1/2 -translate-y-1/2', size: 'w-2.5 h-2.5', color: 'bg-accent-300' },
-                { pos: 'right-0 top-1/2 translate-x-1/2 -translate-y-1/2', size: 'w-2 h-2', color: 'bg-primary-400' },
-              ].map((dot, i) => (
-                <div key={i} className={`absolute ${dot.pos} ${dot.size} ${dot.color} rounded-full`} />
-              ))}
-
-              {/* 装饰弧线 */}
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 320" fill="none">
+              {/* SVG 水波动画 */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400" fill="none">
+                {/* 波浪 1 - 最外层 */}
                 <path
-                  d="M160 20C160 20 240 80 280 160C320 240 240 300 160 300"
-                  stroke="oklch(0.8 0.06 240)"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeDasharray="6 6"
-                  opacity="0.3"
+                  className="hero-wave-1"
+                  d="M200,60 C260,60 310,100 340,160 C370,220 340,300 280,340 C220,380 140,380 80,340 C20,300 -10,220 20,160 C50,100 140,60 200,60Z"
+                  stroke="oklch(0.58 0.16 250 / 0.3)"
+                  strokeWidth="1.5"
+                  fill="none"
                 />
+                {/* 波浪 2 - 中层 */}
+                <path
+                  className="hero-wave-2"
+                  d="M200,80 C250,80 290,110 315,160 C340,210 320,280 270,315 C220,350 150,350 100,315 C50,280 30,210 55,160 C80,110 150,80 200,80Z"
+                  stroke="oklch(0.68 0.14 250 / 0.25)"
+                  strokeWidth="1"
+                  fill="none"
+                />
+                {/* 波浪 3 - 内层 */}
+                <path
+                  className="hero-wave-3"
+                  d="M200,110 C240,110 270,130 290,170 C310,210 295,265 260,290 C225,315 175,315 140,290 C105,265 90,210 110,170 C130,130 160,110 200,110Z"
+                  stroke="oklch(0.77 0.10 250 / 0.2)"
+                  strokeWidth="1"
+                  fill="oklch(0.77 0.10 250 / 0.03)"
+                />
+
+                {/* 涟漪扩散环 */}
+                <circle className="ripple-ring-1" cx="200" cy="200" r="40" fill="none" stroke="oklch(0.58 0.16 250 / 0.4)" strokeWidth="1.5" />
+                <circle className="ripple-ring-2" cx="200" cy="200" r="40" fill="none" stroke="oklch(0.58 0.16 250 / 0.3)" strokeWidth="1" />
+                <circle className="ripple-ring-3" cx="200" cy="200" r="40" fill="none" stroke="oklch(0.58 0.16 250 / 0.2)" strokeWidth="0.8" />
+
+                {/* 中心水滴 */}
+                <g className="hero-drop">
+                  {/* 水滴主体 - 椭圆形态变化 */}
+                  <ellipse className="drop-body" cx="200" cy="200" rx="28" ry="30" fill="url(#heroGradient)" />
+                  {/* 水滴高光 */}
+                  <ellipse className="drop-highlight" cx="192" cy="192" rx="8" ry="10" fill="oklch(1 0 0 / 0.25)" />
+                  {/* 水滴底部小水花 */}
+                  <ellipse className="drop-splash" cx="200" cy="228" rx="12" ry="3" fill="oklch(0.58 0.16 250 / 0.15)" />
+                </g>
+
+                {/* 浮动气泡 */}
+                <g className="hero-bubbles">
+                  <circle className="bubble-1" cx="120" cy="280" r="4" fill="oklch(0.87 0.058 250 / 0.4)" />
+                  <circle className="bubble-2" cx="280" cy="150" r="3" fill="oklch(0.87 0.07 190 / 0.4)" />
+                  <circle className="bubble-3" cx="150" cy="120" r="5" fill="oklch(0.87 0.058 250 / 0.3)" />
+                  <circle className="bubble-4" cx="300" cy="260" r="3.5" fill="oklch(0.90 0.09 85 / 0.4)" />
+                  <circle className="bubble-5" cx="100" cy="180" r="3" fill="oklch(0.87 0.07 190 / 0.3)" />
+                </g>
+
+                {/* 渐变定义 */}
+                <defs>
+                  <radialGradient id="heroGradient" cx="0.4" cy="0.35">
+                    <stop offset="0%" stopColor="oklch(0.78 0.10 250)" />
+                    <stop offset="50%" stopColor="oklch(0.60 0.15 250)" />
+                    <stop offset="100%" stopColor="oklch(0.42 0.13 250)" />
+                  </radialGradient>
+                </defs>
               </svg>
+
+              {/* 环绕的数据点装饰 */}
+              {[
+                { top: '8%', left: '50%', delay: '0s' },
+                { top: '30%', right: '5%', delay: '0.5s' },
+                { bottom: '30%', right: '5%', delay: '1s' },
+                { bottom: '8%', left: '50%', delay: '1.5s' },
+                { bottom: '30%', left: '5%', delay: '2s' },
+                { top: '30%', left: '5%', delay: '2.5s' },
+              ].map((pos, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full bg-primary-400/40"
+                  style={{
+                    ...pos,
+                    animation: `pulse 3s ease-in-out ${pos.delay} infinite`,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>

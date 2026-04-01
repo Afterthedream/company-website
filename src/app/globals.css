@@ -142,6 +142,115 @@
   animation-delay: 1.8s;
 }
 
+/* Hero 水波动画 */
+@keyframes heroWaveRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes heroWavePulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes heroBubbleFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+  50% { transform: translateY(-15px) scale(1.1); opacity: 0.8; }
+}
+
+/* 涟漪扩散 */
+@keyframes rippleExpand {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* 水滴呼吸变形 */
+@keyframes dropBreathe {
+  0%, 100% { 
+    rx: 28; ry: 30;
+    transform: translateY(0);
+  }
+  25% { 
+    rx: 30; ry: 27;
+    transform: translateY(2px);
+  }
+  50% { 
+    rx: 27; ry: 31;
+    transform: translateY(-2px);
+  }
+  75% { 
+    rx: 29; ry: 28;
+    transform: translateY(1px);
+  }
+}
+
+/* 水滴高光闪烁 */
+@keyframes dropHighlight {
+  0%, 100% { opacity: 0.25; transform: translate(0, 0); }
+  50% { opacity: 0.5; transform: translate(-2px, -2px); }
+}
+
+/* 水花弹跳 */
+@keyframes dropSplash {
+  0%, 70%, 100% { transform: scaleY(1) scaleX(1); opacity: 0.15; }
+  80% { transform: scaleY(1.8) scaleX(0.7); opacity: 0.3; }
+  90% { transform: scaleY(0.8) scaleX(1.3); opacity: 0.2; }
+}
+
+.hero-wave-1 {
+  transform-origin: 200px 200px;
+  animation: heroWaveRotate 20s linear infinite;
+}
+
+.hero-wave-2 {
+  transform-origin: 200px 200px;
+  animation: heroWaveRotate 15s linear infinite reverse;
+}
+
+.hero-wave-3 {
+  transform-origin: 200px 200px;
+  animation: heroWavePulse 4s ease-in-out infinite;
+}
+
+.hero-drop {
+  transform-origin: 200px 200px;
+}
+
+.drop-body {
+  animation: dropBreathe 3s ease-in-out infinite;
+}
+
+.drop-highlight {
+  animation: dropHighlight 3s ease-in-out infinite;
+}
+
+.drop-splash {
+  transform-origin: 200px 228px;
+  animation: dropSplash 3s ease-in-out infinite;
+}
+
+/* 涟漪环 */
+.ripple-ring-1 {
+  transform-origin: 200px 200px;
+  animation: rippleExpand 3s ease-out infinite;
+}
+
+.ripple-ring-2 {
+  transform-origin: 200px 200px;
+  animation: rippleExpand 3s ease-out 1s infinite;
+}
+
+.ripple-ring-3 {
+  transform-origin: 200px 200px;
+  animation: rippleExpand 3s ease-out 2s infinite;
+}
+
+.bubble-1 { animation: heroBubbleFloat 3.5s ease-in-out infinite; }
+.bubble-2 { animation: heroBubbleFloat 4s ease-in-out 0.5s infinite; }
+.bubble-3 { animation: heroBubbleFloat 3s ease-in-out 1s infinite; }
+.bubble-4 { animation: heroBubbleFloat 4.5s ease-in-out 1.5s infinite; }
+.bubble-5 { animation: heroBubbleFloat 3.8s ease-in-out 2s infinite; }
+
 /* 水波纹点击效果 */
 @keyframes rippleOut {
   0% {
