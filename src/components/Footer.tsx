@@ -18,6 +18,7 @@ const NAV_GROUPS = [
     links: [
       { name: '产品中心', href: '/products' },
       { name: '解决方案', href: '/solutions' },
+      { name: '应用案例', href: '/cases' },
     ],
   },
   {

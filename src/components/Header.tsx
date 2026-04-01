@@ -29,6 +29,7 @@ export default function Header() {
     { name: '首页', href: '/' },
     { name: '产品中心', href: '/products' },
     { name: '解决方案', href: '/solutions' },
+    { name: '应用案例', href: '/cases' },
     { name: '新闻动态', href: '/news' },
     { name: '关于我们', href: '/about' },
   ]
