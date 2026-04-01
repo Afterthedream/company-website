@@ -93,7 +93,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'
             }`}
           >
-            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg shadow-surface-200/30">
+            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg">
               {companyImage ? (
                 <img 
                   src={companyImage} 
@@ -135,7 +135,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
                 {values.filter(v => v.text).map((item, i) => (
                   <div
                     key={i}
-                    className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-surface-200 hover:border-primary-300 hover:shadow-md hover:shadow-primary-100/20 transition-all duration-200"
+                    className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-surface-200 hover:border-primary-300 hover:shadow-md transition-all duration-200"
                   >
                     <div className="flex-shrink-0 w-11 h-11 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-200 shadow-sm">
                       {item.icon}

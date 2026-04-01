@@ -63,7 +63,7 @@ export default function StatsBar({ company }: StatsBarProps) {
   return (
     <section className="relative -mt-1 z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-primary-700 via-primary-800 to-primary-900 rounded-2xl shadow-2xl shadow-primary-900/30 py-8 px-6 md:px-10">
+        <div className="bg-gradient-to-r from-primary-700 via-primary-800 to-primary-900 rounded-2xl shadow-2xl py-8 px-6 md:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center relative">

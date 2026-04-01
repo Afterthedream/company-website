@@ -231,14 +231,14 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-scale-in"
+        className={`relative bg-white rounded-2xl shadow-2xl w-full overflow-hidden animate-scale-in ${type === 'news' ? 'max-w-6xl max-h-[85vh]' : 'max-w-4xl max-h-[90vh]'}`}
         style={{ animation: 'scaleIn 0.3s ease-out' }}
         onClick={e => e.stopPropagation()}
       >
         {/* 关闭按钮 */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg shadow-surface-200/30 transition-all duration-200"
+          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg transition-all duration-200"
           aria-label="关闭"
         >
           <svg className="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,12 +248,12 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
         <div className="flex flex-col md:flex-row h-full">
           {/* 左侧：图片 */}
-          <div className="md:w-2/5 bg-surface-50 flex items-center justify-center overflow-hidden">
+          <div className={`bg-surface-50 flex items-center justify-center overflow-hidden ${type === 'news' ? 'md:w-1/2' : 'md:w-2/5'}`}>
             {coverImg ? (
               <img 
                 src={coverImg} 
                 alt={title} 
-                className="w-full h-full object-contain p-8 transition-transform duration-300 hover:scale-[1.02]"
+                className={`w-full h-full transition-transform duration-300 hover:scale-[1.02] ${type === 'news' ? 'object-contain' : 'object-contain p-8'}`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -265,7 +265,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
           </div>
 
           {/* 右侧：内容 */}
-          <div className="md:w-3/5 overflow-y-auto scrollbar-hidden p-8 space-y-6" style={{ maxHeight: '90vh' }}>
+          <div className={`overflow-y-auto scrollbar-hidden p-6 space-y-4 ${type === 'news' ? 'md:w-1/2' : 'md:w-3/5'}`} style={{ maxHeight: type === 'news' ? '85vh' : '90vh' }}>
             {/* 类型标签 */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">

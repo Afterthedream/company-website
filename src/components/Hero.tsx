@@ -111,7 +111,7 @@ export default function Hero({ company }: HeroProps) {
 
               {/* 中心实心圆 */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg shadow-primary-500/20" />
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg" />
               </div>
 
               {/* 轨道上的点 */}

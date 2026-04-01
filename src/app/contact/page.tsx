@@ -46,14 +46,14 @@ export default function ContactPage() {
         body: JSON.stringify({ data: formData }),
       })
       if (response.ok) {
-        alert('感谢您的留言，我们会尽快与您联系！')
+        alert('消息已发送！我们会在 1-2 个工作日内回复您。')
         setFormData({ name: '', email: '', phone: '', company: '', message: '' })
       } else {
         const err = await response.json()
-        alert(`提交失败：${err.error?.message || '请稍后重试'}`)
+        alert(`发送失败：${err.error?.message || '服务器暂时无法处理，请稍后再试'}`)
       }
     } catch {
-      alert('提交失败，请检查网络连接后重试')
+      alert('网络连接失败，请检查网络后重试')
     } finally {
       setSubmitting(false)
     }
@@ -140,7 +140,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
-                      placeholder="请输入您的姓名"
+                      placeholder="张三"
                     />
                   </div>
                   <div>
@@ -151,7 +151,7 @@ export default function ContactPage() {
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
-                      placeholder="请输入公司名称"
+                      placeholder="沧杰荇科技"
                     />
                   </div>
                 </div>
@@ -166,7 +166,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
-                      placeholder="请输入您的邮箱"
+                      placeholder="zhangsan@example.com"
                     />
                   </div>
                   <div>
@@ -177,7 +177,7 @@ export default function ContactPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200"
-                      placeholder="请输入您的电话"
+                      placeholder="138-0000-0000"
                     />
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 transition-all duration-200 resize-none"
-                    placeholder="请详细描述您的需求或问题"
+                    placeholder="请描述您的项目需求、预算范围或任何疑问..."
                   />
                 </div>
 
@@ -200,7 +200,7 @@ export default function ContactPage() {
                   disabled={submitting}
                   className="btn-primary w-full justify-center disabled:opacity-50"
                 >
-                  {submitting ? '提交中...' : '提交留言'}
+                  {submitting ? '正在发送...' : '发送消息'}
                 </button>
               </form>
             </div>

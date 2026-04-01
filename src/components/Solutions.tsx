@@ -99,7 +99,7 @@ export default function Solutions() {
               }`}
               style={{ transitionDelay: `${(index + 1) * 120}ms` }}
             >
-              <div className="flex flex-col md:flex-row md:items-center gap-6 p-7 rounded-2xl bg-white border border-surface-200 shadow-md shadow-surface-200/20 hover:shadow-lg hover:shadow-primary-100/20 hover:border-primary-300 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex flex-col md:flex-row md:items-center gap-6 p-7 rounded-2xl bg-white border border-surface-200 shadow-md hover:shadow-lg hover:border-primary-300 transition-all duration-300 transform hover:-translate-y-1">
                 {/* 图标和编号 */}
                 <div className="flex-shrink-0 flex flex-col items-center gap-3">
                   <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300 shadow-sm">

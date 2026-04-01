@@ -37,7 +37,7 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isScrolled || isMobileMenuOpen 
-          ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-surface-200/30'
+          ? 'bg-white/95 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >

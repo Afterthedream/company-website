@@ -32,7 +32,8 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-primary-600/20 hover:shadow-xl hover:shadow-primary-600/25 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    box-shadow: 0 10px 15px -3px oklch(0.50 0.15 250 / 0.2), 0 4px 6px -4px oklch(0.50 0.15 250 / 0.1);
   }
 
   .btn-secondary {
@@ -53,11 +54,11 @@
   }
 
   .card-surface {
-    @apply bg-white rounded-2xl border border-surface-200 shadow-lg shadow-surface-200/30 transition-all duration-200 hover:shadow-xl hover:shadow-surface-200/40;
+    @apply bg-white rounded-2xl border border-surface-200 shadow-lg transition-all duration-200 hover:shadow-xl;
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-xl hover:shadow-surface-200/40 hover:-translate-y-0.5;
+    @apply transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5;
   }
 
   .scrollbar-hidden {
@@ -164,21 +165,21 @@ html {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-in-left {
-  animation: slideInLeft 0.5s ease-out;
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out;
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

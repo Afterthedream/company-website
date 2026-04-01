@@ -118,7 +118,7 @@ export default function ProductsPage() {
                 onClick={() => setSelectedCategory(null)}
                 className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 micro-interaction ${
                   selectedCategory === null
-                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
+                    ? 'bg-primary-600 text-white shadow-lg'
                     : 'bg-white text-surface-700 hover:bg-surface-100 border border-surface-200'
                 }`}
               >
@@ -130,7 +130,7 @@ export default function ProductsPage() {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 micro-interaction ${
                     selectedCategory === category.id
-                      ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
+                      ? 'bg-primary-600 text-white shadow-lg'
                       : 'bg-white text-surface-700 hover:bg-surface-100 border border-surface-200'
                   }`}
                 >
@@ -145,12 +145,11 @@ export default function ProductsPage() {
             {finalProducts.map((product: any, index: number) => (
               <div
                 key={product.id || index}
-                className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                className={`group bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 h-full ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md shadow-surface-200/20 hover:shadow-xl hover:shadow-primary-100/20 transition-all duration-300 transform hover:-translate-y-2 h-full">
                   {/* 图片区 */}
                   <div className="relative h-52 bg-gradient-to-br from-surface-50 to-surface-100 overflow-hidden">
                     {(() => {
@@ -199,7 +198,6 @@ export default function ProductsPage() {
                       </svg>
                     </button>
                   </div>
-                </div>
               </div>
             ))}
           </div>

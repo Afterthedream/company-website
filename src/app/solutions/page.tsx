@@ -88,7 +88,7 @@ export default function SolutionsPage() {
 
       <section className="py-28 bg-surface-50">
         <div className="max-w-6xl mx-auto px-6">
-          <div ref={listRef} className="space-y-5">
+          <div ref={listRef} className="space-y-12">
             {displaySolutions.map((solution: any, index: number) => {
               let featuresArray: string[] = []
               if (solution.features) {
@@ -107,88 +107,85 @@ export default function SolutionsPage() {
               return (
                 <div
                   key={solution.id || index}
-                  className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                  className={`group flex flex-col md:flex-row gap-8 items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="card-surface p-8 md:p-10 card-hover">
-                    <div className="flex flex-col gap-6">
-                      {/* 图片区域 */}
-                      <div className="aspect-video bg-surface-50 rounded-xl overflow-hidden">
-                        {(() => {
-                          const img = solution.image || solution.coverImage
-                          const imgUrl = img
-                            ? Array.isArray(img) ? img[0]?.url : img?.url
-                            : null
-                          const fullUrl = imgUrl ? getStrapiMedia(imgUrl) : null
-                          return fullUrl ? (
-                            <img 
-                              src={fullUrl} 
-                              alt={solution.title} 
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-50 to-surface-100">
-                              <div className="flex flex-col items-center gap-3">
-                                <div className="w-16 h-16 rounded-xl bg-primary-50 flex items-center justify-center text-primary-400">
-                                  {icon}
-                                </div>
-                                <span className="text-xs text-surface-400">暂无图片</span>
+                    {/* 图片/图标区域 */}
+                    <div className="md:w-2/5 w-full aspect-video rounded-2xl overflow-hidden shadow-lg shadow-surface-200/20 bg-white">
+                      {(() => {
+                        const img = solution.image || solution.coverImage
+                        const imgUrl = img
+                          ? Array.isArray(img) ? img[0]?.url : img?.url
+                          : null
+                        const fullUrl = imgUrl ? getStrapiMedia(imgUrl) : null
+                        return fullUrl ? (
+                          <img 
+                            src={fullUrl} 
+                            alt={solution.title} 
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-surface-100">
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="w-20 h-20 rounded-2xl bg-primary-100 flex items-center justify-center text-primary-500">
+                                {icon}
                               </div>
+                              <span className="text-sm text-surface-400">暂无图片</span>
                             </div>
-                          )
-                        })()}
-                      </div>
-
-                      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
-                        {/* 左：编号 */}
-                        <div className="flex items-center gap-4 md:flex-col md:items-center md:gap-3 flex-shrink-0">
-                          <span className="text-xs font-mono text-surface-300 md:mt-1">0{index + 1}</span>
-                        </div>
-
-                        {/* 右：内容 */}
-                        <div className="flex-1 space-y-4">
-                          <div>
-                            <h2 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200 mb-2">
-                              {solution.title}
-                            </h2>
-                            <p className="text-sm text-surface-400 leading-relaxed">
-                              {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
-                            </p>
                           </div>
-
-                          {/* 特性标签 */}
-                          {featuresArray.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {featuresArray.map((feature: string, idx: number) => (
-                                <span key={idx} className="px-3 py-1 bg-surface-50 text-surface-600 text-xs rounded-lg">
-                                  {feature}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* 案例数据 */}
-                          {solution.cases && (
-                            <p className="text-xs text-primary-600 font-medium">
-                              {parseRichText(solution.cases)}
-                            </p>
-                          )}
-
-                          <button
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
-                            onClick={() => setSelectedItem(solution)}
-                          >
-                            了解详情
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
+                        )
+                      })()}
                     </div>
-                  </div>
+
+                    {/* 内容区域 */}
+                    <div className="md:w-3/5 w-full space-y-5">
+                      {/* 标题和描述 */}
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-sm font-mono text-primary-400">0{index + 1}</span>
+                          <h2 className="text-2xl font-bold text-surface-900 group-hover:text-primary-700 transition-colors duration-200">
+                            {solution.title}
+                          </h2>
+                        </div>
+                        <p className="text-base text-surface-500 leading-relaxed">
+                          {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
+                        </p>
+                      </div>
+
+                      {/* 特性标签 */}
+                      {featuresArray.length > 0 && (
+                        <div className="flex flex-wrap gap-3">
+                          {featuresArray.map((feature: string, idx: number) => (
+                            <span key={idx} className="px-4 py-1.5 bg-white text-surface-700 text-xs font-medium rounded-lg shadow-sm transition-transform duration-200 group-hover:scale-105">
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 案例数据 */}
+                      {solution.cases && (
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary-400"></div>
+                          <p className="text-sm text-primary-600 font-medium">
+                            {parseRichText(solution.cases)}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* 了解详情按钮 */}
+                      <button
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 hover:text-primary-800 transition-all duration-200 group-hover:translate-x-1"
+                        onClick={() => setSelectedItem(solution)}
+                      >
+                        了解详情
+                        <svg className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </button>
+                    </div>
                 </div>
               )
             })}

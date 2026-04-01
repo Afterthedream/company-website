@@ -112,7 +112,7 @@ export default function NewsPreview({ articles = [] }: NewsPreviewProps) {
                 style={{ transitionDelay: `${(index + 1) * 120}ms` }}
               >
                 <Link href="/news" className="block">
-                  <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md shadow-surface-200/20 hover:shadow-xl hover:shadow-primary-100/20 transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                     {/* 封面图 */}
                     <div className="aspect-[16/10] bg-surface-100 overflow-hidden">
                       {imgUrl ? (
