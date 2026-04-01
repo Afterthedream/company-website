@@ -4,7 +4,8 @@
   "info": {
     "singularName": "solution",
     "pluralName": "solutions",
-    "displayName": "Solution"
+    "displayName": "解决方案",
+    "description": "公司解决方案展示"
   },
   "options": {
     "draftAndPublish": true

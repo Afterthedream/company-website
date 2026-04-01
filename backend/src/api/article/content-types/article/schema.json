@@ -4,7 +4,8 @@
   "info": {
     "singularName": "article",
     "pluralName": "articles",
-    "displayName": "Article"
+    "displayName": "文章",
+    "description": "公司文章展示"
   },
   "options": {
     "draftAndPublish": true

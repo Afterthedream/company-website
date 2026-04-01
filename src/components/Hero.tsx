@@ -55,8 +55,8 @@ export default function Hero({ company }: HeroProps) {
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* 文字内容 — 左 7 列 */}
-          <div className="lg:col-span-7 space-y-8">
+          {/* 文字内容 — 左 8 列 */}
+          <div className="lg:col-span-8 space-y-8">
             {/* 标签 */}
             <div
               className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -75,13 +75,10 @@ export default function Hero({ company }: HeroProps) {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
             >
-              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-extrabold text-surface-900 leading-[1.05] tracking-tight">
-                以水为脉<br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-accent-500 to-primary-500">以智为器</span>
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+                <span className="text-surface-900">以水为脉</span>，<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-accent-500 to-primary-500">以智为器</span>，<span className="text-accent-600">以服为桥</span>
               </h1>
-              <p className="text-xl md:text-2xl text-surface-600 leading-relaxed max-w-xl font-medium">
-                四川沧杰荇科技——一站式水利信息化问题解决者，
-                让每一滴水都被精准守护。
+              <p className="text-xl md:text-2xl text-surface-600 leading-relaxed max-w-xl font-medium">一站式水利信息化问题解决者
               </p>
             </div>
 
@@ -92,13 +89,13 @@ export default function Hero({ company }: HeroProps) {
               }`}
             >
               <a href="/products" className="btn-primary text-base">
-                查看适配方案
+                所有产品
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </a>
               <a href="/contact" className="btn-secondary text-base">
-                免费获取报价
+                联系我们
               </a>
             </div>
 
@@ -106,7 +103,7 @@ export default function Hero({ company }: HeroProps) {
 
           {/* 动画水波 — 右 5 列 */}
           <div
-            className={`hidden lg:flex lg:col-span-5 items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-300 ${
+            className={`hidden lg:flex lg:col-span-4 items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-300 ${
               isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}
           >

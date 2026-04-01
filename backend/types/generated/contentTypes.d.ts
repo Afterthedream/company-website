@@ -433,7 +433,8 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
-    displayName: 'Article';
+    description: '\u516C\u53F8\u6587\u7AE0\u5C55\u793A';
+    displayName: '\u6587\u7AE0';
     pluralName: 'articles';
     singularName: 'article';
   };
@@ -466,10 +467,59 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCaseCase extends Struct.CollectionTypeSchema {
+  collectionName: 'cases';
+  info: {
+    description: '\u516C\u53F8\u9879\u76EE\u6848\u4F8B\u5C55\u793A';
+    displayName: '\u6848\u4F8B';
+    pluralName: 'cases';
+    singularName: 'case';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    category: Schema.Attribute.Enumeration<
+      [
+        'reservoir',
+        'river',
+        'irrigation',
+        'sluice',
+        'conservation',
+        'flood',
+        'drinking',
+        'other',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'other'>;
+    client: Schema.Attribute.String;
+    cover: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    gallery: Schema.Attribute.Media<'images', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::case.case'> &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    projectDate: Schema.Attribute.Date & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'>;
+    sort: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
   collectionName: 'companies';
   info: {
-    displayName: 'Company';
+    description: '\u516C\u53F8\u4FE1\u606F\u5C55\u793A';
+    displayName: '\u516C\u53F8';
     pluralName: 'companies';
     singularName: 'company';
   };
@@ -550,7 +600,7 @@ export interface ApiProductCategoryProductCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'product_categories';
   info: {
-    displayName: 'Product Category';
+    displayName: '\u4EA7\u54C1\u5206\u7C7B';
     pluralName: 'product-categories';
     singularName: 'product-category';
   };
@@ -584,7 +634,8 @@ export interface ApiProductCategoryProductCategory
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   collectionName: 'products';
   info: {
-    displayName: 'Product';
+    description: '\u516C\u53F8\u4EA7\u54C1\u5C55\u793A';
+    displayName: '\u4EA7\u54C1';
     pluralName: 'products';
     singularName: 'product';
   };
@@ -623,7 +674,8 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
 export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
   collectionName: 'solutions';
   info: {
-    displayName: 'Solution';
+    description: '\u516C\u53F8\u89E3\u51B3\u65B9\u6848\u5C55\u793A';
+    displayName: '\u89E3\u51B3\u65B9\u6848';
     pluralName: 'solutions';
     singularName: 'solution';
   };
@@ -1167,6 +1219,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
+      'api::case.case': ApiCaseCase;
       'api::company.company': ApiCompanyCompany;
       'api::contact.contact': ApiContactContact;
       'api::product-category.product-category': ApiProductCategoryProductCategory;

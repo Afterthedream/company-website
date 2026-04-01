@@ -1,7 +1,23 @@
+'use client'
+
+import React, { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import DetailModal from '@/components/DetailModal'
 import { getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
+
+interface CaseItem {
+  id: number
+  title: string
+  client: string
+  industry: string
+  description: string
+  results: string
+  date: string
+  coverImage: any
+  content: any
+}
 
 const defaultCases = [
   {
@@ -67,7 +83,48 @@ const accentThemes = [
 ]
 
 export default function CasesPage() {
-  const displayCases = defaultCases // Strapi 数据可用时替换
+  const [cases, setCases] = useState<any[]>([])
+  const [selectedCase, setSelectedCase] = useState<CaseItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 数据获取
+  React.useEffect(() => {
+    async function fetchCases() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/cases?populate=*&sort=projectDate:desc`)
+        if (!res.ok) throw new Error('Failed to fetch cases')
+        const data = await res.json()
+        setCases(data.data || [])
+      } catch (error) {
+        console.error('Error fetching cases:', error)
+        setCases([])
+      }
+    }
+
+    fetchCases()
+  }, [])
+
+  const displayCases = cases.length > 0 ? cases.map((item: any) => ({
+    id: item.id,
+    title: item.title,
+    client: item.client,
+    industry: item.category || '其他',
+    description: item.description,
+    results: item.results || '',
+    date: item.projectDate,
+    coverImage: item.cover,
+    location: item.location
+  })) : defaultCases
+
+  const handleOpenModal = (caseItem: CaseItem) => {
+    setSelectedCase(caseItem)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedCase(null)
+  }
 
   return (
     <main className="min-h-screen animate-page-enter">
@@ -105,7 +162,9 @@ export default function CasesPage() {
             {displayCases.map((item: any, index: number) => {
               const theme = accentThemes[index % 3]
               const coverImg = item.coverImage ? getStrapiMedia(
-                Array.isArray(item.coverImage) ? item.coverImage[0]?.url : item.coverImage?.url
+                item.coverImage.data?.attributes?.url || 
+                (Array.isArray(item.coverImage.data) && item.coverImage.data.length > 0) ? item.coverImage.data[0]?.attributes?.url : 
+                item.coverImage.url
               ) : null
 
               return (
@@ -185,7 +244,10 @@ export default function CasesPage() {
 
                       {/* 操作 */}
                       <div className="pt-2">
-                        <button className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700 transition-all duration-200 group-hover:translate-x-1">
+                        <button 
+                          onClick={() => handleOpenModal(item)}
+                          className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700 transition-all duration-200 group-hover:translate-x-1 cursor-pointer"
+                        >
                           查看详情
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -235,6 +297,15 @@ export default function CasesPage() {
       </section>
 
       <Footer />
+
+      {/* 详情模态框 */}
+      {isModalOpen && selectedCase && (
+        <DetailModal 
+          item={selectedCase} 
+          onClose={handleCloseModal} 
+          type="solution" 
+        />
+      )}
     </main>
   )
 }
