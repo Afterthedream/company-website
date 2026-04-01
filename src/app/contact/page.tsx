@@ -86,7 +86,7 @@ export default function ContactPage() {
       <Header />
 
       <PageHeader
-        number="06"
+        number="07"
         label="联系我们"
         title="联系我们"
         description="如有任何疑问或需求，欢迎随时与我们联系"

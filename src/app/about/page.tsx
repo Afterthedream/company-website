@@ -60,7 +60,7 @@ export default async function AboutPage() {
       <Header />
 
       <PageHeader
-        number="05"
+        number="06"
         label="关于我们"
         title="关于沧杰荇"
         description="一站式水利信息化问题解决者"

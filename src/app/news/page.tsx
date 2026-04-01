@@ -121,7 +121,7 @@ function NewsContent() {
       <Header />
 
       <PageHeader
-        number="04"
+        number="05"
         label="新闻动态"
         title="最新资讯"
         description="了解公司最新资讯和行业动态"
