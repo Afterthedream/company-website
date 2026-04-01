@@ -14,6 +14,7 @@ export default function ContactPage() {
     message: '',
   })
   const [submitting, setSubmitting] = useState(false)
+  const [submitResult, setSubmitResult] = useState<'success' | 'error' | null>(null)
   const [companyInfo, setCompanyInfo] = useState({
     phone: '',
     email: '',
@@ -39,6 +40,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
+    setSubmitResult(null)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/contacts`, {
         method: 'POST',
@@ -46,14 +48,16 @@ export default function ContactPage() {
         body: JSON.stringify({ data: formData }),
       })
       if (response.ok) {
-        alert('消息已发送！我们会在 1-2 个工作日内回复您。')
+        setSubmitResult('success')
         setFormData({ name: '', email: '', phone: '', company: '', message: '' })
+        setTimeout(() => setSubmitResult(null), 5000)
       } else {
-        const err = await response.json()
-        alert(`发送失败：${err.error?.message || '服务器暂时无法处理，请稍后再试'}`)
+        setSubmitResult('error')
+        setTimeout(() => setSubmitResult(null), 5000)
       }
     } catch {
-      alert('网络连接失败，请检查网络后重试')
+      setSubmitResult('error')
+      setTimeout(() => setSubmitResult(null), 5000)
     } finally {
       setSubmitting(false)
     }
@@ -202,6 +206,31 @@ export default function ContactPage() {
                 >
                   {submitting ? '正在发送...' : '免费咨询，1 个工作日回复'}
                 </button>
+
+                {/* 提交结果提示 */}
+                {submitResult && (
+                  <div className={`flex items-center gap-3 p-4 rounded-xl animate-fade-in-up ${
+                    submitResult === 'success' 
+                      ? 'bg-accent-50 text-accent-600 border border-accent-200' 
+                      : 'bg-red-50 text-red-600 border border-red-200'
+                  }`}>
+                    {submitResult === 'success' ? (
+                      <>
+                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm font-medium">消息已发送！我们会在 1-2 个工作日内回复您 🎉</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm font-medium">发送失败，请稍后重试或直接拨打电话</span>
+                      </>
+                    )}
+                  </div>
+                )}
               </form>
             </div>
           </div>

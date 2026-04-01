@@ -50,7 +50,16 @@ export default function Footer() {
   }, [])
 
   return (
-    <footer className="bg-surface-950 text-white">
+    <footer className="bg-surface-950 text-white relative">
+      {/* 波浪分隔线 */}
+      <div className="absolute top-0 left-0 right-0 -translate-y-[99%] overflow-hidden leading-none">
+        <svg className="relative block w-full h-12" viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path
+            d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z"
+            fill="oklch(0.11 0.008 250)"
+          />
+        </svg>
+      </div>
 
       {/* ── 主体 ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -154,7 +163,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4
                         flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-surface-600 text-xs">
-            © {currentYear} 四川沧杰荇科技有限公司 · All rights reserved.
+            © {currentYear} 四川沧杰荇科技有限公司 · 让每一滴水都被精准守护 💧
           </p>
           {/* <div className="flex items-center gap-4 text-xs text-gray-600">
             <Link href="/privacy" className="hover:text-primary-400 transition-colors">隐私政策</Link>

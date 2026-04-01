@@ -45,6 +45,14 @@ export default function Hero({ company }: HeroProps) {
       <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-primary-200/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-accent-200/25 rounded-full blur-[100px]" />
 
+      {/* 水滴动画 — 装饰 */}
+      <div className="absolute top-20 right-[15%] hidden lg:block">
+        <div className="water-drop water-drop-delayed" />
+      </div>
+      <div className="absolute top-32 right-[25%] hidden lg:block">
+        <div className="water-drop water-drop-delayed-2" />
+      </div>
+
       <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* 文字内容 — 左 7 列 */}
@@ -147,9 +155,11 @@ export default function Hero({ company }: HeroProps) {
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="flex flex-col items-center gap-2 text-surface-400">
+        <div className="flex flex-col items-center gap-2 text-surface-400 animate-bounce">
           <span className="text-[10px] tracking-widest uppercase">Scroll</span>
-          <div className="w-px h-6 bg-gradient-to-b from-surface-300 to-transparent" />
+          <svg className="w-4 h-6" viewBox="0 0 16 24" fill="none">
+            <path d="M8 0C8 0 0 10 0 16C0 20.4183 3.58172 24 8 24C12.4183 24 16 20.4183 16 16C16 10 8 0 8 0Z" fill="oklch(0.70 0.12 250 / 0.2)" />
+          </svg>
         </div>
       </div>
     </section>

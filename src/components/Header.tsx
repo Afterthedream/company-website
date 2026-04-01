@@ -46,9 +46,9 @@ export default function Header() {
           {/* Logo */}
           <Link 
             href="/" 
-            className="flex items-center space-x-3 micro-interaction"
+            className="flex items-center space-x-3 micro-interaction group"
           >
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shadow-md">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
               {logoUrl ? (
                 <img 
                   src={logoUrl} 
@@ -57,7 +57,7 @@ export default function Header() {
                 />
               ) : (
                 <svg
-                  className="w-7 h-7 text-primary-600"
+                  className="w-7 h-7 text-primary-600 group-hover:text-primary-500 transition-colors duration-200"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
