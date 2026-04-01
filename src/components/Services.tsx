@@ -124,7 +124,14 @@ export default function Services({ products = [] }: ServicesProps) {
 
         {/* 卡片网格 */}
         <div className="grid md:grid-cols-3 gap-5">
-          {services.map((item: any, index: number) => (
+          {services.map((item: any, index: number) => {
+            const accentColors = [
+              { bg: 'bg-primary-500/15', hoverBg: 'group-hover:bg-primary-500/25', text: 'text-primary-300', dot: 'bg-primary-400' },
+              { bg: 'bg-accent-500/15', hoverBg: 'group-hover:bg-accent-500/25', text: 'text-accent-300', dot: 'bg-accent-400' },
+              { bg: 'bg-warm-500/15', hoverBg: 'group-hover:bg-warm-500/25', text: 'text-warm-300', dot: 'bg-warm-400' },
+            ]
+            const ac = accentColors[index % 3]
+            return (
             <div
               key={item.id || index}
               className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -135,10 +142,10 @@ export default function Services({ products = [] }: ServicesProps) {
               <div className="h-full p-7 rounded-2xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/[0.1] transition-all duration-200">
                 {/* 编号 + 图标 */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-11 h-11 rounded-xl bg-primary-500/15 flex items-center justify-center text-primary-300 group-hover:bg-primary-500/25 transition-colors duration-200">
+                  <div className={`w-11 h-11 rounded-xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} transition-colors duration-200`}>
                     {item.icon || defaultServices[0].icon}
                   </div>
-                  <span className="text-xs font-mono text-surface-600">0{index + 1}</span>
+                  <span className={`w-1.5 h-1.5 ${ac.dot} rounded-full`} />
                 </div>
 
                 {/* 标题 */}
@@ -163,7 +170,8 @@ export default function Services({ products = [] }: ServicesProps) {
                 </Link>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* 查看更多 */}

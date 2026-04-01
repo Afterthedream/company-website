@@ -43,7 +43,7 @@ export default function Hero({ company }: HeroProps) {
 
       {/* 柔和光晕 */}
       <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-primary-200/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-primary-100/30 rounded-full blur-[100px]" />
+      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-accent-200/25 rounded-full blur-[100px]" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -55,8 +55,8 @@ export default function Hero({ company }: HeroProps) {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-primary-50 border border-primary-100 rounded-full text-xs font-semibold text-primary-700 tracking-wide">
-                <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-accent-50 border border-accent-100 rounded-full text-xs font-semibold text-accent-600 tracking-wide">
+                <span className="w-1.5 h-1.5 bg-accent-500 rounded-full animate-pulse" />
                 水利信息化专家
               </span>
             </div>
@@ -117,9 +117,9 @@ export default function Hero({ company }: HeroProps) {
               {/* 轨道上的点 */}
               {[
                 { pos: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2', size: 'w-3 h-3', color: 'bg-primary-500' },
-                { pos: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2', size: 'w-2 h-2', color: 'bg-primary-400' },
-                { pos: 'left-0 top-1/2 -translate-x-1/2 -translate-y-1/2', size: 'w-2.5 h-2.5', color: 'bg-primary-300' },
-                { pos: 'right-0 top-1/2 translate-x-1/2 -translate-y-1/2', size: 'w-2 h-2', color: 'bg-primary-500' },
+                { pos: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2', size: 'w-2 h-2', color: 'bg-accent-400' },
+                { pos: 'left-0 top-1/2 -translate-x-1/2 -translate-y-1/2', size: 'w-2.5 h-2.5', color: 'bg-accent-300' },
+                { pos: 'right-0 top-1/2 translate-x-1/2 -translate-y-1/2', size: 'w-2 h-2', color: 'bg-primary-400' },
               ].map((dot, i) => (
                 <div key={i} className={`absolute ${dot.pos} ${dot.size} ${dot.color} rounded-full`} />
               ))}

@@ -91,7 +91,14 @@ export default function Solutions() {
 
         {/* 横向列表布局 */}
         <div className="space-y-6">
-          {displaySolutions.map((solution, index) => (
+          {displaySolutions.map((solution, index) => {
+            const accentColors = [
+              { bg: 'bg-primary-50', hoverBg: 'group-hover:bg-primary-600', text: 'text-primary-600', hoverBorder: 'hover:border-primary-300', gradient: 'from-primary-300 to-primary-100', hoverText: 'group-hover:text-primary-700' },
+              { bg: 'bg-accent-50', hoverBg: 'group-hover:bg-accent-500', text: 'text-accent-600', hoverBorder: 'hover:border-accent-300', gradient: 'from-accent-300 to-accent-100', hoverText: 'group-hover:text-accent-700' },
+              { bg: 'bg-warm-50', hoverBg: 'group-hover:bg-warm-500', text: 'text-warm-500', hoverBorder: 'hover:border-warm-300', gradient: 'from-warm-300 to-warm-100', hoverText: 'group-hover:text-warm-500' },
+            ]
+            const ac = accentColors[index % 3]
+            return (
             <div
               key={index}
               className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -99,10 +106,10 @@ export default function Solutions() {
               }`}
               style={{ transitionDelay: `${(index + 1) * 120}ms` }}
             >
-              <div className="flex flex-col md:flex-row md:items-center gap-6 p-7 rounded-2xl bg-white border border-surface-200 shadow-md hover:shadow-lg hover:border-primary-300 transition-all duration-300 transform hover:-translate-y-1">
+              <div className={`flex flex-col md:flex-row md:items-center gap-6 p-7 rounded-2xl bg-white border border-surface-200 shadow-md hover:shadow-lg ${ac.hoverBorder} transition-all duration-300 transform hover:-translate-y-1`}>
                 {/* 图标和编号 */}
                 <div className="flex-shrink-0 flex flex-col items-center gap-3">
-                  <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                  <div className={`w-14 h-14 rounded-2xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} group-hover:text-white transition-all duration-300 shadow-sm`}>
                     {solution.icon}
                   </div>
                   <span className="text-[11px] font-mono text-surface-300">0{index + 1}</span>
@@ -110,7 +117,7 @@ export default function Solutions() {
 
                 {/* 内容 */}
                 <div className="flex-1 space-y-3">
-                  <h3 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200">
+                  <h3 className={`text-xl font-semibold text-surface-900 ${ac.hoverText} transition-colors duration-200`}>
                     {solution.title}
                   </h3>
                   <p className="text-sm text-surface-400 leading-relaxed">
@@ -119,10 +126,11 @@ export default function Solutions() {
                 </div>
 
                 {/* 装饰元素 */}
-                <div className="flex-shrink-0 w-1 h-16 bg-gradient-to-b from-primary-300 to-primary-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className={`flex-shrink-0 w-1 h-16 bg-gradient-to-b ${ac.gradient} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* CTA */}

@@ -47,6 +47,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
       ),
       title: '企业愿景',
       text: company?.vision,
+      color: 'primary',
     },
     {
       icon: (
@@ -56,6 +57,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
       ),
       title: '企业使命',
       text: company?.mission,
+      color: 'accent',
     },
     {
       icon: (
@@ -65,6 +67,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
       ),
       title: '核心价值观',
       text: company?.values,
+      color: 'warm',
     },
   ]
 
@@ -132,20 +135,28 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
             {/* 三列理念 */}
             {values.some(v => v.text) && (
               <div className="grid gap-4">
-                {values.filter(v => v.text).map((item, i) => (
-                  <div
-                    key={i}
-                    className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-surface-200 hover:border-primary-300 hover:shadow-md transition-all duration-200"
-                  >
-                    <div className="flex-shrink-0 w-11 h-11 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-200 shadow-sm">
-                      {item.icon}
+                {values.filter(v => v.text).map((item, i) => {
+                  const colorMap: Record<string, { bg: string; hoverBg: string; text: string; border: string }> = {
+                    primary: { bg: 'bg-primary-50', hoverBg: 'group-hover:bg-primary-600', text: 'text-primary-600', border: 'hover:border-primary-300' },
+                    accent: { bg: 'bg-accent-50', hoverBg: 'group-hover:bg-accent-500', text: 'text-accent-600', border: 'hover:border-accent-300' },
+                    warm: { bg: 'bg-warm-50', hoverBg: 'group-hover:bg-warm-500', text: 'text-warm-500', border: 'hover:border-warm-300' },
+                  }
+                  const c = colorMap[item.color] || colorMap.primary
+                  return (
+                    <div
+                      key={i}
+                      className={`group flex items-start gap-4 p-5 rounded-2xl bg-white border border-surface-200 ${c.border} hover:shadow-md transition-all duration-200`}
+                    >
+                      <div className={`flex-shrink-0 w-11 h-11 ${c.bg} rounded-xl flex items-center justify-center ${c.text} ${c.hoverBg} group-hover:text-white transition-all duration-200 shadow-sm`}>
+                        {item.icon}
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-surface-800 mb-0.5">{item.title}</h3>
+                        <p className="text-sm text-surface-400 leading-relaxed">{parseRichText(item.text)}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-semibold text-surface-800 mb-0.5">{item.title}</h3>
-                      <p className="text-sm text-surface-400 leading-relaxed">{parseRichText(item.text)}</p>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
 
