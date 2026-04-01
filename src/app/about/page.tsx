@@ -171,7 +171,7 @@ export default async function AboutPage() {
             </div>
 
             {/* 地图 */}
-            <div className="rounded-2xl overflow-hidden shadow-lg shadow-surface-200/50 h-[360px]">
+            <div className="rounded-2xl overflow-hidden shadow-lg h-[360px] relative z-0">
               <TencentMapSimple
                 longitude={data.mapLongitude}
                 latitude={data.mapLatitude}
