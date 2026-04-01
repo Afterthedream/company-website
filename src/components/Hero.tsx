@@ -83,13 +83,13 @@ export default function Hero({ company }: HeroProps) {
               }`}
             >
               <a href="/products" className="btn-primary">
-                探索产品
+                查看适配方案
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </a>
               <a href="/contact" className="btn-secondary">
-                联系我们
+                免费获取报价
               </a>
             </div>
 

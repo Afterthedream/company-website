@@ -80,7 +80,7 @@ export default function Solutions() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-8 h-px bg-primary-300" />
-            <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">解决方案</span>
+            <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">行业方案</span>
             <div className="w-8 h-px bg-primary-300" />
           </div>
           <h2 className="section-title">针对不同场景的专业方案</h2>

@@ -200,7 +200,7 @@ export default function ContactPage() {
                   disabled={submitting}
                   className="btn-primary w-full justify-center disabled:opacity-50"
                 >
-                  {submitting ? '正在发送...' : '发送消息'}
+                  {submitting ? '正在发送...' : '免费咨询，1 个工作日回复'}
                 </button>
               </form>
             </div>

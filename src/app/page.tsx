@@ -19,9 +19,9 @@ export default async function Home() {
     <main className="min-h-screen">
       <Header />
       <Hero company={company} />
-      <AboutPreview company={company} companyImage={companyImage} />
       <Services products={products} />
       <Solutions />
+      <AboutPreview company={company} companyImage={companyImage} />
       <NewsPreview articles={articles} />
       <CtaSection />
       <Footer />

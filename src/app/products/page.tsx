@@ -215,17 +215,17 @@ export default function ProductsPage() {
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-10">
               <div className="text-center md:text-left space-y-4 max-w-xl">
                 <h2 className="font-['Geist'] text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
-                  没有心仪的<span className="text-primary-300">应用产品</span>？
+                  没有找到合适的<span className="text-primary-300">产品</span>？
                 </h2>
                 <p className="text-sm text-surface-400 leading-relaxed">
-                  我们将根据您的具体需求，提供合适的产品解决方案，为您的项目保驾护航
+                  免费咨询，1 个工作日内为您定制专属解决方案
                 </p>
               </div>
               <a 
                 href="/contact" 
                 className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-4 px-9 rounded-xl hover:bg-primary-50 transition-all duration-300 shadow-lg shadow-black/10 flex-shrink-0 micro-interaction"
               >
-                联系我们
+                免费获取报价
                 <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>

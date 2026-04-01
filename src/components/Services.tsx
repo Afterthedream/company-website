@@ -111,7 +111,7 @@ export default function Services({ products = [] }: ServicesProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <span className="w-1.5 h-1.5 bg-primary-400 rounded-full" />
-              <span className="text-xs font-semibold text-primary-300 tracking-widest uppercase">核心业务</span>
+              <span className="text-xs font-semibold text-primary-300 tracking-widest uppercase">核心技术</span>
             </div>
             <h2 className="font-display text-3xl md:text-[2.75rem] font-bold text-white tracking-tight leading-tight">
               产品与服务
