@@ -74,17 +74,17 @@ export default function Solutions() {
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 标题 */}
         <div
-          className={`text-center mb-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`text-center mb-20 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-px bg-primary-300" />
-            <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">行业方案</span>
-            <div className="w-8 h-px bg-primary-300" />
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <div className="w-10 h-px bg-primary-300" />
+            <span className="text-sm font-bold text-primary-600 tracking-widest uppercase">行业方案</span>
+            <div className="w-10 h-px bg-primary-300" />
           </div>
           <h2 className="section-title">针对不同场景的专业方案</h2>
-          <p className="section-subtitle mx-auto mt-3">
+          <p className="section-subtitle mx-auto mt-4">
             从城市到农村，从工业到民生，覆盖全场景水治理需求
           </p>
         </div>

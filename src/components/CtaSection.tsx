@@ -33,33 +33,33 @@ export default function CtaSection() {
           <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary-600/8 rounded-full blur-[80px]" />
 
-          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-12">
             {/* 左 */}
-            <div className="text-center lg:text-left space-y-3 max-w-lg">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
-                需要专业的<span className="text-primary-300">水治理方案</span>？
+            <div className="text-center lg:text-left space-y-4 max-w-lg">
+              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                需要专业的<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">水治理方案</span>？
               </h2>
-              <p className="text-sm text-surface-400 leading-relaxed">
+              <p className="text-base text-surface-300 leading-relaxed">
                 我们的专业团队将根据您的具体需求，提供个性化的定制化解决方案
               </p>
             </div>
 
             {/* 右 */}
-            <div className="flex items-center gap-5 flex-shrink-0">
+            <div className="flex items-center gap-6 flex-shrink-0">
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-2 bg-white text-surface-900 font-semibold text-sm py-3.5 px-8 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 active:scale-[0.98]"
+                className="group inline-flex items-center gap-2.5 bg-white text-surface-900 font-bold text-base py-4 px-10 rounded-xl hover:bg-primary-50 transition-all duration-200 shadow-lg shadow-black/10 active:scale-[0.97]"
               >
                 免费咨询方案
-                <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
               <Link
                 href="/products"
-                className="text-sm text-surface-500 hover:text-white transition-colors font-medium"
+                className="text-base text-surface-400 hover:text-white transition-colors font-semibold"
               >
-                浏览产品
+                浏览产品 →
               </Link>
             </div>
           </div>

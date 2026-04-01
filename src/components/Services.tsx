@@ -104,20 +104,20 @@ export default function Services({ products = [] }: ServicesProps) {
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 标题区 */}
         <div
-          className={`flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-20 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 bg-primary-400 rounded-full" />
-              <span className="text-xs font-semibold text-primary-300 tracking-widest uppercase">核心技术</span>
+              <span className="w-2 h-2 bg-accent-400 rounded-full" />
+              <span className="text-sm font-bold text-accent-300 tracking-widest uppercase">核心技术</span>
             </div>
-            <h2 className="font-display text-3xl md:text-[2.75rem] font-bold text-white tracking-tight leading-tight">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
               产品与服务
             </h2>
           </div>
-          <p className="text-sm text-surface-400 max-w-sm leading-relaxed">
+          <p className="text-base text-surface-300 max-w-sm leading-relaxed">
             全方位水治理解决方案，满足不同客户的需求
           </p>
         </div>
@@ -139,22 +139,22 @@ export default function Services({ products = [] }: ServicesProps) {
               }`}
               style={{ transitionDelay: `${(index + 1) * 120}ms` }}
             >
-              <div className="h-full p-7 rounded-2xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/[0.1] transition-all duration-200">
+              <div className="h-full p-8 rounded-2xl bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] hover:border-white/[0.15] transition-all duration-200 group-hover:translate-y-[-4px]">
                 {/* 编号 + 图标 */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className={`w-11 h-11 rounded-xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} transition-colors duration-200`}>
+                <div className="flex items-center justify-between mb-7">
+                  <div className={`w-14 h-14 rounded-2xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} transition-colors duration-200`}>
                     {item.icon || defaultServices[0].icon}
                   </div>
-                  <span className={`w-1.5 h-1.5 ${ac.dot} rounded-full`} />
+                  <span className={`w-2 h-2 ${ac.dot} rounded-full`} />
                 </div>
 
                 {/* 标题 */}
-                <h3 className="text-base font-semibold text-white mb-2">
+                <h3 className="text-lg font-bold text-white mb-3">
                   {item.name || item.title}
                 </h3>
 
                 {/* 描述 */}
-                <p className="text-sm text-surface-400 leading-relaxed mb-5">
+                <p className="text-sm text-surface-300 leading-relaxed mb-6">
                   {parseRichText(item.description) || '提供专业的解决方案，满足您的各种需求。'}
                 </p>
 

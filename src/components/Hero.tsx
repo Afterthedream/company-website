@@ -63,32 +63,33 @@ export default function Hero({ company }: HeroProps) {
 
             {/* 标题 */}
             <div
-              className={`space-y-4 transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] delay-100 ${
+              className={`space-y-5 transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] delay-100 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
             >
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-surface-900 leading-[1.1] tracking-tight">
-                {vision}
+              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-extrabold text-surface-900 leading-[1.05] tracking-tight">
+                以水为脉<br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-accent-500 to-primary-500">以智为器</span>
               </h1>
-              <p className="text-lg md:text-xl text-surface-500 leading-relaxed max-w-xl">
-                四川沧杰荇科技有限公司——一站式水利信息化问题解决者，
+              <p className="text-xl md:text-2xl text-surface-600 leading-relaxed max-w-xl font-medium">
+                四川沧杰荇科技——一站式水利信息化问题解决者，
                 让每一滴水都被精准守护。
               </p>
             </div>
 
             {/* 按钮组 */}
             <div
-              className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200 ${
+              className={`flex flex-col sm:flex-row gap-5 pt-2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <a href="/products" className="btn-primary">
+              <a href="/products" className="btn-primary text-base">
                 查看适配方案
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </a>
-              <a href="/contact" className="btn-secondary">
+              <a href="/contact" className="btn-secondary text-base">
                 免费获取报价
               </a>
             </div>

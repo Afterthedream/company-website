@@ -123,11 +123,11 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'
             }`}
           >
-            <div className="space-y-4">
+            <div className="space-y-5">
               <h2 className="section-title">
-                以水为脉，以智为器
+                以水为脉，<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500">以智为器</span>
               </h2>
-              <p className="text-surface-500 leading-relaxed text-[15px]">
+              <p className="text-surface-600 leading-relaxed text-base">
                 {parseRichText(company?.description) || '智汇泽润是一家专注于水资源治理与保护的科技企业，秉承"道法自然、上善若水"的理念，致力于为客户提供专业、高效、环保的水治理解决方案。'}
               </p>
             </div>
