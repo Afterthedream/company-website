@@ -2,58 +2,11 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
 import { NewsListSkeleton } from '@/components/Skeleton'
 import { getArticles, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
-
-const defaultArticles = [
-  {
-    id: 1,
-    title: '公司成功完成某大型湖泊生态修复项目',
-    excerpt: '该项目是我司迄今为止承接的最大的湖泊生态修复工程，标志着公司技术实力达到行业领先水平。',
-    category: 'company',
-    publishedAt: '2025-03-15',
-  },
-  {
-    id: 2,
-    title: '公司荣获"水处理行业十大品牌"称号',
-    excerpt: '在第十届中国水处理行业峰会上，凭借卓越的技术实力和优质的服务荣获该殊荣。',
-    category: 'company',
-    publishedAt: '2025-03-10',
-  },
-  {
-    id: 3,
-    title: '2025年水处理行业发展趋势分析',
-    excerpt: '随着环保政策的日益严格和技术的不断进步，水处理行业正迎来新的发展机遇。',
-    category: 'industry',
-    publishedAt: '2025-03-05',
-  },
-  {
-    id: 4,
-    title: '智慧水务系统助力城市水管理数字化转型',
-    excerpt: '公司最新研发的智慧水务系统在某市成功上线，实现了水务管理的智能化和精细化。',
-    category: 'company',
-    publishedAt: '2025-02-28',
-  },
-  {
-    id: 5,
-    title: '新环保政策解读：水处理行业迎来新机遇',
-    excerpt: '国家最新发布的环保政策为水处理行业带来了哪些发展机遇？本文将为您详细解读。',
-    category: 'industry',
-    publishedAt: '2025-02-20',
-  },
-  {
-    id: 6,
-    title: '公司技术团队参加国际水处理技术交流会',
-    excerpt: '公司技术团队受邀参加在荷兰举办的国际水处理技术交流会，与全球专家共同探讨行业前沿技术。',
-    category: 'company',
-    publishedAt: '2025-02-15',
-  },
-]
 
 function NewsContent() {
   const searchParams = useSearchParams()
@@ -118,9 +71,7 @@ function NewsContent() {
   ]
 
   return (
-    <main className="min-h-screen animate-page-enter">
-      <Header />
-
+    <main className="min-h-screen animate-page-enter" id="main-content">
       <PageHeader
         number="05"
         label="新闻动态"
@@ -132,11 +83,23 @@ function NewsContent() {
         <div className="max-w-6xl mx-auto px-6">
           {/* 标签切换 */}
           <div className="flex justify-center mb-14">
-            <div className="inline-flex bg-surface-100 rounded-xl p-1">
-              {tabs.map((tab) => (
+            <div className="inline-flex bg-surface-100 rounded-xl p-1" role="tablist" aria-label="新闻分类">
+              {tabs.map((tab, tabIndex) => (
                 <button
                   key={tab.key}
+                  role="tab"
+                  aria-selected={activeTab === tab.key}
+                  aria-controls="news-tab-panel"
                   onClick={() => setActiveTab(tab.key)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowRight') {
+                      const next = tabs[(tabIndex + 1) % tabs.length]
+                      setActiveTab(next.key)
+                    } else if (e.key === 'ArrowLeft') {
+                      const prev = tabs[(tabIndex - 1 + tabs.length) % tabs.length]
+                      setActiveTab(prev.key)
+                    }
+                  }}
                   className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === tab.key
                       ? 'bg-white text-surface-900 shadow-sm'
@@ -152,17 +115,17 @@ function NewsContent() {
           {loading ? (
             <NewsListSkeleton count={6} />
           ) : !hasArticles ? (
-            <div className="text-center py-20">
+            <div id="news-tab-panel" role="tabpanel" className="text-center py-20">
               <div className="w-20 h-20 mx-auto mb-6 bg-surface-100 rounded-full flex items-center justify-center">
                 <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-surface-700 mb-2">暂时还没有新闻哦</h3>
-              <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+              <p className="text-sm text-surface-500">敬请期待后续更新~</p>
             </div>
           ) : (
-            <>
+            <div id="news-tab-panel" role="tabpanel">
               <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {visibleArticles.map((item: any, index: number) => {
                   const cover = item.coverImage
@@ -184,11 +147,12 @@ function NewsContent() {
                             <img
                               src={imgUrl}
                               alt={item.title}
+                              loading="lazy"
                               className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                             />
                           ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-primary-50 to-primary-100/50 flex items-center justify-center">
-                              <svg className="w-10 h-10 text-primary-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-full h-full bg-surface-100 flex items-center justify-center">
+                              <svg className="w-10 h-10 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                               </svg>
                             </div>
@@ -199,23 +163,24 @@ function NewsContent() {
                             <span className={`px-2 py-0.5 rounded-md font-medium ${
                               item.category === 'company'
                                 ? 'bg-primary-50 text-primary-600'
-                                : 'bg-emerald-50 text-emerald-600'
+                                : 'bg-accent-50 text-accent-600'
                             }`}>
                               {item.category === 'company' ? '公司新闻' : '行业资讯'}
                             </span>
-                            <span className="text-surface-400">
+                            <span className="text-surface-500">
                               {new Date(item.publishedAt || item.date).toLocaleDateString('zh-CN')}
                             </span>
                           </div>
                           <h3 className="text-[15px] font-semibold text-surface-900 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors duration-200">
                             {item.title}
                           </h3>
-                          <p className="text-sm text-surface-400 leading-relaxed line-clamp-2">
+                          <p className="text-sm text-surface-500 leading-relaxed line-clamp-2">
                             {parseRichText(item.excerpt) || item.excerpt || ''}
                           </p>
                           <button
                             className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
                             onClick={() => setSelectedItem(item)}
+                            aria-label={`阅读文章：${item.title}`}
                           >
                             阅读更多
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,12 +204,10 @@ function NewsContent() {
                   </button>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </section>
-
-      <Footer />
 
       {selectedItem && (
         <DetailModal item={selectedItem} type="news" onClose={() => setSelectedItem(null)} />
@@ -257,14 +220,12 @@ export default function NewsPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen">
-        <Header />
         <PageHeader number="04" label="新闻动态" title="最新资讯" description="了解公司最新资讯和行业动态" />
         <section className="py-28 bg-surface-50">
           <div className="max-w-6xl mx-auto px-6">
             <NewsListSkeleton count={6} />
           </div>
         </section>
-        <Footer />
       </main>
     }>
       <NewsContent />

@@ -1,25 +1,143 @@
-/* 导入现代字体 */
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties (OKLCH Design Tokens) ── */
+:root {
+  /* 浅色模式颜色 */
+  --hero-wave-1: oklch(0.58 0.16 250);
+  --hero-wave-2: oklch(0.68 0.14 250);
+  --hero-wave-3: oklch(0.77 0.10 250);
+  --hero-bubble-primary: oklch(0.87 0.058 250);
+  --hero-bubble-accent: oklch(0.87 0.07 190);
+  --hero-bubble-warm: oklch(0.90 0.09 85);
+  --hero-drop-start: oklch(0.78 0.10 250);
+  --hero-drop-mid: oklch(0.60 0.15 250);
+  --hero-drop-end: oklch(0.42 0.13 250);
+  --hero-grid-dot: oklch(0.45 0.12 250);
+  --selection-bg: oklch(0.9 0.03 240);
+  --focus-ring: oklch(0.65 0.15 240);
+  --btn-shadow-color: oklch(0.50 0.15 250);
+  --skeleton-start: oklch(0.93 0.005 250);
+  --skeleton-mid: oklch(0.97 0.003 250);
+  --water-drop-color: oklch(0.70 0.12 250);
+  --footer-wave: oklch(0.11 0.008 250);
+  
+  /* 表面颜色 */
+  --surface-50: oklch(0.99 0 0);
+  --surface-100: oklch(0.98 0 0);
+  --surface-200: oklch(0.96 0 0);
+  --surface-300: oklch(0.92 0 0);
+  --surface-400: oklch(0.88 0 0);
+  --surface-500: oklch(0.82 0 0);
+  --surface-600: oklch(0.74 0 0);
+  --surface-700: oklch(0.64 0 0);
+  --surface-800: oklch(0.52 0 0);
+  --surface-900: oklch(0.38 0 0);
+  --surface-950: oklch(0.12 0 0);
+  
+  /* 主色调 */
+  --primary-50: oklch(0.97 0.03 250);
+  --primary-100: oklch(0.95 0.04 250);
+  --primary-200: oklch(0.90 0.06 250);
+  --primary-300: oklch(0.85 0.08 250);
+  --primary-400: oklch(0.78 0.10 250);
+  --primary-500: oklch(0.70 0.12 250);
+  --primary-600: oklch(0.60 0.14 250);
+  --primary-700: oklch(0.50 0.13 250);
+  --primary-800: oklch(0.42 0.11 250);
+  --primary-900: oklch(0.35 0.09 250);
+  
+  /* 强调色 */
+  --accent-50: oklch(0.97 0.03 190);
+  --accent-100: oklch(0.95 0.04 190);
+  --accent-200: oklch(0.90 0.06 190);
+  --accent-300: oklch(0.85 0.08 190);
+  --accent-400: oklch(0.78 0.10 190);
+  --accent-500: oklch(0.70 0.12 190);
+  --accent-600: oklch(0.60 0.14 190);
+  --accent-700: oklch(0.50 0.13 190);
+  --accent-800: oklch(0.42 0.11 190);
+  --accent-900: oklch(0.35 0.09 190);
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 深色模式颜色 */
+    --hero-wave-1: oklch(0.65 0.14 250);
+    --hero-wave-2: oklch(0.72 0.12 250);
+    --hero-wave-3: oklch(0.80 0.08 250);
+    --hero-bubble-primary: oklch(0.35 0.08 250);
+    --hero-bubble-accent: oklch(0.35 0.10 190);
+    --hero-bubble-warm: oklch(0.40 0.12 85);
+    --hero-drop-start: oklch(0.85 0.08 250);
+    --hero-drop-mid: oklch(0.68 0.13 250);
+    --hero-drop-end: oklch(0.50 0.11 250);
+    --hero-grid-dot: oklch(0.55 0.10 250);
+    --selection-bg: oklch(0.3 0.05 240);
+    --focus-ring: oklch(0.70 0.13 240);
+    --btn-shadow-color: oklch(0.40 0.13 250);
+    --skeleton-start: oklch(0.25 0.005 250);
+    --skeleton-mid: oklch(0.30 0.003 250);
+    --water-drop-color: oklch(0.75 0.10 250);
+    --footer-wave: oklch(0.08 0.005 250);
+    
+    /* 表面颜色 */
+    --surface-50: oklch(0.12 0 0);
+    --surface-100: oklch(0.18 0 0);
+    --surface-200: oklch(0.25 0 0);
+    --surface-300: oklch(0.32 0 0);
+    --surface-400: oklch(0.38 0 0);
+    --surface-500: oklch(0.45 0 0);
+    --surface-600: oklch(0.55 0 0);
+    --surface-700: oklch(0.65 0 0);
+    --surface-800: oklch(0.82 0 0);
+    --surface-900: oklch(0.92 0 0);
+    --surface-950: oklch(0.98 0 0);
+    
+    /* 主色调 */
+    --primary-50: oklch(0.20 0.05 250);
+    --primary-100: oklch(0.25 0.06 250);
+    --primary-200: oklch(0.30 0.08 250);
+    --primary-300: oklch(0.35 0.10 250);
+    --primary-400: oklch(0.45 0.12 250);
+    --primary-500: oklch(0.55 0.14 250);
+    --primary-600: oklch(0.65 0.14 250);
+    --primary-700: oklch(0.72 0.12 250);
+    --primary-800: oklch(0.80 0.10 250);
+    --primary-900: oklch(0.85 0.08 250);
+    
+    /* 强调色 */
+    --accent-50: oklch(0.20 0.05 190);
+    --accent-100: oklch(0.25 0.06 190);
+    --accent-200: oklch(0.30 0.08 190);
+    --accent-300: oklch(0.35 0.10 190);
+    --accent-400: oklch(0.45 0.12 190);
+    --accent-500: oklch(0.55 0.14 190);
+    --accent-600: oklch(0.65 0.14 190);
+    --accent-700: oklch(0.72 0.12 190);
+    --accent-800: oklch(0.80 0.10 190);
+    --accent-900: oklch(0.85 0.08 190);
+  }
+}
+
 @layer base {
   body {
-    @apply font-['DM_Sans'] text-surface-800 antialiased;
-    background: #ffffff;
+    @apply font-sans antialiased;
+    background-color: var(--surface-50);
+    color: var(--surface-800);
   }
 
   /* 中性色带冷色调的灰 */
   ::selection {
-    background-color: oklch(0.9 0.03 240);
+    background-color: var(--selection-bg);
     color: inherit;
   }
 
   /* 清晰的 focus 状态 */
   *:focus-visible {
-    outline: 2px solid oklch(0.65 0.15 240);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -27,22 +145,33 @@
   /* 标题字体 */
   h1, h2, h3, h4, h5, h6 {
     @apply font-display font-semibold;
+    color: var(--surface-900);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold text-base py-4 px-10 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-    box-shadow: 0 10px 25px -5px oklch(0.50 0.15 250 / 0.3), 0 4px 10px -4px oklch(0.50 0.15 250 / 0.15);
+    @apply inline-flex items-center gap-2.5 font-bold text-base py-4 px-10 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-offset-2;
+    background-color: var(--primary-600);
+    color: white;
+    box-shadow: 0 10px 25px -5px oklch(from var(--btn-shadow-color) l c h / 0.3), 0 4px 10px -4px oklch(from var(--btn-shadow-color) l c h / 0.15);
     position: relative;
     overflow: hidden;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-500);
+  }
+
+  .btn-primary:focus {
+    ring-color: var(--primary-500);
   }
 
   .btn-primary::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), oklch(1 0 0 / 0.15) 0%, transparent 60%);
+    background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.15) 0%, transparent 60%);
     opacity: 0;
     transition: opacity 0.4s;
   }
@@ -53,24 +182,41 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center gap-2.5 bg-white hover:bg-surface-50 text-surface-900 font-bold text-base py-4 px-10 rounded-xl border-2 border-surface-200 hover:border-primary-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply inline-flex items-center gap-2.5 font-bold text-base py-4 px-10 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    background-color: var(--surface-50);
+    color: var(--surface-900);
+    border-color: var(--surface-200);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--surface-100);
+    border-color: var(--primary-400);
+  }
+
+  .btn-secondary:focus {
+    ring-color: var(--primary-500);
   }
 
   .section-title {
-    @apply font-display text-4xl md:text-5xl font-bold tracking-tight text-surface-900;
+    @apply font-display text-4xl md:text-5xl font-bold tracking-tight;
     line-height: 1.1;
+    color: var(--surface-900);
   }
 
   .section-subtitle {
-    @apply text-lg md:text-xl text-surface-600 max-w-2xl leading-relaxed;
+    @apply text-lg md:text-xl max-w-2xl leading-relaxed;
+    color: var(--surface-600);
   }
 
   .section-label {
-    @apply inline-flex items-center gap-2 text-xs font-bold text-primary-600 tracking-widest uppercase;
+    @apply inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase;
+    color: var(--primary-600);
   }
 
   .card-surface {
-    @apply bg-white rounded-2xl border border-surface-200 shadow-lg transition-all duration-200 hover:shadow-xl;
+    @apply rounded-2xl border shadow-lg transition-all duration-200 hover:shadow-xl;
+    background-color: var(--surface-50);
+    border-color: var(--surface-200);
   }
 
   .card-hover {
@@ -95,14 +241,26 @@
   .micro-interaction {
     @apply transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)];
   }
-
-  /* 渐变文本 */
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400;
-  }
 }
 
-/* 水滴下落动画 */
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-start) 25%,
+    var(--skeleton-mid) 50%,
+    var(--skeleton-start) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+
 @keyframes waterDrop {
   0% {
     transform: translateY(-40px) scale(1, 0.8);
@@ -129,7 +287,7 @@
 .water-drop {
   width: 8px;
   height: 12px;
-  background: oklch(0.70 0.12 250 / 0.4);
+  background: oklch(from var(--water-drop-color) l c h / 0.4);
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   animation: waterDrop 3s ease-in infinite;
 }
@@ -166,21 +324,17 @@
 
 /* 水滴呼吸变形 */
 @keyframes dropBreathe {
-  0%, 100% { 
-    rx: 28; ry: 30;
-    transform: translateY(0);
+  0%, 100% {
+    transform: scale(1, 1) translateY(0);
   }
-  25% { 
-    rx: 30; ry: 27;
-    transform: translateY(2px);
+  25% {
+    transform: scale(1.07, 0.9) translateY(2px);
   }
-  50% { 
-    rx: 27; ry: 31;
-    transform: translateY(-2px);
+  50% {
+    transform: scale(0.96, 1.03) translateY(-2px);
   }
-  75% { 
-    rx: 29; ry: 28;
-    transform: translateY(1px);
+  75% {
+    transform: scale(1.03, 0.93) translateY(1px);
   }
 }
 
@@ -271,7 +425,7 @@
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background: oklch(1 0 0 / 0.25);
+  background: rgba(255,255,255,0.25);
   animation: rippleOut 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   pointer-events: none;
 }
@@ -294,6 +448,18 @@
 
 .animate-breathe {
   animation: breathe 4s ease-in-out infinite;
+}
+
+/* 滚动指示线动画 */
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+.animate-scroll-line {
+  animation: scrollLine 2s ease-in-out infinite;
 }
 
 /* 页面进入动画 */
@@ -358,28 +524,7 @@ html {
   }
 }
 
-/* 滑入动画 */
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+/* 淡入向上动画已定义在 contact/page.tsx 使用 */
 
 .animate-fade-in {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -391,12 +536,4 @@ html {
 
 .animate-fade-in-up {
   animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

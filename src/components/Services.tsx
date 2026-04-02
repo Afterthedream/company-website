@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { parseRichText } from '@/lib/richTextParser'
+import DetailModal, { ModalItem } from '@/components/DetailModal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 interface Product {
   id: number
@@ -75,25 +77,21 @@ const defaultServices = [
 ]
 
 export default function Services({ products = [] }: ServicesProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>(0.1)
+  const [selectedProduct, setSelectedProduct] = useState<ModalItem | null>(null)
 
   const hasProducts = products.length > 0
-  const services = products.slice(0, 3)
+  const services = hasProducts ? products.slice(0, 3) : defaultServices.slice(0, 3)
+
+  const handleViewDetails = (product: any) => {
+    const data = product.attributes || product
+    setSelectedProduct({
+      name: data.name || data.title,
+      description: data.description,
+      features: data.features,
+      coverImage: data.coverImage || data.image
+    })
+  }
 
   return (
     <section ref={sectionRef} className="py-28 bg-surface-950 relative overflow-hidden">
@@ -129,17 +127,6 @@ export default function Services({ products = [] }: ServicesProps) {
         </div>
 
         {/* 卡片网格 */}
-        {!hasProducts ? (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto mb-5 bg-white/10 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">暂时还没有产品哦</h3>
-            <p className="text-sm text-surface-300">敬请期待后续更新~</p>
-          </div>
-        ) : (
         <div className="grid md:grid-cols-3 gap-5">
           {services.map((item: any, index: number) => {
             const accentColors = [
@@ -160,7 +147,7 @@ export default function Services({ products = [] }: ServicesProps) {
                 {/* 编号 + 图标 */}
                 <div className="flex items-center justify-between mb-7">
                   <div className={`w-14 h-14 rounded-2xl ${ac.bg} flex items-center justify-center ${ac.text} ${ac.hoverBg} transition-colors duration-200`}>
-                    {item.icon || defaultServices[0].icon}
+                    {item.icon || defaultServices[index % defaultServices.length].icon}
                   </div>
                   <span className={`w-2 h-2 ${ac.dot} rounded-full`} />
                 </div>
@@ -171,27 +158,36 @@ export default function Services({ products = [] }: ServicesProps) {
                 </h3>
 
                 {/* 描述 */}
-                <p className="text-sm text-surface-200 leading-relaxed mb-6">
+                <p className="text-sm text-surface-100 leading-relaxed mb-6">
                   {parseRichText(item.description) || '提供专业的解决方案，满足您的各种需求。'}
                 </p>
 
                 {/* 链接 */}
-                <Link
-                  href="/products"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-400 group-hover:text-primary-300 transition-colors"
+                <button
+                  onClick={() => handleViewDetails(item)}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-400 group-hover:text-primary-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
+                  aria-label={`查看${item.name || item.title}的详情`}
                 >
                   了解更多
                   <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
-                </Link>
+                </button>
               </div>
             </div>
             )
           })}
         </div>
-        )}
       </div>
+
+      {/* 详情弹窗 */}
+      {selectedProduct && (
+        <DetailModal 
+          item={selectedProduct} 
+          type="product" 
+          onClose={() => setSelectedProduct(null)} 
+        />
+      )}
     </section>
   )
 }

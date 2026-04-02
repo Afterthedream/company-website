@@ -1,31 +1,34 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+'use client'
+
+import { useState, useEffect } from 'react'
 import PageHeader from '@/components/PageHeader'
 import TencentMapSimple from '@/components/TencentMapSimple'
-import { getCompanyInfo, getCompanyImage } from '@/lib/strapi'
+import { AboutPageSkeleton } from '@/components/Skeleton'
+import { getCompanyInfo, extractCompanyImage } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
+import { defaultCompany } from '@/lib/defaults'
 
-const defaultCompany = {
-  name: '四川沧杰荇科技有限公司',
-  description: '四川沧杰荇科技有限公司是专业的水利水务数字化解决方案服务商，以先进的水利信息化技术为驱动，为客户提供专业、高效的解决方案，助力实现水资源的科学管理与可持续利用。',
-  vision: '以水为脉，以智为器，以服为桥 —— 让每一滴水都被精准守护，每一项水治理都可持续',
-  mission: '致力于水利信息化领域的科技创新，为水利行业提供智能化、数字化的服务，推动水资源管理迈向新高度。',
-  values: '团结 共建 努力 共赢',
-  phone: '028-86045168',
-  email: '742035754@qq.com',
-  address: '成都市双流区新通大道777号2栋1单元1203号',
-  mapLongitude: 104.098072,
-  mapLatitude: 30.524227,
-  mapAddress: '成都市双流区新通大道777号2栋1单元1203号',
-  establishedYear: '2025',
-  projectCount: 10,
-}
+export default function AboutPage() {
+  const [company, setCompany] = useState<any>(null)
+  const [companyImage, setCompanyImage] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-export const dynamic = 'force-dynamic'
+  useEffect(() => {
+    // 添加延迟，确保骨架屏有足够时间显示
+    const timer = setTimeout(async () => {
+      try {
+        const data = await getCompanyInfo()
+        setCompany(data)
+        setCompanyImage(extractCompanyImage(data))
+      } catch (error) {
+        console.error('Failed to fetch company info:', error)
+      } finally {
+        setLoading(false)
+      }
+    }, 500) // 500ms延迟，确保骨架屏显示
 
-export default async function AboutPage() {
-  const company = await getCompanyInfo()
-  const companyImage = await getCompanyImage()
+    return () => clearTimeout(timer)
+  }, [])
 
   const data = {
     ...defaultCompany,
@@ -55,10 +58,19 @@ export default async function AboutPage() {
     )},
   ]
 
+  // 显示骨架屏
+  if (loading) {
+    return (
+      <main className="min-h-screen">
+        <PageHeader number="06" label="关于我们" title="关于沧杰荇" description="一站式水利信息化问题解决者" />
+        <AboutPageSkeleton />
+      </main>
+    )
+  }
+
+  // 显示实际内容
   return (
     <main className="min-h-screen animate-page-enter">
-      <Header />
-
       <PageHeader
         number="06"
         label="关于我们"
@@ -73,7 +85,7 @@ export default async function AboutPage() {
             {/* 图片 */}
             <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3]">
               {companyImage ? (
-                <img src={companyImage} alt={data.name} className="w-full h-full object-cover" />
+                <img src={companyImage} alt={data.name} loading="lazy" className="w-full h-full object-cover" />
               ) : null}
               <div className="absolute -bottom-3 -left-3 w-full h-full rounded-2xl border border-primary-100 -z-10" />
             </div>
@@ -84,7 +96,7 @@ export default async function AboutPage() {
                 <div className="flex items-center gap-3">
                   <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
                   <div className="w-8 h-px bg-primary-200" />
-                  <span className="text-xs text-surface-400">公司简介</span>
+                  <span className="text-xs text-surface-500">公司简介</span>
                 </div>
                 <h2 className="section-title">{data.name}</h2>
                 <p className="text-surface-500 leading-relaxed text-[15px]">{data.description}</p>
@@ -93,11 +105,11 @@ export default async function AboutPage() {
               <div className="flex gap-10">
                 <div>
                   <div className="font-display text-3xl font-bold text-primary-600">{data.establishedYear}</div>
-                  <div className="text-xs text-surface-400 mt-1">成立年份</div>
+                  <div className="text-xs text-surface-500 mt-1">成立年份</div>
                 </div>
                 <div>
                   <div className="font-display text-3xl font-bold text-primary-600">{data.projectCount}+</div>
-                  <div className="text-xs text-surface-400 mt-1">成功案例</div>
+                  <div className="text-xs text-surface-500 mt-1">成功案例</div>
                 </div>
               </div>
             </div>
@@ -125,7 +137,7 @@ export default async function AboutPage() {
                 </div>
                 <span className="text-[11px] font-mono text-surface-300 block mb-2">0{i + 1}</span>
                 <h3 className="text-lg font-semibold text-surface-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-surface-400 leading-relaxed">{item.text}</p>
+                <p className="text-sm text-surface-500 leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>
@@ -149,22 +161,26 @@ export default async function AboutPage() {
             <div className="space-y-6">
               {[
                 { icon: (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                ), label: '联系电话', value: data.phone },
+                  <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                ), label: '联系电话', value: data.phone, href: `tel:${data.phone}` },
                 { icon: (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                ), label: '电子邮箱', value: data.email },
+                  <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                ), label: '电子邮箱', value: data.email, href: `mailto:${data.email}` },
                 { icon: (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                ), label: '公司地址', value: data.address },
+                  <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                ), label: '公司地址', value: data.address, href: undefined },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-5 rounded-xl bg-surface-50 hover:bg-surface-100/80 transition-colors duration-200">
                   <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 flex-shrink-0">
                     {item.icon}
                   </div>
                   <div>
-                    <div className="text-xs text-surface-400 mb-0.5">{item.label}</div>
-                    <div className="text-sm font-medium text-surface-800">{item.value}</div>
+                    <div className="text-xs text-surface-500 mb-0.5">{item.label}</div>
+                    {item.href ? (
+                      <a href={item.href} className="text-sm font-medium text-surface-800 hover:text-primary-600 transition-colors duration-200">{item.value}</a>
+                    ) : (
+                      <div className="text-sm font-medium text-surface-800">{item.value}</div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -181,8 +197,6 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   )
 }

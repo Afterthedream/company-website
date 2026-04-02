@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 import { getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
@@ -23,7 +24,7 @@ export interface ModalItem {
 interface DetailModalProps {
   item: ModalItem | null
   onClose: () => void
-  type: 'product' | 'solution' | 'news'
+  type: 'product' | 'solution' | 'news' | 'case'
 }
 
 // 将任意 features 格式解析为 { label, value? }[] 列表
@@ -65,7 +66,7 @@ function renderInlineChildren(children: any[]): React.ReactNode {
     if (child.italic)        node = <em key={i}>{node}</em>
     if (child.underline)     node = <u key={i}>{node}</u>
     if (child.strikethrough) node = <s key={i}>{node}</s>
-    if (child.code)          node = <code key={i} className="bg-gray-100 px-1 rounded text-sm font-mono">{node}</code>
+    if (child.code)          node = <code key={i} className="bg-surface-100 px-1 rounded text-sm font-mono">{node}</code>
     if (child.type === 'link') {
       node = (
         <a key={i} href={child.url} target="_blank" rel="noreferrer"
@@ -82,22 +83,22 @@ function renderBlock(block: any, i: number): React.ReactNode {
   switch (block.type) {
     case 'paragraph':
       return (
-        <p key={i} className="text-gray-700 leading-relaxed">
+        <p key={i} className="text-surface-700 leading-relaxed">
           {renderInlineChildren(block.children)}
         </p>
       )
     case 'heading': {
       const text = renderInlineChildren(block.children)
-      const cls = 'font-bold text-gray-900'
-      if (block.level === 1) return <h1 key={i} className={`text-2xl ${cls}`}>{text}</h1>
-      if (block.level === 2) return <h2 key={i} className={`text-xl ${cls}`}>{text}</h2>
-      if (block.level === 3) return <h3 key={i} className={`text-lg ${cls}`}>{text}</h3>
-      return <h4 key={i} className={`text-base ${cls}`}>{text}</h4>
+      const cls = 'font-bold text-surface-900'
+      if (block.level === 1) return <h2 key={i} className={`text-2xl ${cls}`}>{text}</h2>
+      if (block.level === 2) return <h3 key={i} className={`text-xl ${cls}`}>{text}</h3>
+      if (block.level === 3) return <h4 key={i} className={`text-lg ${cls}`}>{text}</h4>
+      return <h5 key={i} className={`text-base ${cls}`}>{text}</h5>
     }
     case 'list':
       if (block.format === 'ordered') {
         return (
-          <ol key={i} className="list-decimal list-inside space-y-1 text-gray-700">
+          <ol key={i} className="list-decimal list-inside space-y-1 text-surface-700">
             {block.children?.map((item: any, j: number) => (
               <li key={j}>{renderInlineChildren(item.children)}</li>
             ))}
@@ -105,7 +106,7 @@ function renderBlock(block: any, i: number): React.ReactNode {
         )
       }
       return (
-        <ul key={i} className="list-disc list-inside space-y-1 text-gray-700">
+        <ul key={i} className="list-disc list-inside space-y-1 text-surface-700">
           {block.children?.map((item: any, j: number) => (
             <li key={j}>{renderInlineChildren(item.children)}</li>
           ))}
@@ -113,13 +114,13 @@ function renderBlock(block: any, i: number): React.ReactNode {
       )
     case 'quote':
       return (
-        <blockquote key={i} className="border-l-4 border-primary-400 pl-4 italic text-gray-600">
+        <blockquote key={i} className="border-l-4 border-primary-400 pl-4 italic text-surface-600">
           {renderInlineChildren(block.children)}
         </blockquote>
       )
     case 'code':
       return (
-        <pre key={i} className="bg-gray-100 rounded-lg p-4 overflow-x-auto text-sm font-mono text-gray-800">
+        <pre key={i} className="bg-surface-100 rounded-lg p-4 overflow-x-auto text-sm font-mono text-surface-800">
           {renderInlineChildren(block.children)}
         </pre>
       )
@@ -159,7 +160,7 @@ function StrapiBlocks({ content }: { content: any }) {
           // 普通文本段落
           if (part.trim()) {
             return (
-              <p key={i} className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <p key={i} className="text-surface-700 leading-relaxed whitespace-pre-line">
                 {part}
               </p>
             )
@@ -182,10 +183,49 @@ function StrapiBlocks({ content }: { content: any }) {
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function DetailModal({ item, onClose, type }: DetailModalProps) {
+  const modalRef = React.useRef<HTMLDivElement>(null)
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null)
+
+  // 焦点陷阱 + Escape 关闭
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const previouslyFocused = document.activeElement as HTMLElement
+
+    // 打开时自动聚焦关闭按钮
+    closeButtonRef.current?.focus()
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab') return
+
+      const modal = modalRef.current
+      if (!modal) return
+      const focusable = modal.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault()
+          last?.focus()
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault()
+          first?.focus()
+        }
+      }
+    }
+
     window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+      previouslyFocused?.focus()
+    }
   }, [onClose])
 
   useEffect(() => {
@@ -213,7 +253,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
   const getTypeColor = () => {
     switch (type) {
       case 'product': return 'primary'
-      case 'solution': return 'emerald'
+      case 'solution': return 'accent'
       case 'news': return 'blue'
       default: return 'primary'
     }
@@ -226,21 +266,20 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
-      style={{ 
-        backgroundColor: 'rgba(0,0,0,0.6)', 
-        backdropFilter: 'blur(6px)',
-        animation: 'fadeIn 0.3s ease-in-out',
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/75 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >
       <div
+        ref={modalRef}
         className={`relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl md:max-w-6xl overflow-hidden animate-scale-in ${type === 'news' ? 'max-h-[85vh]' : 'max-h-[90vh]'}`}
-        style={{ animation: 'scaleIn 0.3s ease-out' }}
         onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
       >
         {/* 关闭按钮 */}
         <button
+          ref={closeButtonRef}
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg transition-all duration-200"
           aria-label="关闭"
@@ -254,9 +293,10 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
           {/* 左侧：图片 */}
           <div className={`bg-surface-50 flex items-center justify-center overflow-hidden ${type === 'news' ? 'md:w-1/2' : 'md:w-2/5'}`}>
             {coverImg ? (
-              <img 
-                src={coverImg} 
-                alt={title} 
+              <img
+                src={coverImg}
+                alt={title}
+                loading="lazy"
                 className={`w-full h-full transition-transform duration-300 hover:scale-[1.02] ${type === 'news' ? 'object-contain' : 'object-contain p-8'}`}
               />
             ) : (
@@ -277,18 +317,22 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
                   <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${
                     item.category === 'company'
                       ? 'bg-primary-50 text-primary-600 border border-primary-100'
-                      : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                      : 'bg-accent-50 text-accent-600 border border-accent-100'
                   }`}>
                     {item.category === 'company' ? '公司新闻' : '行业资讯'}
                   </span>
                 )}
                 {type !== 'news' && (
-                  <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-${typeColor}-50 text-${typeColor}-600 border border-${typeColor}-100`}>
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${
+                    type === 'product'
+                      ? 'bg-primary-50 text-primary-600 border border-primary-100'
+                      : 'bg-accent-50 text-accent-600 border border-accent-100'
+                  }`}>
                     {type === 'product' ? '产品' : '解决方案'}
                   </span>
                 )}
                 {(item.publishedAt || item.date) && (
-                  <span className="text-surface-400 text-sm">
+                  <span className="text-surface-500 text-sm">
                     {new Date(item.publishedAt || item.date!).toLocaleDateString('zh-CN')}
                   </span>
                 )}
@@ -323,14 +367,22 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
             {/* Features */}
             {featureList.length > 0 && (
-              <div className={`p-5 rounded-xl bg-${typeColor}-50/50 border border-${typeColor}-100/50`}>
-                <h3 className={`text-base font-semibold text-${typeColor}-700 mb-4`}>
+              <div className={`p-5 rounded-xl ${
+                type === 'product'
+                  ? 'bg-primary-50/50 border border-primary-100/50'
+                  : 'bg-accent-50/50 border border-accent-100/50'
+              }`}>
+                <h3 className={`text-base font-semibold mb-4 ${
+                  type === 'product' ? 'text-primary-700' : 'text-accent-700'
+                }`}>
                   {type === 'product' ? '产品特性' : '方案特点'}
                 </h3>
                 <div className="space-y-3">
                   {featureList.map((f, i) => (
                     <div key={i} className="flex items-start space-x-3">
-                      <div className={`w-2.5 h-2.5 rounded-full bg-${typeColor}-500 flex-shrink-0 mt-1.5`} />
+                      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1.5 ${
+                        type === 'product' ? 'bg-primary-500' : 'bg-accent-500'
+                      }`} />
                       <div className="text-sm">
                         {f.value ? (
                           <>
@@ -349,9 +401,9 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
             {/* Cases */}
             {type === 'solution' && item.cases && (
-              <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
-                <h3 className="text-sm font-semibold text-emerald-700 mb-2">典型案例</h3>
-                <p className="text-emerald-700 text-sm leading-relaxed">{parseRichText(item.cases) || String(item.cases)}</p>
+              <div className="bg-accent-50 rounded-xl p-5 border border-accent-100">
+                <h3 className="text-sm font-semibold text-accent-700 mb-2">典型案例</h3>
+                <p className="text-accent-700 text-sm leading-relaxed">{parseRichText(item.cases) || String(item.cases)}</p>
               </div>
             )}
 
@@ -359,11 +411,9 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
             <div className="pt-4">
               <button
                 onClick={onClose}
-                className="w-full py-3.5 rounded-xl font-bold text-base transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                style={{
-                  backgroundColor: typeColor === 'primary' ? '#2563eb' : typeColor === 'emerald' ? '#059669' : '#2563eb',
-                  color: 'white',
-                }}
+                className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98] ${
+                  type === 'solution' ? 'bg-accent-600' : 'bg-primary-600'
+                }`}
               >
                 关闭
               </button>

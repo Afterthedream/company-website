@@ -1,0 +1,46 @@
+{
+  "navigation": {
+    "home": "首页",
+    "products": "产品中心",
+    "solutions": "解决方案",
+    "cases": "应用案例",
+    "news": "新闻动态",
+    "about": "关于我们",
+    "contact": "联系我们"
+  },
+  "hero": {
+    "label": "水利信息化专家",
+    "title": "以水为脉，以智为器，以服为桥",
+    "subtitle": "一站式水利信息化问题解决者",
+    "btnProducts": "所有产品",
+    "btnContact": "联系我们"
+  },
+  "footer": {
+    "company": "四川沧杰荇科技有限公司",
+    "companyEn": "SICHUAN CANGJIEXING TECHNOLOGY CO,LTD",
+    "description": "以水为脉，以智为器，以服为桥——专注水资源治理与保护，让每一滴水都被精准守护，每一项水治理都可持续。",
+    "sections": {
+      "about": "关于我们",
+      "products": "产品与服务",
+      "news": "新闻动态"
+    },
+    "links": {
+      "companyProfile": "公司简介",
+      "culture": "企业文化",
+      "contactInfo": "公司信息",
+      "productCenter": "产品中心",
+      "solutions": "解决方案",
+      "cases": "应用案例",
+      "companyNews": "公司新闻",
+      "industryNews": "行业资讯"
+    },
+    "copyright": "© {{year}} 四川沧杰荇科技有限公司 All Rights Reserved.",
+    "icp": "蜀ICP备2024XXXXXX号"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "出错了，请稍后重试",
+    "retry": "重试",
+    "noData": "暂无数据"
+  }
+}

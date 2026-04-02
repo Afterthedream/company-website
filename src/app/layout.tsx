@@ -1,6 +1,24 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { DM_Sans, Sora } from 'next/font/google'
 import './globals.css'
 import DynamicFavicon from '@/components/DynamicFavicon'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import I18nProvider from '@/components/I18nProvider'
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
+
+const sora = Sora({
+  subsets: ['latin'],
+  weight: ['600', '700', '800'],
+  variable: '--font-sora',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: '四川沧杰荇科技有限公司',
@@ -12,24 +30,32 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: 'oklch(0.98 0.003 250)',
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-      </head>
-      <body>
-        <DynamicFavicon />
-        {children}
+    <html lang="zh-CN" className={`${dmSans.variable} ${sora.variable}`}>
+      <body className={`${dmSans.variable} ${sora.variable}`}>
+        <I18nProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-lg"
+          >
+            跳转到主内容
+          </a>
+          <DynamicFavicon />
+          <Header />
+          {children}
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   )

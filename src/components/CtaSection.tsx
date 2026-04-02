@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 interface CtaSectionProps {
   title?: string
@@ -15,25 +15,10 @@ export default function CtaSection({
   title = "需要专业的",
   description = "我们的专业团队将根据您的具体需求，提供个性化的定制化解决方案",
   highlightText = "水治理方案",
-  buttonText = "免费咨询方案",
-  secondaryLink = { href: "/products", text: "浏览产品 →" }
+  buttonText = "联系我们",
+  secondaryLink = { href: "/products", text: "浏览产品" }
 }: CtaSectionProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>(0.2)
 
   return (
     <section ref={sectionRef} className="py-28 bg-white relative">
@@ -43,17 +28,12 @@ export default function CtaSection({
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          {/* 装饰光晕 */}
-          <div className="absolute top-0 right-0 w-72 h-72 bg-primary-500/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary-600/8 rounded-full blur-[80px]" />
-
           <div className="relative flex flex-col lg:flex-row items-center justify-between gap-12">
-            {/* 左 */}
             <div className="text-center lg:text-left space-y-4 max-w-lg">
-              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight lg:whitespace-nowrap">
-                {title}<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">{highlightText}</span>？
+              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight whitespace-nowrap">
+                {title}<span className="text-primary-300">{highlightText}</span>？
               </h2>
-              <p className="text-base text-surface-200 leading-relaxed">
+              <p className="text-base text-surface-100 leading-relaxed">
                 {description}
               </p>
             </div>
@@ -72,9 +52,12 @@ export default function CtaSection({
               {secondaryLink && (
                 <Link
                   href={secondaryLink.href}
-                  className="text-base text-surface-300 hover:text-white transition-colors font-semibold"
+                  className="group/link inline-flex items-center gap-1.5 text-base text-surface-200 hover:text-white transition-colors font-semibold"
                 >
                   {secondaryLink.text}
+                  <svg className="w-4 h-4 group-hover/link:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
                 </Link>
               )}
             </div>

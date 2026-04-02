@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const MAP_KEY = 'GRDBZ-VMFEQ-FN75C-4HYJZ-Y36R2-W5BUT'
+const MAP_KEY = process.env.NEXT_PUBLIC_TENCENT_MAP_KEY || ''
 
 export default function TencentMap({
   longitude,

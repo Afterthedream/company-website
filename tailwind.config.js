@@ -54,8 +54,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['DM Sans', 'system-ui', 'sans-serif'],
-        display: ['Sora', 'DM Sans', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-dm-sans)', 'DM Sans', 'system-ui', 'sans-serif'],
+        display: ['var(--font-sora)', 'Sora', 'DM Sans', 'system-ui', 'sans-serif'],
       },
       animation: {
         'float-slow': 'float-slow 8s cubic-bezier(0.16, 1, 0.3, 1) infinite',

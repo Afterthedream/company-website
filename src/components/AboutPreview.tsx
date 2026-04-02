@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { parseRichText } from '@/lib/richTextParser'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 interface Company {
   id: number
@@ -20,22 +20,7 @@ interface AboutPreviewProps {
 }
 
 export default function AboutPreview({ company, companyImage }: AboutPreviewProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.15 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>(0.15)
 
   const values = [
     {
@@ -73,10 +58,6 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
 
   return (
     <section ref={sectionRef} className="py-28 bg-surface-50 relative overflow-hidden">
-      {/* 背景光晕 */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary-50/60 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-100/40 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4" />
-
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 区域标签 */}
         <div
@@ -86,7 +67,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
         >
           <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
           <div className="w-10 h-px bg-primary-300" />
-          <span className="text-sm text-surface-400">关于我们</span>
+          <span className="text-sm text-surface-500">关于我们</span>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
@@ -96,12 +77,13 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'
             }`}
           >
-            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg group">
+            <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3] shadow-lg group max-w-full">
               {companyImage ? (
-                <img 
-                  src={companyImage} 
-                  alt="公司照片" 
-                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                <img
+                  src={companyImage}
+                  alt={company?.name ? `${company.name} 办公环境` : '公司办公环境'}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 max-w-full"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
@@ -126,8 +108,8 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
             }`}
           >
             <div className="space-y-5">
-              <h2 className="section-title whitespace-nowrap">
-                以水为脉，<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500">以智为器</span>，<span className="text-accent-600">以服为桥</span>
+              <h2 className="section-title text-3xl md:text-4xl">
+                以水为脉，<span className="text-primary-600">以智为器</span>，<span className="text-accent-600">以服为桥</span>
               </h2>
               <p className="text-surface-600 leading-relaxed text-base">
                 {parseRichText(company?.description) || '四川沧杰荇科技有限公司是专业的水利水务数字化解决方案服务商，以先进的水利信息化技术为驱动，为客户提供专业、高效的解决方案，助力实现水资源的科学管理与可持续利用。'}
@@ -154,7 +136,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
                       </div>
                       <div>
                         <h3 className="text-sm font-semibold text-surface-800 mb-0.5">{item.title}</h3>
-                        <p className="text-sm text-surface-400 leading-relaxed">{parseRichText(item.text)}</p>
+                        <p className="text-sm text-surface-500 leading-relaxed">{parseRichText(item.text)}</p>
                       </div>
                     </div>
                   )

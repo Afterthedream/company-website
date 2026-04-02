@@ -1,96 +1,96 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
 import { SolutionListSkeleton } from '@/components/Skeleton'
 import { getSolutions, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
+import { defaultSolutions } from '@/lib/defaults'
+import CtaSection from '@/components/CtaSection'
 
-const defaultSolutions = [
-  {
-    title: '城市水环境治理',
-    description: '为城市黑臭水体、污染河道提供系统性治理方案',
-    features: ['黑臭水体治理', '河道生态修复', '雨污分流改造', '初期雨水处理'],
-    cases: '已服务 30+ 城市，治理河道总长度超过 500 公里',
-  },
-  {
-    title: '工业废水处理',
-    description: '针对各类工业废水提供定制化处理解决方案',
-    features: ['化工废水处理', '电镀废水处理', '印染废水处理', '零排放系统'],
-    cases: '服务 200+ 工业企业，达标率 99% 以上',
-  },
-  {
-    title: '农村污水治理',
-    description: '为农村地区提供分散式、生态化污水处理方案',
-    features: ['一体化处理设备', '人工湿地系统', '资源化利用', '智能运维'],
-    cases: '覆盖 100+ 村庄，受益人口超过 50 万',
-  },
-  {
-    title: '饮用水安全保障',
-    description: '从水源地到水龙头的全流程饮用水安全保障',
-    features: ['水源地保护', '水厂提标改造', '管网水质保障', '二次供水改造'],
-    cases: '保障 500+ 万人饮水安全',
-  },
-  {
-    title: '智慧水务建设',
-    description: '运用物联网、大数据技术实现水务智能化',
-    features: ['在线监测系统', '智能调度系统', '应急指挥系统', '移动应用平台'],
-    cases: '建设 20+ 智慧水务平台',
-  },
-]
-
-const solutionIcons = [
-  <svg key={0} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
-  <svg key={1} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>,
-  <svg key={2} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
-  <svg key={3} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>,
-  <svg key={4} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+// Thin inline SVG decorators for each solution domain
+const domainMarks = [
+  // Water wave
+  <svg key={0} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-full h-full">
+    <path d="M4 32 Q12 24 20 32 Q28 40 36 32 Q44 24 48 32" strokeLinecap="round"/>
+    <path d="M4 22 Q12 14 20 22 Q28 30 36 22 Q44 14 48 22" strokeLinecap="round" opacity="0.5"/>
+    <path d="M4 12 Q12 4 20 12 Q28 20 36 12 Q44 4 48 12" strokeLinecap="round" opacity="0.25"/>
+  </svg>,
+  // Industrial pipe
+  <svg key={1} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-full h-full">
+    <rect x="6" y="18" width="36" height="12" rx="6"/>
+    <path d="M18 18 V10 M30 18 V10" strokeLinecap="round"/>
+    <path d="M18 30 V38 M30 30 V38" strokeLinecap="round"/>
+    <circle cx="18" cy="10" r="3"/>
+    <circle cx="30" cy="10" r="3"/>
+  </svg>,
+  // House + leaf
+  <svg key={2} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-full h-full">
+    <path d="M8 24 L24 10 L40 24" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14 24 V38 H34 V24" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M30 34 Q36 28 36 20 Q28 20 26 28 Q24 36 30 34Z" fill="none"/>
+  </svg>,
+  // Shield + drop
+  <svg key={3} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-full h-full">
+    <path d="M24 6 L40 12 V26 C40 35 24 44 24 44 C24 44 8 35 8 26 V12 Z" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M24 16 Q24 16 30 26 A6 6 0 0 1 18 26 Q24 16 24 16Z"/>
+  </svg>,
+  // Circuit / IoT
+  <svg key={4} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-full h-full">
+    <rect x="18" y="18" width="12" height="12" rx="2"/>
+    <path d="M24 18 V8 M24 30 V40" strokeLinecap="round"/>
+    <path d="M18 24 H8 M30 24 H40" strokeLinecap="round"/>
+    <circle cx="8" cy="24" r="2.5" fill="currentColor" opacity="0.3"/>
+    <circle cx="40" cy="24" r="2.5" fill="currentColor" opacity="0.3"/>
+    <circle cx="24" cy="8" r="2.5" fill="currentColor" opacity="0.3"/>
+    <circle cx="24" cy="40" r="2.5" fill="currentColor" opacity="0.3"/>
+  </svg>,
 ]
 
 export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<any[]>([])
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
-  const [isVisible, setIsVisible] = useState(false)
   const [loading, setLoading] = useState(true)
-  const listRef = useRef<HTMLDivElement>(null)
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set())
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     getSolutions()
-      .then(data => {
-        console.log('Solutions data:', JSON.stringify(data))
-        setSolutions(data)
-      })
-      .catch((err) => {
-        console.error('Solutions error:', err)
-        setSolutions([])
-      })
+      .then(data => setSolutions(data))
+      .catch(() => setSolutions([]))
       .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.05 }
-    )
-    if (listRef.current) observer.observe(listRef.current)
-    return () => observer.disconnect()
-  }, [])
+    const observers: IntersectionObserver[] = []
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisibleItems(prev => new Set([...prev, i]))
+            obs.disconnect()
+          }
+        },
+        { threshold: 0.08 }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [loading])
 
   const displaySolutions = solutions.length > 0 ? solutions : defaultSolutions
   const hasDisplayData = displaySolutions.length > 0
 
-  return (
-    <main className="min-h-screen">
-      <Header />
+  const handleToggle = (index: number) => {
+    setExpandedIndex(prev => (prev === index ? null : index))
+  }
 
+  return (
+    <main className="min-h-screen" id="main-content">
       <PageHeader
         number="03"
         label="解决方案"
@@ -98,12 +98,20 @@ export default function SolutionsPage() {
         description="针对不同场景，提供专业的定制化解决方案"
       />
 
-      <section className="py-28 bg-surface-50">
+      <section className="py-24 bg-surface-50">
         <div className="max-w-6xl mx-auto px-6">
+
+          {/* Section intro line */}
+          <div className="flex items-center gap-6 mb-16">
+            <div className="h-px flex-1 bg-surface-100" />
+            <span className="text-xs font-bold tracking-widest uppercase text-surface-300">SOLUTIONS</span>
+            <div className="h-px flex-1 bg-surface-100" />
+          </div>
+
           {loading ? (
             <SolutionListSkeleton count={5} />
-          ) : (
-            <div ref={listRef} className="space-y-5">
+          ) : hasDisplayData ? (
+            <div>
               {displaySolutions.map((solution: any, index: number) => {
                 let featuresArray: string[] = []
                 if (solution.features) {
@@ -117,87 +125,191 @@ export default function SolutionsPage() {
                   featuresArray = defaultSolutions[index].features
                 }
 
-                const icon = solutionIcons[index % solutionIcons.length]
+                const defaults = defaultSolutions[index] || {}
+                const isExpanded = expandedIndex === index
+                const isVisible = visibleItems.has(index)
+                const icon = domainMarks[index % domainMarks.length]
+                const desc = parseRichText(solution.description) || solution.description || defaults.description || ''
 
                 return (
                   <div
                     key={solution.id || index}
-                    className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    ref={el => { itemRefs.current[index] = el }}
+                    className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
+                    style={{ transitionDelay: `${index * 90}ms` }}
                   >
-                    <div className="card-surface p-8 md:p-10 card-hover">
-                      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
-                        {/* 左：图标 + 编号 */}
-                        <div className="flex items-center gap-4 md:flex-col md:items-center md:gap-3 flex-shrink-0">
-                          <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-200">
-                            {icon}
+                    {/* Top rule */}
+                    <div className={`h-px w-full transition-colors duration-300 ${isExpanded ? 'bg-primary-300' : 'bg-surface-100'}`} />
+
+                    <div
+                      className="group"
+                    >
+                      {/* Main clickable row */}
+                      <button
+                        className="w-full text-left"
+                        onClick={() => handleToggle(index)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`solution-detail-${index}`}
+                      >
+                        <div className="grid grid-cols-[3rem_1fr_auto] md:grid-cols-[5rem_1fr_auto] items-center gap-6 md:gap-10 py-8 md:py-10">
+
+                          {/* Ordinal */}
+                          <div className="self-start pt-1">
+                            <span
+                              className={`font-display text-2xl md:text-3xl font-bold leading-none select-none tabular-nums transition-colors duration-300 ${isExpanded ? 'text-primary-600' : 'text-surface-200'}`}
+                            >
+                              {String(index + 1).padStart(2, '0')}
+                            </span>
                           </div>
-                          <span className="text-xs font-mono text-surface-300 md:mt-1">0{index + 1}</span>
-                        </div>
 
-                        {/* 右：内容 */}
-                        <div className="flex-1 space-y-4">
-                          {/* 图片区（预留） */}
-                          {solution.image && (
-                            <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-50 border border-surface-100 mb-2">
-                              <img
-                                src={typeof solution.image === 'string' ? solution.image : getStrapiMedia(solution.image?.url)}
-                                alt={solution.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-
-                          <div>
-                            <h2 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200 mb-2">
-                              {solution.title}
+                          {/* Title + description preview */}
+                          <div className="space-y-1.5 min-w-0">
+                            <h2
+                              className="font-display text-xl md:text-2xl font-bold tracking-tight leading-snug text-surface-900 group-hover:text-primary-700 transition-colors duration-200"
+                            >
+                              {solution.title || defaults.title}
                             </h2>
-                            <p className="text-sm text-surface-400 leading-relaxed">
-                              {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
+                            <p className="text-sm text-surface-500 leading-relaxed line-clamp-1 md:line-clamp-none">
+                              {desc}
                             </p>
                           </div>
 
-                          {/* 特性标签 */}
-                          {featuresArray.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {featuresArray.map((feature: string, idx: number) => (
-                                <span key={idx} className="px-3 py-1 bg-surface-50 text-surface-600 text-xs rounded-lg">
-                                  {feature}
-                                </span>
-                              ))}
+                          {/* Toggle indicator */}
+                          <div className="flex-shrink-0 flex items-center">
+                            <div
+                              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                                isExpanded
+                                  ? 'bg-primary-600 text-white'
+                                  : 'bg-surface-100 text-surface-500 group-hover:bg-primary-50 group-hover:text-primary-500'
+                              }`}
+                            >
+                              <svg
+                                className={`w-3.5 h-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-45' : 'rotate-0'}`}
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14M5 12h14" />
+                              </svg>
                             </div>
-                          )}
+                          </div>
+                        </div>
+                      </button>
 
-                          {/* 案例数据 */}
-                          {solution.cases && (
-                            <p className="text-xs text-primary-600 font-medium">
-                              {parseRichText(solution.cases)}
-                            </p>
-                          )}
+                      {/* Expandable detail panel */}
+                      <div
+                        id={`solution-detail-${index}`}
+                        className="overflow-hidden"
+                        style={{
+                          display: 'grid',
+                          gridTemplateRows: isExpanded ? '1fr' : '0fr',
+                          transition: 'grid-template-rows 0.45s cubic-bezier(0.16,1,0.3,1)',
+                        }}
+                      >
+                        <div className="min-h-0">
+                          <div className="grid md:grid-cols-[5rem_1fr_minmax(0,20rem)] gap-6 md:gap-10 pb-10">
+                            {/* Left column: large domain icon */}
+                            <div className="hidden md:flex items-start justify-center pt-1">
+                              <div
+                                className="w-12 h-12 text-primary-200"
+                                aria-hidden="true"
+                              >
+                                {icon}
+                              </div>
+                            </div>
 
-                          <button
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
-                            onClick={() => setSelectedItem(solution)}
-                          >
-                            了解详情
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                          </button>
+                            {/* Center: features */}
+                            <div className="space-y-6">
+                              {/* Feature list as inline markers */}
+                              {featuresArray.length > 0 && (
+                                <div>
+                                  <p className="text-xs font-bold tracking-widest uppercase text-surface-300 mb-3">核心能力</p>
+                                  <div className="space-y-2.5">
+                                    {featuresArray.map((feature: string, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center gap-3"
+                                        style={{
+                                          opacity: isExpanded ? 1 : 0,
+                                          transform: isExpanded ? 'translateX(0)' : 'translateX(-8px)',
+                                          transition: `opacity 0.35s ease ${idx * 60 + 120}ms, transform 0.35s ease ${idx * 60 + 120}ms`,
+                                        }}
+                                      >
+                                        <div className="w-1 h-1 rounded-full bg-primary-400 flex-shrink-0" />
+                                        <span className="text-sm text-surface-600 font-medium">{feature}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* CTA */}
+                              <div
+                                style={{
+                                  opacity: isExpanded ? 1 : 0,
+                                  transition: `opacity 0.4s ease 0.35s`,
+                                }}
+                              >
+                                <button
+                                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors group/btn"
+                                  onClick={() => setSelectedItem(solution)}
+                                >
+                                  查看完整方案
+                                  <svg className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Right: image or accent block */}
+                            <div
+                              style={{
+                                opacity: isExpanded ? 1 : 0,
+                                transform: isExpanded ? 'translateY(0)' : 'translateY(8px)',
+                                transition: `opacity 0.45s ease 0.1s, transform 0.45s ease 0.1s`,
+                              }}
+                            >
+                              {solution.image ? (
+                                <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-surface-50">
+                                  <img
+                                    src={typeof solution.image === 'string' ? solution.image : getStrapiMedia(solution.image?.url)}
+                                    alt={solution.title}
+                                    loading="lazy"
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-full aspect-[4/3] rounded-xl bg-primary-50 flex items-center justify-center">
+                                  <div className="w-20 h-20 text-primary-200" aria-hidden="true">
+                                    {icon}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )
               })}
+
+              {/* Final rule */}
+              <div className="h-px w-full bg-surface-100" />
             </div>
-          )}
+          ) : null}
+
         </div>
       </section>
 
-      <Footer />
+      <CtaSection
+        title="没有找到合适的"
+        highlightText="解决方案"
+        description="联系我们，我们将根据您的需求提供定制化的解决方案"
+        buttonText="联系我们"
+        secondaryLink={{ href: "/products", text: "浏览产品" }}
+      />
 
       {selectedItem && (
         <DetailModal item={selectedItem} type="solution" onClose={() => setSelectedItem(null)} />

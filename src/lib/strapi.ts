@@ -53,7 +53,6 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
  */
 export async function getCompanyInfo() {
   try {
-    const url = `${STRAPI_URL}/api/companies?populate=*`;
     const data = await fetchApi<any>('/companies?populate=*');
     return data.data?.[0] || null;
   } catch (error) {
@@ -63,16 +62,21 @@ export async function getCompanyInfo() {
 }
 
 /**
- * 获取公司Logo
+ * 从公司数据中提取 Logo URL（不发起额外请求）
+ */
+export function extractCompanyLogo(company: any): string | null {
+  if (!company?.logo) return null;
+  const logoUrl = Array.isArray(company.logo) ? company.logo[0]?.url : company.logo?.url;
+  return logoUrl ? getStrapiMedia(logoUrl) : null;
+}
+
+/**
+ * 获取公司Logo（独立调用时使用）
  */
 export async function getCompanyLogo() {
   try {
     const company = await getCompanyInfo();
-    if (company?.logo) {
-      const logoUrl = Array.isArray(company.logo) ? company.logo[0]?.url : company.logo?.url;
-      return logoUrl ? getStrapiMedia(logoUrl) : null;
-    }
-    return null;
+    return extractCompanyLogo(company);
   } catch (error) {
     console.error('Error fetching company logo:', error);
     return null;
@@ -80,16 +84,21 @@ export async function getCompanyLogo() {
 }
 
 /**
- * 获取公司照片
+ * 从公司数据中提取公司照片 URL（不发起额外请求）
+ */
+export function extractCompanyImage(company: any): string | null {
+  if (!company?.companyImage) return null;
+  const imageUrl = Array.isArray(company.companyImage) ? company.companyImage[0]?.url : company.companyImage?.url;
+  return imageUrl ? getStrapiMedia(imageUrl) : null;
+}
+
+/**
+ * 获取公司照片（独立调用时使用）
  */
 export async function getCompanyImage() {
   try {
     const company = await getCompanyInfo();
-    if (company?.companyImage) {
-      const imageUrl = Array.isArray(company.companyImage) ? company.companyImage[0]?.url : company.companyImage?.url;
-      return imageUrl ? getStrapiMedia(imageUrl) : null;
-    }
-    return null;
+    return extractCompanyImage(company);
   } catch (error) {
     console.error('Error fetching company image:', error);
     return null;
@@ -159,9 +168,7 @@ export async function getArticles(category?: string) {
  */
 export async function getSolutions() {
   try {
-    console.log('Fetching solutions from Strapi...');
     const response = await fetchApi<any>('/solutions?populate=*&sort=order:asc');
-    console.log('Solutions fetched successfully:', response.data?.length || 0, 'items');
     return response.data || [];
   } catch (error) {
     // 如果是 403 权限错误，返回空数组使用默认数据
@@ -206,7 +213,23 @@ export async function getContactInfo() {
 }
 
 /**
- * 提交联系表单
+ * 提交联系表单（通过 Strapi contacts 接口）
+ */
+export async function submitContact(data: {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message: string;
+}) {
+  return fetchApi<any>('/contacts', {
+    method: 'POST',
+    body: JSON.stringify({ data }),
+  });
+}
+
+/**
+ * 提交联系表单（旧接口，兼容保留）
  */
 export async function submitContactForm(data: {
   name: string;
