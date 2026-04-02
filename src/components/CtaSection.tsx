@@ -53,7 +53,7 @@ export default function CtaSection({
               <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight lg:whitespace-nowrap">
                 {title}<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-accent-300">{highlightText}</span>？
               </h2>
-              <p className="text-base text-surface-300 leading-relaxed">
+              <p className="text-base text-surface-200 leading-relaxed">
                 {description}
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function CtaSection({
               {secondaryLink && (
                 <Link
                   href={secondaryLink.href}
-                  className="text-base text-surface-400 hover:text-white transition-colors font-semibold"
+                  className="text-base text-surface-300 hover:text-white transition-colors font-semibold"
                 >
                   {secondaryLink.text}
                 </Link>

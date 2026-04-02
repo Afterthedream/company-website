@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { getSolutions } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
@@ -98,9 +99,15 @@ export default function Solutions() {
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500">专业方案</span>
             </h2>
           </div>
-          <p className="text-base text-surface-500 max-w-sm leading-relaxed">
-            从城市到农村，从工业到民生，覆盖全场景水治理需求
-          </p>
+          <Link
+            href="/solutions"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors group micro-interaction"
+          >
+            查看全部方案
+            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
 
         {/* 编辑式列表布局 */}
@@ -202,23 +209,6 @@ export default function Solutions() {
 
         {/* 底部分隔线 */}
         <div className="border-t border-surface-100" />
-
-        {/* CTA */}
-        <div
-          className={`text-center mt-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-400 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <a
-            href="/solutions"
-            className="btn-primary"
-          >
-            查看全部解决方案
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
-        </div>
       </div>
 
       {/* 详情弹窗 */}

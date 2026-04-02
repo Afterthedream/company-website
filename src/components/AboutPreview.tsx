@@ -84,7 +84,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
-          <span className="font-['Geist'] text-sm font-bold text-primary-600 tracking-wider">01</span>
+          <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
           <div className="w-10 h-px bg-primary-300" />
           <span className="text-sm text-surface-400">关于我们</span>
         </div>
