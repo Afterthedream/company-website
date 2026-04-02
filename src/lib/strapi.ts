@@ -54,9 +54,7 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
 export async function getCompanyInfo() {
   try {
     const url = `${STRAPI_URL}/api/companies?populate=*`;
-    console.log('Fetching:', url);
     const data = await fetchApi<any>('/companies?populate=*');
-    console.log('Company data:', JSON.stringify(data).substring(0, 200));
     return data.data?.[0] || null;
   } catch (error) {
     console.error('Error fetching company info:', error);
@@ -103,8 +101,8 @@ export async function getCompanyImage() {
  */
 export async function getProductCategories() {
   try {
-    const data = await fetchApi<any>('/product-categories?populate=*&sort=order:asc');
-    return data.data || [];
+    const response = await fetchApi<any>('/product-categories?populate=*&sort=order:asc');
+    return response.data || [];
   } catch (error) {
     // 如果分类接口不存在或返回错误，返回空数组
     console.warn('Product categories not available yet:', error);
@@ -121,9 +119,14 @@ export async function getProducts(categoryId?: string) {
     if (categoryId) {
       endpoint += `&filters[category][id][$eq]=${categoryId}`;
     }
-    const data = await fetchApi<any>(endpoint);
-    return data.data || [];
+    const response = await fetchApi<any>(endpoint);
+    return response.data || [];
   } catch (error) {
+    // 如果是 403 权限错误，返回空数组
+    if (error instanceof Error && error.message.includes('403')) {
+      console.warn('Strapi Products API requires public read permission. Using empty data.');
+      return [];
+    }
     console.error('Error fetching products:', error);
     return [];
   }
@@ -138,9 +141,14 @@ export async function getArticles(category?: string) {
     if (category) {
       endpoint += `&filters[category][$eq]=${category}`;
     }
-    const data = await fetchApi<any>(endpoint);
-    return data.data || [];
+    const response = await fetchApi<any>(endpoint);
+    return response.data || [];
   } catch (error) {
+    // 如果是 403 权限错误，返回空数组
+    if (error instanceof Error && error.message.includes('403')) {
+      console.warn('Strapi Articles API requires public read permission. Using empty data.');
+      return [];
+    }
     console.error('Error fetching articles:', error);
     return [];
   }
@@ -152,9 +160,9 @@ export async function getArticles(category?: string) {
 export async function getSolutions() {
   try {
     console.log('Fetching solutions from Strapi...');
-    const data = await fetchApi<any>('/solutions?populate=*&sort=order:asc');
-    console.log('Solutions fetched successfully:', data.data?.length || 0, 'items');
-    return data.data || [];
+    const response = await fetchApi<any>('/solutions?populate=*&sort=order:asc');
+    console.log('Solutions fetched successfully:', response.data?.length || 0, 'items');
+    return response.data || [];
   } catch (error) {
     // 如果是 403 权限错误，返回空数组使用默认数据
     if (error instanceof Error && error.message.includes('403')) {
@@ -171,9 +179,14 @@ export async function getSolutions() {
  */
 export async function getCases() {
   try {
-    const data = await fetchApi<any>('/cases?populate=*&sort=projectDate:desc');
-    return data.data || [];
+    const response = await fetchApi<any>('/cases?populate=*&sort=projectDate:desc');
+    return response.data || [];
   } catch (error) {
+    // 如果是 403 权限错误，返回空数组
+    if (error instanceof Error && error.message.includes('403')) {
+      console.warn('Strapi Cases API requires public read permission. Using empty data.');
+      return [];
+    }
     console.error('Error fetching cases:', error);
     return [];
   }

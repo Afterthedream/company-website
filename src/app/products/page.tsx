@@ -7,55 +7,8 @@ import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
 import CtaSection from '@/components/CtaSection'
 import { ProductListSkeleton } from '@/components/Skeleton'
-import { getProducts, getProductCategories } from '@/lib/strapi'
+import { getProducts, getProductCategories, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
-
-const defaultProducts = [
-  {
-    id: 'treatment',
-    title: '水处理技术',
-    description: '先进的水处理工艺，提供从源头到终端的全流程水净化解决方案',
-    features: ['物理处理技术', '化学处理技术', '生物处理技术', '膜分离技术'],
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'ecology',
-    title: '水生态修复',
-    description: '运用生态工程方法，恢复水体自净能力，构建健康的水生态系统',
-    features: ['湿地生态修复', '河流生态修复', '湖泊生态修复', '水源地保护'],
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-      </svg>
-    ),
-  },
-  {
-    id: 'smart',
-    title: '智慧水务',
-    description: '融合物联网、大数据技术，实现水务系统的智能化监控与管理',
-    features: ['智能监控系统', '数据分析平台', '远程控制系统', '预警预报系统'],
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'monitoring',
-    title: '水环境监测',
-    description: '建立完善的水环境监测体系，实时掌握水质动态变化',
-    features: ['水质在线监测', '水文监测', '污染源监测', '应急监测'],
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ),
-  },
-]
 
 export const dynamic = 'force-dynamic'
 
@@ -93,10 +46,13 @@ export default function ProductsPage() {
     )
     if (gridRef.current) observer.observe(gridRef.current)
     return () => observer.disconnect()
-  }, [])
+  }, [loading])
 
   const displayProducts = selectedCategory
-    ? products.filter((p) => p.category?.id === selectedCategory)
+    ? products.filter((p: any) => {
+        const catId = p.category?.documentId || p.category?.id
+        return catId === selectedCategory
+      })
     : products
 
   const hasProducts = products.length > 0
@@ -130,10 +86,10 @@ export default function ProductsPage() {
               </button>
               {categories.map((category: any) => (
                 <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  key={category.id || category.documentId}
+                  onClick={() => setSelectedCategory(category.documentId || category.id)}
                   className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 micro-interaction ${
-                    selectedCategory === category.id
+                    selectedCategory === (category.documentId || category.id)
                       ? 'bg-primary-600 text-white shadow-lg'
                       : 'bg-white text-surface-700 hover:bg-surface-100 border border-surface-200'
                   }`}
@@ -158,66 +114,76 @@ export default function ProductsPage() {
               <p className="text-sm text-surface-400">敬请期待后续更新~</p>
             </div>
           ) : (
-          <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {displayProducts.map((product: any, index: number) => (
-              <div
-                key={product.id || index}
-                className={`group bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 h-full ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                  {/* 图片区 */}
-                  <div className="relative h-52 bg-gradient-to-br from-surface-50 to-surface-100 overflow-hidden">
-                    {(() => {
-                      const img = product.image
-                      const imgUrl = img
-                        ? Array.isArray(img) ? img[0]?.url : img?.url
-                        : null
-                      const fullUrl = imgUrl
-                        ? imgUrl.startsWith('http') ? imgUrl : `${process.env.NEXT_PUBLIC_STRAPI_URL}${imgUrl}`
-                        : null
-                      return fullUrl ? (
+            <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {displayProducts.map((product: any, index: number) => {
+                // 获取图片URL
+                const img = product.image
+                const imgUrl = img
+                  ? (Array.isArray(img) ? img[0]?.url : img?.url)
+                  : null
+                const fullUrl = imgUrl
+                  ? (imgUrl.startsWith('http') ? imgUrl : getStrapiMedia(imgUrl))
+                  : null
+
+                // 获取产品名称
+                const productName = product.name || product.title || '未命名产品'
+                
+                // 获取描述
+                const description = parseRichText(product.description) || product.description || '暂无描述'
+
+                return (
+                  <div
+                    key={product.id || product.documentId || index}
+                    className={`group bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 h-full ${
+                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    {/* 图片区 */}
+                    <div className="relative h-52 bg-gradient-to-br from-surface-50 to-surface-100 overflow-hidden">
+                      {fullUrl ? (
                         <img 
                           src={fullUrl} 
-                          alt={product.name || product.title} 
+                          alt={productName} 
                           className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 shadow-sm">
-                            {product.icon || defaultProducts[0].icon}
+                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
                           </div>
                         </div>
-                      )
-                    })()}
-                  </div>
-
-                  {/* 内容 */}
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono text-surface-300">0{index + 1}</span>
-                      <span className="w-1.5 h-1.5 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
                     </div>
-                    <h2 className="text-lg font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200">
-                      {product.name || product.title}
-                    </h2>
-                    <p className="text-sm text-surface-400 leading-relaxed line-clamp-2">
-                      {parseRichText(product.description) || '暂无描述'}
-                    </p>
-                    <button
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors pt-1 micro-interaction"
-                      onClick={() => setSelectedItem(product)}
-                    >
-                      了解详情
-                      <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </button>
+
+                    {/* 内容 */}
+                    <div className="p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-mono text-surface-300">0{index + 1}</span>
+                        <span className="w-1.5 h-1.5 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                      <h2 className="text-lg font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200">
+                        {productName}
+                      </h2>
+                      <p className="text-sm text-surface-400 leading-relaxed line-clamp-2">
+                        {typeof description === 'string' ? description : '暂无描述'}
+                      </p>
+                      <button
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors pt-1 micro-interaction"
+                        onClick={() => setSelectedItem(product)}
+                      >
+                        了解详情
+                        <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-              </div>
-            ))}
-          </div>
+                )
+              })}
+            </div>
           )}
         </div>
       </section>
