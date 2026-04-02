@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const STRAPI_URL = 'http://47.109.195.123:1337';
 
 async function proxy(request: NextRequest) {
-  const path = request.nextUrl.pathname.replace('/api', '');
+  const path = request.nextUrl.pathname;
   const search = request.nextUrl.search;
   const url = `${STRAPI_URL}${path}${search}`;
 
