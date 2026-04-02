@@ -84,7 +84,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
           }`}
         >
-          <span className="font-['Geist'] text-sm font-bold text-primary-600 tracking-wider">01</span>
+          <span className="font-display text-sm font-bold text-primary-600 tracking-wider">01</span>
           <div className="w-10 h-px bg-primary-300" />
           <span className="text-sm text-surface-400">关于我们</span>
         </div>
@@ -130,7 +130,7 @@ export default function AboutPreview({ company, companyImage }: AboutPreviewProp
                 以水为脉，<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500">以智为器</span>，<span className="text-accent-600">以服为桥</span>
               </h2>
               <p className="text-surface-600 leading-relaxed text-base">
-                {parseRichText(company?.description) || '智汇泽润是一家专注于水资源治理与保护的科技企业，秉承"道法自然、上善若水"的理念，致力于为客户提供专业、高效、环保的水治理解决方案。'}
+                {parseRichText(company?.description) || '四川沧杰荇科技有限公司是专业的水利水务数字化解决方案服务商，以先进的水利信息化技术为驱动，为客户提供专业、高效的解决方案，助力实现水资源的科学管理与可持续利用。'}
               </p>
             </div>
 

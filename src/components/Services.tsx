@@ -117,9 +117,15 @@ export default function Services({ products = [] }: ServicesProps) {
               产品与服务
             </h2>
           </div>
-          <p className="text-base text-surface-300 max-w-sm leading-relaxed">
-            全方位水治理解决方案，满足不同客户的需求
-          </p>
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-400 hover:text-primary-300 transition-colors group micro-interaction"
+          >
+            查看全部产品
+            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
 
         {/* 卡片网格 */}
@@ -131,7 +137,7 @@ export default function Services({ products = [] }: ServicesProps) {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">暂时还没有产品哦</h3>
-            <p className="text-sm text-surface-400">敬请期待后续更新~</p>
+            <p className="text-sm text-surface-300">敬请期待后续更新~</p>
           </div>
         ) : (
         <div className="grid md:grid-cols-3 gap-5">
@@ -165,7 +171,7 @@ export default function Services({ products = [] }: ServicesProps) {
                 </h3>
 
                 {/* 描述 */}
-                <p className="text-sm text-surface-300 leading-relaxed mb-6">
+                <p className="text-sm text-surface-200 leading-relaxed mb-6">
                   {parseRichText(item.description) || '提供专业的解决方案，满足您的各种需求。'}
                 </p>
 
@@ -185,16 +191,6 @@ export default function Services({ products = [] }: ServicesProps) {
           })}
         </div>
         )}
-
-        {/* 查看更多 */}
-        <div className="text-center mt-12">
-          <Link href="/products" className="btn-primary">
-            查看所有产品
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
       </div>
     </section>
   )

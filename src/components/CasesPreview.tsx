@@ -198,22 +198,6 @@ export default function CasesPreview({ cases = [] }: CasesPreviewProps) {
               })}
             </div>
           )}
-
-          {/* 底部按钮 */}
-          {hasCases && (
-            <div
-              className={`text-center mt-12 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-300 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <Link href="/cases" className="btn-primary">
-                查看更多案例
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-          )}
         </div>
       </section>
 
