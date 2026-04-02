@@ -3,10 +3,11 @@
 import React, { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import PageHeader from '@/components/PageHeader'
 import DetailModal from '@/components/DetailModal'
 import CtaSection from '@/components/CtaSection'
 import { CaseListSkeleton } from '@/components/Skeleton'
-import { getStrapiMedia } from '@/lib/strapi'
+import { getStrapiMedia, getCases } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
 interface CaseItem {
@@ -94,10 +95,8 @@ export default function CasesPage() {
   React.useEffect(() => {
     async function fetchCases() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/cases?populate=*&sort=projectDate:desc`)
-        if (!res.ok) throw new Error('Failed to fetch cases')
-        const data = await res.json()
-        setCases(data.data || [])
+        const data = await getCases()
+        setCases(data)
       } catch (error) {
         console.error('Error fetching cases:', error)
         setCases([])
@@ -114,7 +113,7 @@ export default function CasesPage() {
     id: item.id,
     title: item.title,
     client: item.client,
-    industry: item.category || '其他',
+    industry: (item.category && item.category !== 'river') ? item.category : '其他',
     description: item.description,
     results: item.results || '',
     date: item.projectDate,
@@ -136,30 +135,12 @@ export default function CasesPage() {
     <main className="min-h-screen animate-page-enter">
       <Header />
 
-      {/* 页面头部 */}
-      <section className="pt-32 pb-20 bg-surface-50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-50/40 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-50/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
-
-        <div className="max-w-6xl mx-auto px-6 relative">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <div className="space-y-5">
-              <div className="flex items-center gap-3">
-                <span className="font-display text-sm font-bold text-primary-600 tracking-wider">04</span>
-                <div className="w-8 h-px bg-primary-200" />
-                <span className="text-xs font-semibold text-primary-600 tracking-widest uppercase">应用案例</span>
-              </div>
-              <h1 className="font-display text-5xl md:text-6xl font-extrabold text-surface-900 tracking-tight leading-tight">
-                成功<br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500">案例展示</span>
-              </h1>
-            </div>
-            <p className="text-lg text-surface-500 max-w-md leading-relaxed md:pb-2">
-              真实项目，看得见的效果——每一个案例都是专业实力的见证
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        number="04"
+        label="应用案例"
+        title="成功案例展示"
+        description="真实项目，看得见的效果——每一个案例都是专业实力的见证"
+      />
 
       {/* 案例列表 */}
       <section className="py-24 bg-white">
@@ -221,11 +202,8 @@ export default function CasesPage() {
 
                     {/* 右侧：内容 */}
                     <div className="flex-1 space-y-5 lg:pt-4">
-                      {/* 标签 + 日期 */}
+                      {/* 日期 */}
                       <div className="flex items-center gap-3">
-                        <span className={`px-3 py-1 border rounded-lg text-xs font-medium ${theme.tag}`}>
-                          {item.industry}
-                        </span>
                         <span className="text-xs text-surface-400">
                           {new Date(item.date).toLocaleDateString('zh-CN')}
                         </span>

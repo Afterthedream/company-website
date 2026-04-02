@@ -5,7 +5,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PageHeader from '@/components/PageHeader'
 import DetailModal, { ModalItem } from '@/components/DetailModal'
-import { getSolutions } from '@/lib/strapi'
+import { SolutionListSkeleton } from '@/components/Skeleton'
+import { getSolutions, getStrapiMedia } from '@/lib/strapi'
 import { parseRichText } from '@/lib/richTextParser'
 
 const defaultSolutions = [
@@ -53,10 +54,20 @@ export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<any[]>([])
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [loading, setLoading] = useState(true)
   const listRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getSolutions().then(data => setSolutions(data)).catch(() => setSolutions([]))
+    getSolutions()
+      .then(data => {
+        console.log('Solutions data:', JSON.stringify(data))
+        setSolutions(data)
+      })
+      .catch((err) => {
+        console.error('Solutions error:', err)
+        setSolutions([])
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -74,6 +85,7 @@ export default function SolutionsPage() {
   }, [])
 
   const displaySolutions = solutions.length > 0 ? solutions : defaultSolutions
+  const hasDisplayData = displaySolutions.length > 0
 
   return (
     <main className="min-h-screen">
@@ -88,85 +100,100 @@ export default function SolutionsPage() {
 
       <section className="py-28 bg-surface-50">
         <div className="max-w-6xl mx-auto px-6">
-          <div ref={listRef} className="space-y-5">
-            {displaySolutions.map((solution: any, index: number) => {
-              let featuresArray: string[] = []
-              if (solution.features) {
-                if (Array.isArray(solution.features)) {
-                  featuresArray = solution.features.map((f: any) => parseRichText(f) || String(f))
-                } else if (typeof solution.features === 'string') {
-                  featuresArray = solution.features.split(',').map((f: string) => f.trim())
+          {loading ? (
+            <SolutionListSkeleton count={5} />
+          ) : (
+            <div ref={listRef} className="space-y-5">
+              {displaySolutions.map((solution: any, index: number) => {
+                let featuresArray: string[] = []
+                if (solution.features) {
+                  if (Array.isArray(solution.features)) {
+                    featuresArray = solution.features.map((f: any) => parseRichText(f) || String(f))
+                  } else if (typeof solution.features === 'string') {
+                    featuresArray = solution.features.split(',').map((f: string) => f.trim())
+                  }
                 }
-              }
-              if (featuresArray.length === 0 && defaultSolutions[index]) {
-                featuresArray = defaultSolutions[index].features
-              }
+                if (featuresArray.length === 0 && defaultSolutions[index]) {
+                  featuresArray = defaultSolutions[index].features
+                }
 
-              const icon = solutionIcons[index % solutionIcons.length]
+                const icon = solutionIcons[index % solutionIcons.length]
 
-              return (
-                <div
-                  key={solution.id || index}
-                  className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className="card-surface p-8 md:p-10 card-hover">
-                    <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
-                      {/* 左：图标 + 编号 */}
-                      <div className="flex items-center gap-4 md:flex-col md:items-center md:gap-3 flex-shrink-0">
-                        <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-200">
-                          {icon}
-                        </div>
-                        <span className="text-xs font-mono text-surface-300 md:mt-1">0{index + 1}</span>
-                      </div>
-
-                      {/* 右：内容 */}
-                      <div className="flex-1 space-y-4">
-                        <div>
-                          <h2 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200 mb-2">
-                            {solution.title}
-                          </h2>
-                          <p className="text-sm text-surface-400 leading-relaxed">
-                            {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
-                          </p>
-                        </div>
-
-                        {/* 特性标签 */}
-                        {featuresArray.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {featuresArray.map((feature: string, idx: number) => (
-                              <span key={idx} className="px-3 py-1 bg-surface-50 text-surface-600 text-xs rounded-lg">
-                                {feature}
-                              </span>
-                            ))}
+                return (
+                  <div
+                    key={solution.id || index}
+                    className={`group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <div className="card-surface p-8 md:p-10 card-hover">
+                      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
+                        {/* 左：图标 + 编号 */}
+                        <div className="flex items-center gap-4 md:flex-col md:items-center md:gap-3 flex-shrink-0">
+                          <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-200">
+                            {icon}
                           </div>
-                        )}
+                          <span className="text-xs font-mono text-surface-300 md:mt-1">0{index + 1}</span>
+                        </div>
 
-                        {/* 案例数据 */}
-                        {solution.cases && (
-                          <p className="text-xs text-primary-600 font-medium">
-                            {parseRichText(solution.cases)}
-                          </p>
-                        )}
+                        {/* 右：内容 */}
+                        <div className="flex-1 space-y-4">
+                          {/* 图片区（预留） */}
+                          {solution.image && (
+                            <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-50 border border-surface-100 mb-2">
+                              <img
+                                src={typeof solution.image === 'string' ? solution.image : getStrapiMedia(solution.image?.url)}
+                                alt={solution.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
 
-                        <button
-                          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
-                          onClick={() => setSelectedItem(solution)}
-                        >
-                          了解详情
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </button>
+                          <div>
+                            <h2 className="text-xl font-semibold text-surface-900 group-hover:text-primary-700 transition-colors duration-200 mb-2">
+                              {solution.title}
+                            </h2>
+                            <p className="text-sm text-surface-400 leading-relaxed">
+                              {parseRichText(solution.description) || solution.description || '提供专业的定制化解决方案'}
+                            </p>
+                          </div>
+
+                          {/* 特性标签 */}
+                          {featuresArray.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {featuresArray.map((feature: string, idx: number) => (
+                                <span key={idx} className="px-3 py-1 bg-surface-50 text-surface-600 text-xs rounded-lg">
+                                  {feature}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* 案例数据 */}
+                          {solution.cases && (
+                            <p className="text-xs text-primary-600 font-medium">
+                              {parseRichText(solution.cases)}
+                            </p>
+                          )}
+
+                          <button
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                            onClick={() => setSelectedItem(solution)}
+                          >
+                            了解详情
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 
