@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
 import { getCompanyLogo } from '@/lib/strapi'
 
 export default function Header() {
@@ -12,11 +11,20 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const pathname = usePathname()
-  const { t } = useTranslation('common')
 
   useEffect(() => {
+    let ticking = false
+    let lastScrollY = 0
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      lastScrollY = window.scrollY
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(lastScrollY > 20)
+          ticking = false
+        })
+        ticking = true
+      }
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -31,12 +39,12 @@ export default function Header() {
   }, [])
 
   const navItems = [
-    { name: t('navigation.home'), href: '/' },
-    { name: t('navigation.products'), href: '/products' },
-    { name: t('navigation.solutions'), href: '/solutions' },
-    { name: t('navigation.cases'), href: '/cases' },
-    { name: t('navigation.news'), href: '/news' },
-    { name: t('navigation.about'), href: '/about' },
+    { name: '首页', href: '/' },
+    { name: '产品中心', href: '/products' },
+    { name: '解决方案', href: '/solutions' },
+    { name: '应用案例', href: '/cases' },
+    { name: '新闻动态', href: '/news' },
+    { name: '关于我们', href: '/about' },
   ]
 
   return (
@@ -61,6 +69,7 @@ export default function Header() {
                   alt="四川沧杰荇科技有限公司"
                   width={48}
                   height={48}
+                  loading="eager"
                   className="w-full h-full object-contain"
                 />
               ) : (
@@ -142,6 +151,7 @@ export default function Header() {
           id="mobile-nav"
           aria-label="移动导航"
           aria-hidden={!isMobileMenuOpen}
+          {...(!isMobileMenuOpen && { inert: true as const })}
           className={`md:hidden overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
@@ -153,7 +163,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`block py-3 px-4 font-medium micro-interaction rounded-lg ${
+                className={`flex items-center min-h-[44px] py-3.5 px-4 font-medium micro-interaction rounded-lg ${
                   isActive
                     ? 'text-primary-600 bg-primary-50'
                     : 'text-surface-700 hover:bg-surface-50 hover:text-primary-600'

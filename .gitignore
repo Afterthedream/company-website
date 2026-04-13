@@ -26,6 +26,12 @@ yarn-error.log*
 # IDE
 .idea
 .vscode
+.agents
+.claude
+.github
+.lingma
+.qwen
+.trae
 *.swp
 *.swo
 *~

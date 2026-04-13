@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import PageHeader from '@/components/PageHeader'
 import TencentMapSimple from '@/components/TencentMapSimple'
 import { AboutPageSkeleton } from '@/components/Skeleton'
@@ -14,8 +15,8 @@ export default function AboutPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 添加延迟，确保骨架屏有足够时间显示
-    const timer = setTimeout(async () => {
+    // 立即获取数据，无需延迟
+    const fetchData = async () => {
       try {
         const data = await getCompanyInfo()
         setCompany(data)
@@ -25,9 +26,9 @@ export default function AboutPage() {
       } finally {
         setLoading(false)
       }
-    }, 500) // 500ms延迟，确保骨架屏显示
-
-    return () => clearTimeout(timer)
+    }
+    
+    fetchData()
   }, [])
 
   const data = {
@@ -85,7 +86,7 @@ export default function AboutPage() {
             {/* 图片 */}
             <div className="relative rounded-2xl overflow-hidden bg-surface-100 aspect-[4/3]">
               {companyImage ? (
-                <img src={companyImage} alt={data.name} loading="lazy" className="w-full h-full object-cover" />
+                <Image src={companyImage} alt={data.name} fill className="object-cover" unoptimized />
               ) : null}
               <div className="absolute -bottom-3 -left-3 w-full h-full rounded-2xl border border-primary-100 -z-10" />
             </div>

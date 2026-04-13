@@ -129,7 +129,7 @@ export default function CasesPage() {
 
                   <div className="relative py-12 md:py-16 flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
                     {/* 左侧：编号 + 图片 */}
-                    <div className="flex-shrink-0 lg:w-[340px] space-y-4">
+                    <div className="flex-shrink-0 lg:w-full lg:max-w-[340px] space-y-4">
                       <span className="font-display text-7xl font-extrabold text-surface-100 group-hover:text-primary-200 transition-colors duration-300 leading-none select-none">
                         {String(index + 1).padStart(2, '0')}
                       </span>

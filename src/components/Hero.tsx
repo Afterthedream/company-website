@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useTranslation } from 'react-i18next'
 import { parseRichText } from '@/lib/richTextParser'
 
 interface Company {
@@ -21,14 +20,13 @@ interface HeroProps {
 
 export default function Hero({ company }: HeroProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const { t } = useTranslation('common')
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100)
     return () => clearTimeout(timer)
   }, [])
 
-  const vision = parseRichText(company?.vision)?.split('——')[0].trim() || t('hero.title')
+  const vision = parseRichText(company?.vision)?.split('——')[0].trim() || '以水为脉，以智为器，以服为桥'
 
   return (
     <section className="relative min-h-[100vh] flex items-center overflow-hidden">
@@ -45,8 +43,8 @@ export default function Hero({ company }: HeroProps) {
       />
 
       {/* 柔和光晕 */}
-      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-primary-200/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-accent-200/25 rounded-full blur-[100px]" />
+      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-primary-200/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-accent-200/25 rounded-full blur-3xl" />
 
       {/* 水滴动画 — 装饰 */}
       <div className="absolute top-20 right-[15%] hidden lg:block">
@@ -66,9 +64,9 @@ export default function Hero({ company }: HeroProps) {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-accent-50 border border-accent-100 rounded-full text-xs font-semibold text-accent-600 tracking-wide">
+              <span className="inline-flex items-center gap-2 min-h-[44px] px-3.5 py-1.5 bg-accent-50 border border-accent-100 rounded-full text-xs font-semibold text-accent-600 tracking-wide">
                 <span className="w-1.5 h-1.5 bg-accent-500 rounded-full animate-pulse" />
-                {t('hero.label')}
+                水利信息化专家
               </span>
             </div>
 
@@ -82,7 +80,7 @@ export default function Hero({ company }: HeroProps) {
                 {vision}
               </h1>
               <p className="text-xl md:text-2xl text-surface-700 leading-relaxed max-w-xl font-medium">
-                {t('hero.subtitle')}
+                一站式水利信息化问题解决者
               </p>
             </div>
 
@@ -93,13 +91,13 @@ export default function Hero({ company }: HeroProps) {
               }`}
             >
               <Link href="/products" className="btn-primary text-base">
-                {t('hero.btnProducts')}
+                所有产品
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
               <Link href="/contact" className="btn-secondary text-base">
-                {t('hero.btnContact')}
+                联系我们
               </Link>
             </div>
 
@@ -111,7 +109,7 @@ export default function Hero({ company }: HeroProps) {
               isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
             }`}
           >
-            <div className="relative w-[380px] h-[380px]">
+            <div className="relative w-full max-w-[380px] aspect-square">
               {/* 底层渐变圆 */}
               <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary-100/60 via-accent-50/40 to-primary-50/60 animate-breathe" />
 
@@ -178,20 +176,16 @@ export default function Hero({ company }: HeroProps) {
 
               {/* 环绕的数据点装饰 */}
               {[
-                { top: '8%', left: '50%', delay: '0s' },
-                { top: '30%', right: '5%', delay: '0.5s' },
-                { bottom: '30%', right: '5%', delay: '1s' },
-                { bottom: '8%', left: '50%', delay: '1.5s' },
-                { bottom: '30%', left: '5%', delay: '2s' },
-                { top: '30%', left: '5%', delay: '2.5s' },
-              ].map((pos, i) => (
+                { pos: 'top-[8%] left-1/2', delayClass: 'animate-pulse-delay-0' },
+                { pos: 'top-[30%] right-[5%]', delayClass: 'animate-pulse-delay-1' },
+                { pos: 'bottom-[30%] right-[5%]', delayClass: 'animate-pulse-delay-2' },
+                { pos: 'bottom-[8%] left-1/2', delayClass: 'animate-pulse-delay-3' },
+                { pos: 'bottom-[30%] left-[5%]', delayClass: 'animate-pulse-delay-4' },
+                { pos: 'top-[30%] left-[5%]', delayClass: 'animate-pulse-delay-5' },
+              ].map((item, i) => (
                 <div
                   key={i}
-                  className="absolute w-2 h-2 rounded-full bg-primary-400/40"
-                  style={{
-                    ...pos,
-                    animation: `pulse 3s ease-in-out ${pos.delay} infinite`,
-                  }}
+                  className={`absolute w-2 h-2 rounded-full bg-primary-400/40 ${item.pos} ${item.delayClass}`}
                 />
               ))}
             </div>
@@ -206,7 +200,7 @@ export default function Hero({ company }: HeroProps) {
         }`}
       >
         <div className="flex flex-col items-center gap-2 text-surface-500">
-          <span className="text-[10px] tracking-widest uppercase">Scroll</span>
+          <span className="text-xs tracking-wider">向下探索</span>
           <div className="w-px h-8 bg-gradient-to-b from-surface-400 to-transparent animate-scroll-line" />
         </div>
       </div>

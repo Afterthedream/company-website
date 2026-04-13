@@ -4,7 +4,6 @@ import Services from '@/components/Services'
 import Solutions from '@/components/Solutions'
 import CasesPreview from '@/components/CasesPreview'
 import NewsPreview from '@/components/NewsPreview'
-import CtaSection from '@/components/CtaSection'
 import { getCompanyInfo, getProducts, getArticles, extractCompanyImage, getCases } from '@/lib/strapi'
 export const dynamic = 'force-dynamic'
 export default async function Home() {

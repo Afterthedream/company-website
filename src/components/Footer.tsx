@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useTranslation } from 'react-i18next'
 import { getCompanyInfo, getCompanyLogo } from '@/lib/strapi'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  const { t } = useTranslation('common')
 
   const [address, setAddress] = useState('成都市双流区新通大道777号2栋1单元1203号')
   const [phone, setPhone]     = useState('028-86045168')
@@ -29,26 +27,26 @@ export default function Footer() {
 
   const NAV_GROUPS = [
     {
-      title: t('footer.sections.about'),
+      title: '关于我们',
       links: [
-        { name: t('footer.links.companyProfile'), href: '/about' },
-        { name: t('footer.links.culture'), href: '/about#culture' },
-        { name: t('footer.links.contactInfo'), href: '/about#contact-info' },
+        { name: '公司简介', href: '/about' },
+        { name: '企业文化', href: '/about#culture' },
+        { name: '公司信息', href: '/about#contact-info' },
       ],
     },
     {
-      title: t('footer.sections.products'),
+      title: '产品与服务',
       links: [
-        { name: t('footer.links.productCenter'), href: '/products' },
-        { name: t('footer.links.solutions'), href: '/solutions' },
-        { name: t('footer.links.cases'), href: '/cases' },
+        { name: '产品中心', href: '/products' },
+        { name: '解决方案', href: '/solutions' },
+        { name: '应用案例', href: '/cases' },
       ],
     },
     {
-      title: t('footer.sections.news'),
+      title: '新闻动态',
       links: [
-        { name: t('footer.links.companyNews'), href: '/news' },
-        { name: t('footer.links.industryNews'), href: '/news?category=industry' },
+        { name: '公司新闻', href: '/news' },
+        { name: '行业资讯', href: '/news?category=industry' },
       ],
     },
   ]
@@ -57,7 +55,7 @@ export default function Footer() {
     <footer className="bg-surface-950 text-white relative">
       {/* 波浪分隔线 */}
       <div className="absolute top-0 left-0 right-0 -translate-y-[99%] overflow-hidden leading-none">
-        <svg className="relative block w-full h-12" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+        <svg className="relative block w-full h-10 sm:h-12 lg:h-14" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
           <path
             d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z"
             fill="var(--footer-wave)"
@@ -75,12 +73,13 @@ export default function Footer() {
             <Link href="/" className="inline-flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
                 {logoUrl ? (
-                  <img
+                  <Image
                     src={logoUrl}
                     alt="四川沧杰荇科技有限公司 Logo"
                     width={36}
                     height={36}
                     className="w-full h-full object-contain"
+                    unoptimized
                   />
                 ) : (
                   <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -89,14 +88,14 @@ export default function Footer() {
                 )}
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-bold">{t('footer.company')}</span>
-                <span className="text-[10px] text-surface-200">{t('footer.companyEn')}</span>
+                <span className="text-sm font-bold">四川沧杰荇科技有限公司</span>
+                <span className="text-[10px] text-surface-200">SICHUAN CANGJIEXING TECHNOLOGY CO,LTD</span>
               </div>
             </Link>
 
             {/* 简介 */}
             <p className="text-surface-200 text-xs leading-relaxed">
-              {t('footer.description')}
+              以水为脉，以智为器，以服为桥——专注水资源治理与保护，让每一滴水都被精准守护，每一项水治理都可持续。
             </p>
 
             {/* 联系方式 */}
@@ -130,28 +129,28 @@ export default function Footer() {
           <div className="hidden lg:block w-px bg-surface-800 self-stretch" />
 
           {/* 右：导航，3 列排列 */}
-          <div className="grid grid-cols-3 gap-x-[50px] gap-y-6 lg:max-w-md xl:max-w-lg">
+          <div className="grid grid-cols-3 gap-x-8 lg:gap-x-10 gap-y-4">
             {NAV_GROUPS.map((group) => (
               <div key={group.title}>
-                <h3 className="text-xs font-semibold text-surface-200 uppercase tracking-wider mb-4">
+                <h3 className="text-[11px] font-semibold text-surface-300 tracking-wider uppercase mb-3">
                   {group.title}
                 </h3>
-                <ul className="space-y-2.5">
+                <ul className="space-y-1.5">
                   {group.links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="group/link inline-flex items-center py-2 text-xs text-surface-200 hover:text-primary-400 transition-all duration-200"
+                        className="group/link relative block py-1.5 pl-0 text-xs text-surface-400 hover:text-white transition-colors duration-200"
                       >
-                        <span className="relative">
-                          {link.name}
-                          {/* 下划线滑入效果 */}
-                          <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary-400 transition-all duration-300 ease-out group-hover/link:w-full" />
+                        {/* 左侧指示条滑入 */}
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-3.5 bg-primary-500 rounded-full transition-all duration-300 ease-out group-hover/link:w-0.5 group-hover/link:opacity-100 opacity-0" />
+                        {/* 文字微右移 + 底部渐变下划线 */}
+                        <span className="relative inline-flex items-center gap-1.5">
+                          <span className="transition-transform duration-200 ease-out group-hover/link:translate-x-0.5">
+                            {link.name}
+                          </span>
+                          <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 ease-out group-hover/link:w-full" />
                         </span>
-                        {/* 箭头滑入 */}
-                        <svg className="w-3 h-3 ml-1 opacity-0 -translate-x-1 transition-all duration-200 ease-out group-hover/link:opacity-100 group-hover/link:translate-x-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
                       </Link>
                     </li>
                   ))}
@@ -168,7 +167,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4
                         flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-surface-400 text-xs">
-            {t('footer.copyright', { year: currentYear })}
+            © {currentYear} 四川沧杰荇科技有限公司 All Rights Reserved.
           </p>
           <a
             href="https://beian.miit.gov.cn/"
@@ -176,7 +175,7 @@ export default function Footer() {
             rel="noreferrer"
             className="text-surface-400 hover:text-surface-300 text-xs transition-colors duration-200"
           >
-            {t('footer.icp')}
+            蜀ICP备2024XXXXXX号
           </a>
         </div>
       </div>

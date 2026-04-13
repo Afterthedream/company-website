@@ -96,8 +96,8 @@ export default function Services({ products = [] }: ServicesProps) {
   return (
     <section ref={sectionRef} className="py-28 bg-surface-950 relative overflow-hidden">
       {/* 背景光晕（带色调，不是纯黑） */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary-900/30 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-primary-800/20 rounded-full blur-[120px]" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary-900/30 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-primary-800/20 rounded-full blur-3xl" />
 
       <div className="max-w-6xl mx-auto px-6 relative">
         {/* 标题区 */}
@@ -158,14 +158,14 @@ export default function Services({ products = [] }: ServicesProps) {
                 </h3>
 
                 {/* 描述 */}
-                <p className="text-sm text-surface-100 leading-relaxed mb-6">
-                  {parseRichText(item.description) || '提供专业的解决方案，满足您的各种需求。'}
+                <p className="text-sm text-surface-50 leading-relaxed mb-6">
+                  {parseRichText(item.description) || '聚焦水利数字化与智慧水务管理，为水资源治理提供全生命周期技术支持。'}
                 </p>
 
                 {/* 链接 */}
                 <button
                   onClick={() => handleViewDetails(item)}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-400 group-hover:text-primary-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
+                  className="inline-flex items-center gap-1.5 min-h-[44px] px-2 text-xs font-medium text-primary-400 group-hover:text-primary-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
                   aria-label={`查看${item.name || item.title}的详情`}
                 >
                   了解更多

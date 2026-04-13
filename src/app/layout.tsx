@@ -4,7 +4,7 @@ import './globals.css'
 import DynamicFavicon from '@/components/DynamicFavicon'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import I18nProvider from '@/components/I18nProvider'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -28,6 +28,17 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
     apple: '/favicon.ico',
   },
+  openGraph: {
+    title: '四川沧杰荇科技有限公司',
+    description: '一站式水利信息化问题解决者',
+    type: 'website',
+    locale: 'zh_CN',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '四川沧杰荇科技有限公司',
+    description: '一站式水利信息化问题解决者',
+  },
 }
 
 export const viewport: Viewport = {
@@ -44,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className={`${dmSans.variable} ${sora.variable}`}>
       <body className={`${dmSans.variable} ${sora.variable}`}>
-        <I18nProvider>
+        <ErrorBoundary>
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-lg"
@@ -55,7 +66,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
-        </I18nProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

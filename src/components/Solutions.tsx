@@ -95,7 +95,7 @@ const SolutionCard = React.memo(({ solution, index, isVisible, hoveredIndex, onV
           {/* 移动端详情按钮 */}
           <button
             onClick={() => onViewDetails(solution)}
-            className="md:hidden inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
+            className="md:hidden inline-flex items-center gap-1.5 min-h-[44px] px-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
             aria-label={`了解${solution.title}的详情`}
             disabled={loading}
           >
@@ -110,7 +110,7 @@ const SolutionCard = React.memo(({ solution, index, isVisible, hoveredIndex, onV
         {/* 箭头指示 */}
         <button
           onClick={() => onViewDetails(solution)}
-          className={`flex-shrink-0 hidden md:flex items-center gap-2 text-sm font-medium text-surface-300 group-hover:text-primary-500 transition-all duration-300 ${isHovered ? 'translate-x-1' : ''} focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded`}
+          className={`flex-shrink-0 hidden md:flex items-center gap-2 min-h-[44px] px-2 text-sm font-medium text-surface-300 group-hover:text-primary-500 transition-all duration-300 ${isHovered ? 'translate-x-1' : ''} focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded`}
           aria-label={`了解${solution.title}的详情`}
           disabled={loading}
         >

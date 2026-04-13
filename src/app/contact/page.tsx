@@ -24,25 +24,17 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 添加延迟，确保骨架屏有足够时间显示
-    const timer = setTimeout(async () => {
-      try {
-        const company = await getCompanyInfo()
-        if (company) {
-          setCompanyInfo({
-            phone: company.phone || '',
-            email: company.email || '',
-            address: company.address || '',
-          })
-        }
-      } catch (error) {
-        console.error('Failed to fetch company info:', error)
-      } finally {
-        setLoading(false)
+    getCompanyInfo().then(company => {
+      if (company) {
+        setCompanyInfo({
+          phone: company.phone || '',
+          email: company.email || '',
+          address: company.address || '',
+        })
       }
-    }, 500) // 500ms延迟，确保骨架屏显示
-
-    return () => clearTimeout(timer)
+    }).catch(() => {}).finally(() => {
+      setLoading(false)
+    })
   }, [])
 
   const validate = () => {
@@ -181,10 +173,10 @@ export default function ContactPage() {
                       aria-required="true"
                       aria-invalid={!!errors.name}
                       aria-describedby={errors.name ? 'name-error' : undefined}
-                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.name ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
+                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.name ? 'border-error-400 focus:border-error-400 focus:ring-error-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
                       placeholder="张三"
                     />
-                    {errors.name && <p id="name-error" className="mt-1 text-xs text-red-500">{errors.name}</p>}
+                    {errors.name && <p id="name-error" className="mt-1 text-xs text-error-500">{errors.name}</p>}
                   </div>
                   <div>
                     <label htmlFor="company" className="block text-xs font-medium text-surface-600 mb-1.5">公司</label>
@@ -210,10 +202,10 @@ export default function ContactPage() {
                       aria-required="true"
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? 'email-error' : undefined}
-                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
+                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.email ? 'border-error-400 focus:border-error-400 focus:ring-error-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
                       placeholder="zhangsan@example.com"
                     />
-                    {errors.email && <p id="email-error" className="mt-1 text-xs text-red-500">{errors.email}</p>}
+                    {errors.email && <p id="email-error" className="mt-1 text-xs text-error-500">{errors.email}</p>}
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-xs font-medium text-surface-600 mb-1.5">电话</label>
@@ -224,10 +216,10 @@ export default function ContactPage() {
                       onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: undefined })) }}
                       aria-invalid={!!errors.phone}
                       aria-describedby={errors.phone ? 'phone-error' : undefined}
-                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.phone ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
+                      className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 ${errors.phone ? 'border-error-400 focus:border-error-400 focus:ring-error-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
                       placeholder="13800000000"
                     />
-                    {errors.phone && <p id="phone-error" className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+                    {errors.phone && <p id="phone-error" className="mt-1 text-xs text-error-500">{errors.phone}</p>}
                   </div>
                 </div>
 
@@ -241,10 +233,10 @@ export default function ContactPage() {
                     aria-required="true"
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? 'message-error' : undefined}
-                    className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 resize-none ${errors.message ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
+                    className={`w-full px-4 py-3 bg-surface-50 border rounded-xl text-sm text-surface-800 placeholder:text-surface-300 focus:outline-none focus:ring-1 transition-all duration-200 resize-none ${errors.message ? 'border-error-400 focus:border-error-400 focus:ring-error-400' : 'border-surface-200 focus:border-primary-400 focus:ring-primary-400'}`}
                     placeholder="请描述您的项目需求、预算范围或任何疑问..."
                   />
-                  {errors.message && <p id="message-error" className="mt-1 text-xs text-red-500">{errors.message}</p>}
+                  {errors.message && <p id="message-error" className="mt-1 text-xs text-error-500">{errors.message}</p>}
                 </div>
 
                 <button
@@ -259,15 +251,15 @@ export default function ContactPage() {
                 {submitResult && (
                   <div role="alert" aria-live="polite" className={`flex items-center gap-3 p-4 rounded-xl animate-fade-in-up ${
                     submitResult === 'success' 
-                      ? 'bg-accent-50 text-accent-600 border border-accent-200' 
-                      : 'bg-red-50 text-red-600 border border-red-200'
+                      ? 'bg-accent-50 text-accent-600 border border-accent-200'
+                      : 'bg-error-50 text-error-600 border border-error-200'
                   }`}>
                     {submitResult === 'success' ? (
                       <>
                         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span className="text-sm font-medium">您的消息</span>
+                        <span className="text-sm font-medium">您的消息已发送，我们会尽快回复！</span>
                       </>
                     ) : (
                       <>

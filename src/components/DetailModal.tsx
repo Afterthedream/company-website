@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { getStrapiMedia } from '@/lib/strapi'
@@ -183,8 +183,13 @@ function StrapiBlocks({ content }: { content: any }) {
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function DetailModal({ item, onClose, type }: DetailModalProps) {
+  const [isMounted, setIsMounted] = useState(false)
   const modalRef = React.useRef<HTMLDivElement>(null)
   const closeButtonRef = React.useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // 焦点陷阱 + Escape 关闭
   useEffect(() => {
@@ -233,7 +238,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
     return () => { document.body.style.overflow = '' }
   }, [])
 
-  if (!item) return null
+  if (!isMounted || !item) return null
 
   const title = parseRichText(item.name || item.title || '') || (item.name || item.title || '')
   const excerpt = parseRichText(item.description || item.excerpt || '') || ''
@@ -248,21 +253,6 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
 
   // features
   const featureList = parseFeatures(item.features)
-
-  // 根据类型获取主题色
-  const getTypeColor = () => {
-    switch (type) {
-      case 'product': return 'primary'
-      case 'solution': return 'accent'
-      case 'news': return 'blue'
-      default: return 'primary'
-    }
-  }
-
-  const typeColor = getTypeColor()
-
-  // 使用 Portal 挂载到 body，避免父元素 transform 影响 fixed 定位
-  if (typeof document === 'undefined') return null
 
   return createPortal(
     <div
@@ -309,7 +299,9 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
           </div>
 
           {/* 右侧：内容 */}
-          <div className={`overflow-y-auto scrollbar-hidden p-6 space-y-4 ${type === 'news' ? 'md:w-1/2' : 'md:w-3/5'}`} style={{ maxHeight: type === 'news' ? '85vh' : '90vh' }}>
+          <div className={`flex flex-col overflow-hidden ${type === 'news' ? 'md:w-1/2' : 'md:w-3/5'}`}>
+            {/* 可滚动内容区 */}
+            <div className="flex-1 overflow-y-auto scrollbar-hidden p-6 space-y-4" style={{ maxHeight: type === 'news' ? 'calc(85vh - 5rem)' : 'calc(90vh - 5rem)' }}>
             {/* 类型标签 */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -346,7 +338,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
             {type === 'news' && (
               <>
                 {excerpt && (
-                  <div className={`p-4 rounded-xl bg-blue-50 border border-blue-100`}>
+                  <div className={`p-4 rounded-xl bg-primary-50 border border-primary-100`}>
                     <p className="text-surface-600 italic leading-relaxed">
                       {excerpt}
                     </p>
@@ -406,9 +398,10 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
                 <p className="text-accent-700 text-sm leading-relaxed">{parseRichText(item.cases) || String(item.cases)}</p>
               </div>
             )}
+            </div>
 
-            {/* 关闭按钮 */}
-            <div className="pt-4">
+            {/* 关闭按钮 - 固定在底部 */}
+            <div className="flex-shrink-0 p-6 pt-0">
               <button
                 onClick={onClose}
                 className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98] ${
