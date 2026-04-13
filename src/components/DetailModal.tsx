@@ -261,7 +261,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
     >
       <div
         ref={modalRef}
-        className={`relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl md:max-w-6xl overflow-hidden animate-scale-in ${type === 'news' ? 'max-h-[85vh]' : 'max-h-[90vh]'}`}
+        className={`relative bg-surface-0 rounded-2xl shadow-2xl w-full max-w-4xl md:max-w-6xl overflow-hidden animate-scale-in ${type === 'news' ? 'max-h-[85vh]' : 'max-h-[90vh]'}`}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -271,7 +271,7 @@ export default function DetailModal({ item, onClose, type }: DetailModalProps) {
         <button
           ref={closeButtonRef}
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg transition-all duration-200"
+          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-surface-0/90 backdrop-blur-sm hover:bg-surface-50 shadow-lg transition-all duration-200"
           aria-label="关闭"
         >
           <svg className="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

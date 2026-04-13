@@ -57,7 +57,7 @@ export default function TencentMap({
       new window.TMap.InfoWindow({
         map,
         position: center,
-        content: `<div style="padding:6px 10px;font-size:14px;color:#333;">${address}</div>`,
+        content: `<div style="padding:6px 10px;font-size:14px;color:var(--surface-700);">${address}</div>`,
         offset: { x: 0, y: -50 },
       })
     }

@@ -31,17 +31,9 @@ const accentThemes = [
 export default function CasesPreview({ cases = [] }: CasesPreviewProps) {
   const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>(0.1)
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
-  const [loading, setLoading] = useState(false)
 
-  const handleViewDetails = async (item: any) => {
-    setLoading(true)
-    try {
-      setSelectedItem(item)
-    } catch (error) {
-      console.error('Error opening modal:', error)
-    } finally {
-      setLoading(false)
-    }
+  const handleViewDetails = (item: any) => {
+    setSelectedItem(item)
   }
 
   const hasCases = cases.length > 0
@@ -186,9 +178,8 @@ export default function CasesPreview({ cases = [] }: CasesPreviewProps) {
                             onClick={() => handleViewDetails(item)}
                             className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700 transition-all duration-200 group-hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 rounded"
                             aria-label={`查看${item.title}的详情`}
-                            disabled={loading}
                           >
-                            {loading ? '加载中...' : '查看详情'}
+                            查看详情
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>

@@ -5,7 +5,8 @@
       "Bash(rmdir *)",
       "Bash(del *)",
       "Bash(npm install)",
-      "Bash(findstr *)"
+      "Bash(findstr *)",
+      "Bash(type *)"
     ]
   },
   "$version": 3

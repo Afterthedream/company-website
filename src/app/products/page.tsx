@@ -6,7 +6,6 @@ import DetailModal, { ModalItem } from '@/components/DetailModal'
 import CtaSection from '@/components/CtaSection'
 import { ProductListSkeleton } from '@/components/Skeleton'
 import { getProducts, getProductCategories } from '@/lib/strapi'
-import { parseRichText } from '@/lib/richTextParser'
 import { defaultProducts } from '@/lib/defaults'
 
 const productIcons = [

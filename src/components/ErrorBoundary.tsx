@@ -38,13 +38,13 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-xl hover:bg-primary-500 transition-colors"
+                className="px-6 py-3 min-h-[44px] bg-primary-600 text-white text-sm font-medium rounded-xl hover:bg-primary-500 transition-colors"
               >
                 刷新页面
               </button>
               <a
                 href="/"
-                className="px-5 py-2.5 bg-surface-100 text-surface-700 text-sm font-medium rounded-xl hover:bg-surface-200 transition-colors"
+                className="px-6 py-3 min-h-[44px] bg-surface-100 text-surface-700 text-sm font-medium rounded-xl hover:bg-surface-200 transition-colors"
               >
                 返回首页
               </a>

@@ -152,6 +152,7 @@ export default function SolutionsPage() {
                         onClick={() => handleToggle(index)}
                         aria-expanded={isExpanded}
                         aria-controls={`solution-detail-${index}`}
+                        aria-label="展开查看详情"
                       >
                         <div className="grid grid-cols-[3rem_1fr_auto] md:grid-cols-[5rem_1fr_auto] items-center gap-6 md:gap-10 py-8 md:py-10">
 
@@ -253,6 +254,7 @@ export default function SolutionsPage() {
                                 <button
                                   className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors group/btn"
                                   onClick={() => setSelectedItem(solution)}
+                                  aria-label="查看完整方案"
                                 >
                                   查看完整方案
                                   <svg className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

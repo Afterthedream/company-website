@@ -220,7 +220,7 @@ export default function NewsPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen">
-        <PageHeader number="04" label="新闻动态" title="最新资讯" description="了解公司最新资讯和行业动态" />
+        <PageHeader number="05" label="新闻动态" title="最新资讯" description="了解公司最新资讯和行业动态" />
         <section className="py-28 bg-surface-50">
           <div className="max-w-6xl mx-auto px-6">
             <NewsListSkeleton count={6} />

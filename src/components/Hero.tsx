@@ -150,7 +150,7 @@ export default function Hero({ company }: HeroProps) {
                   {/* 水滴主体 - 椭圆形态变化 */}
                   <ellipse className="drop-body" cx="200" cy="200" rx="28" ry="30" fill="url(#heroGradient)" />
                   {/* 水滴高光 */}
-                  <ellipse className="drop-highlight" cx="192" cy="192" rx="8" ry="10" fill="rgba(255,255,255,0.25)" />
+                  <ellipse className="drop-highlight" cx="192" cy="192" rx="8" ry="10" fill="oklch(1 0 0 / 0.25)" />
                   {/* 水滴底部小水花 */}
                   <ellipse className="drop-splash" cx="200" cy="228" rx="12" ry="3" fill="oklch(from var(--hero-wave-1) l c h / 0.15)" />
                 </g>

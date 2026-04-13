@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { getCompanyLogo } from '@/lib/strapi'
 
@@ -50,8 +49,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isScrolled || isMobileMenuOpen 
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
+        isScrolled || isMobileMenuOpen
+          ? 'bg-surface-0/95 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >

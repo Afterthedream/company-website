@@ -229,7 +229,7 @@ export default function CasesPage() {
         <DetailModal
           item={selectedItem}
           onClose={handleCloseModal}
-          type="solution"
+          type="case"
         />
       )}
     </main>

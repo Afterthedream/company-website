@@ -256,7 +256,7 @@ export async function submitContactForm(data: {
     return await response.json();
   } catch (error) {
     console.error('Error submitting form:', error);
-    // 降级处理：直接返回成功
-    return { success: true };
+    // 降级处理：直接返回失败
+    return { success: false };
   }
 }
